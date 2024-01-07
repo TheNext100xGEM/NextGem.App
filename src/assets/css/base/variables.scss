@@ -1,0 +1,107 @@
+@import "../mixins/medias";
+
+:root {
+  /* Transition */
+  --cubic: cubic-bezier(0.305, 0.045, 0.355, 1);
+  --transition-link: 0.2s;
+  --transition-active: 0.1s;
+  --transition-input: 0.2s;
+
+  /* Sizes */
+  --size-1: calc(4px + 1 * (100vw - 320px) / 1080);
+  --size-2: calc(8px + 1 * (100vw - 320px) / 1080);
+  --size-3: calc(16px + 1 * (100vw - 320px) / 1080);
+  --size-4: calc(24px + 2 * (100vw - 320px) / 1080);
+  --size-5: calc(32px + 3 * (100vw - 320px) / 1080);
+  --size-6: calc(40px + 4 * (100vw - 320px) / 1080);
+  --size-7: calc(48px + 5 * (100vw - 320px) / 1080);
+
+  /* Fonts */
+  --font-family-main: "Nippo", Helvetica, Arial, sans-serif;
+  --font-family-heading: "Outfit", Inter, Helvetica, Arial, sans-serif;
+
+  /* Background */
+  --bg-body-rgb: 9 9 10;
+  --bg-body: rgb(var(--bg-body-rgb));
+  --bg-secondary-rgb: 40 40 45;
+  --bg-secondary: rgb(var(--bg-secondary-rgb));
+
+  /* Text */
+  --text-primary-rgb: 136 135 137;
+  --text-primary: rgb(var(--text-primary-rgb));
+  --text-secondary-rgb: 240 240 240;
+  --text-secondary: rgb(var(--text-secondary-rgb));
+  --text-spacing: 0.1em;
+
+  --h1: calc(28px + 25 * (100vw - 320px) / 1080);
+  --h2: calc(24px + 20 * (100vw - 320px) / 1080);
+  --h3: calc(20px + 15 * (100vw - 320px) / 1080);
+  --h4: calc(18px + 12 * (100vw - 320px) / 1080);
+  --h5: calc(16px + 10 * (100vw - 320px) / 1080);
+  --h6: calc(14px + 8 * (100vw - 320px) / 1080);
+
+  /* Color */
+  --color-h: 0;
+  --color-s: 0%;
+
+  --color-l-1: 45%;
+  --color-l-2: 80%;
+  --color-l-3: 23%;
+
+  --color-primary-l-1: var(--color-l-1);
+  --color-primary-l-2: var(--color-l-2);
+  --color-primary-l-3: var(--color-l-3);
+
+  --color-secondary-l: 25%;
+  --color-secondary-l-1: var(--color-secondary-l);
+  --color-secondary-l-2: var(--color-secondary-l);
+  --color-secondary-l-3: var(--color-secondary-l);
+
+  --color-tertiary-l: 15%;
+  --color-tertiary-l-1: var(--color-tertiary-l);
+  --color-tertiary-l-2: var(--color-tertiary-l);
+  --color-tertiary-l-3: var(--color-tertiary-l);
+
+  --color-status-s: 85%;
+  --color-danger-h: 0;
+  --color-success-h: 110;
+  --color-warning-h: 25;
+  --color-info-h: 200;
+  --color-custom-h: 260;
+
+  --light-primary: rgba(255 255 255 / 30%);
+
+  /* Stroke */
+  --stroke-color: rgba(74 74 83 / 40%);
+  --stroke-width: 1px;
+  --stroke-primary: var(--stroke-width) solid var(--stroke-color);
+
+  /* Main */
+  --main-padding: var(--size-4);
+  --main-size: calc(14px + 1 * (100vw - 320px) / 1080);
+
+  /* Wrapper */
+  --wrapper-width: calc(700px + 400 * (100vw - 320px) / 1080);
+  --wrapper-max: 85vw;
+
+  /* Header */
+  --header-padding: var(--size-3);
+  --header-swipe-transition: 0.5s var(--cubic);
+
+  /* Corner */
+  --corner-size: 1.5em;
+  --corner-bg: transparent;
+
+  /* Input */
+  --input-size: 0.85rem;
+  --input-height: 4.15em;
+
+  @include max($xl) {
+    --main-padding: var(--size-3);
+    --wrapper-max: 92vw;
+  }
+
+  @include max($xs) {
+    --main-padding: 0px;
+  }
+}

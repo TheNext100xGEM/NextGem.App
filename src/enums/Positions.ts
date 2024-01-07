@@ -1,0 +1,1 @@
+export type Positions = "left-top" | "left-bottom" | "right-top" | "right-bottom"

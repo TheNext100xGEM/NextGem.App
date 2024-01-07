@@ -1,0 +1,82 @@
+@import "../../../assets/css/mixins/styles";
+
+.btn {
+  --padding-v: 1.5em;
+  --padding-h: 1.85em;
+  --corner-size: calc(var(--padding-h) / 1.5);
+  transition: transform var(--transition-active);
+  padding: 0 var(--padding-h);
+  display: inline-flex;
+  align-items: stretch;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  gap: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: var(--text-spacing);
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  & > * {
+    z-index: 2;
+  }
+
+  &.loaded {
+    cursor: wait;
+    pointer-events: none;
+
+    .btn-txt {
+      opacity: 0.5;
+    }
+  }
+
+  svg {
+    transition: transform var(--transition-link);
+    font-size: 1.2em;
+    margin: -0.1em;
+    align-self: center;
+    pointer-events: none;
+  }
+
+  &.minus {
+    svg {
+      padding: calc(var(--padding-v) * 0.85) 0;
+      transform: scale(1.5);
+    }
+  }
+
+  &-txt {
+    height: 100%;
+    display: flex;
+    padding: var(--padding-v) 0;
+    overflow: hidden;
+    gap: 1.5em;
+    align-items: center;
+
+    small {
+      color: var(--text-primary);
+      font-size: 1em;
+    }
+  }
+
+  &::before {
+    transition: opacity var(--transition-link);
+    opacity: 0;
+    @include light-blur;
+  }
+
+  &:hover {
+    &::before {
+      opacity: 0.3;
+    }
+  }
+
+  .corner {
+    z-index: 0;
+  }
+}

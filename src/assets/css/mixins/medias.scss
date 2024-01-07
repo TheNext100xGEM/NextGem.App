@@ -1,0 +1,21 @@
+$ls: 1200px;
+$xl: 1084px;
+$l: 900px;
+$sm: 800px;
+$xs: 750px;
+$xxs: 600px;
+$mobile: 500px;
+
+$responsiveHeader: $xl;
+
+@mixin max($width) {
+  @media screen and (max-width: $width) {
+    @content;
+  }
+}
+
+@mixin min($width) {
+  @media screen and (min-width: ($width + 1px)) {
+    @content;
+  }
+}

@@ -1,0 +1,91 @@
+.menu {
+  z-index: 90;
+
+  &-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+
+    &-item {
+      & > .btn,
+      .dropdown-opener .btn {
+        --corner-size: 0.5em;
+        transition: color var(--transition-link);
+        font-size: var(--size-2);
+        width: 3em;
+        height: 3em;
+        padding: 0;
+        color: var(--text-primary);
+        overflow: hidden;
+
+        svg {
+          margin: 0;
+        }
+
+        &:active {
+          transform: scale(1);
+          will-change: auto;
+        }
+
+        .corner {
+          transition: opacity var(--transition-link);
+          opacity: 0;
+        }
+
+        &:hover {
+          color: var(--text-secondary);
+
+          .corner {
+            opacity: 1;
+          }
+        }
+      }
+
+      .active {
+        & > .btn {
+          color: var(--text-secondary);
+
+          svg {
+            transform: rotate(90deg) scale(1.5);
+          }
+
+          .corner {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  .dropdown-content {
+    --content-margin: 2px;
+
+    &-scroll {
+      padding: var(--size-2);
+    }
+
+    .corner {
+      --corner-size: 13px;
+    }
+  }
+
+  &-subnav {
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--size-2) / 2);
+
+    li {
+      z-index: 5;
+    }
+
+    .btn {
+      font-size: 0.7em;
+      width: 100%;
+      justify-content: flex-end;
+      flex-direction: row-reverse;
+      gap: 1.5em;
+      padding-right: var(--size-4);
+    }
+  }
+}

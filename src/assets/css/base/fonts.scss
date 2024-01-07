@@ -1,0 +1,15 @@
+@mixin addFont($family, $src) {
+  font-family: $family;
+  src: url("../fonts/#{$src}.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  @include addFont("Nippo", "nippo/Nippo-Variable");
+}
+
+@font-face {
+  @include addFont("Outfit", "outfit/Outfit-Variable");
+}

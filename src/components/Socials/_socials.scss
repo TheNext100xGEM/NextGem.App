@@ -1,0 +1,14 @@
+.socials {
+  display: flex;
+  gap: 0.5em;
+
+  a {
+    transition:
+      color var(--transition-link),
+      opacity var(--transition-link);
+
+    &:hover {
+      color: var(--text-secondary);
+    }
+  }
+}

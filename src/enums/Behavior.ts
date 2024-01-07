@@ -1,0 +1,1 @@
+export type Behavior = "auto" | "instant" | "smooth"

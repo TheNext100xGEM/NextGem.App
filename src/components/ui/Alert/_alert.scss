@@ -1,0 +1,20 @@
+.alert {
+  padding: 1em 1.5em;
+  color: var(--color-1);
+  display: flex;
+  align-items: center;
+  gap: 1em;
+
+  strong {
+    font-weight: 500;
+  }
+
+  &-content {
+    flex: 1;
+    align-self: flex-start;
+  }
+
+  .corner {
+    z-index: 1;
+  }
+}

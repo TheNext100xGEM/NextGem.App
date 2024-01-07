@@ -1,0 +1,124 @@
+@import "../../assets/css/mixins/medias";
+
+.footer {
+  --padding: var(--size-6);
+  z-index: 200;
+  padding: var(--padding) 0;
+  border-top: var(--stroke-primary);
+  margin-bottom: var(--main-padding);
+
+  @include min($xs) {
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100vw;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top: var(--stroke-primary);
+    }
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    background-color: var(--light-primary);
+    inset: auto 25% 0;
+    height: 30px;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-left,
+  &-right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &-left {
+    gap: 0.5em;
+
+    p {
+      white-space: nowrap;
+    }
+  }
+
+  &-right {
+    font-size: 0.8em;
+    gap: 1.5em;
+
+    .nav {
+      text-transform: uppercase;
+      letter-spacing: var(--text-spacing);
+
+      ul {
+        gap: 0.5em;
+      }
+    }
+
+    .socials {
+      font-size: var(--size-4);
+    }
+  }
+
+  @include max($xl) {
+    overflow: hidden;
+
+    .wrapper,
+    &-right {
+      flex-direction: column;
+      gap: calc(var(--padding) / 2);
+    }
+
+    &-left {
+      order: 2;
+    }
+
+    .nav {
+      font-size: var(--size-3);
+      order: 2;
+    }
+  }
+
+  @include max($mobile) {
+    &::before {
+      height: 100px;
+    }
+
+    &-left {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .wrapper,
+    &-right {
+      align-items: flex-start;
+    }
+
+    .wrapper {
+      padding: var(--size-2);
+    }
+
+    .nav {
+      padding: var(--size-3) 0;
+
+      ul {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--size-3);
+      }
+
+      a:not(.btn) {
+        padding: 0;
+      }
+    }
+  }
+}

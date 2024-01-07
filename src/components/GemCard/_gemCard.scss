@@ -1,0 +1,158 @@
+@import "../../assets/css/mixins/styles";
+
+.gem {
+  --padding: var(--size-4);
+  --gap: calc(var(--padding) / 2.5);
+  display: flex;
+  flex-direction: column;
+
+  &-section {
+    padding: var(--padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    align-items: flex-start;
+    flex: 1;
+
+    & > * {
+      z-index: 5;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: var(--stroke-width);
+      background-color: var(--stroke-color);
+      opacity: 0.5;
+    }
+
+    &-light {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: 0;
+      z-index: 0;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 40% 10% -100%;
+        opacity: 0.5;
+        background: radial-gradient(var(--stroke-color) 0%, transparent 70%)
+          no-repeat;
+      }
+    }
+  }
+
+  &-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 100;
+  }
+
+  &-sub {
+    font-size: 0.85em;
+    letter-spacing: var(--text-spacing);
+    text-transform: uppercase;
+  }
+
+  &-title {
+    font-family: var(--font-family-heading);
+    font-weight: 600;
+    font-size: 2.25em;
+    @include ellipsis;
+    @include text-gradient;
+    line-height: 1;
+  }
+
+  &-link {
+    transition: color var(--transition-link);
+    @include ellipsis;
+
+    &:hover {
+      color: var(--text-secondary);
+    }
+
+    svg {
+      color: var(--text-primary);
+      margin-left: 0.5em;
+    }
+  }
+
+  &-desc {
+    font-size: 0.95em;
+    line-height: 1.8;
+    font-weight: 200;
+    padding-top: 0.5em;
+    @include clamp(2);
+  }
+
+  table {
+    --gap: calc(var(--padding) / 1.25);
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 var(--gap);
+    margin: calc(var(--gap) * -1) 0;
+
+    td {
+      font-size: 0.85em;
+      vertical-align: middle;
+
+      &:first-child {
+        white-space: nowrap;
+        padding-right: 0.5em;
+      }
+
+      &:last-child {
+        text-align: right;
+        color: var(--text-secondary);
+        width: 100%;
+      }
+
+      ul:not(.socials) {
+        li {
+          display: inline;
+
+          &.hidded {
+            color: var(--text-primary);
+          }
+
+          &:not(:first-child):not(:last-child) {
+            &::before {
+              content: ", ";
+            }
+          }
+
+          &:last-child {
+            margin-left: 0.5em;
+
+            &:not(.hidded) {
+              margin-left: 0;
+
+              &::before {
+                content: ", ";
+              }
+            }
+          }
+        }
+      }
+
+      .socials {
+        justify-content: flex-end;
+        font-size: 1.5em;
+        margin: -0.25em 0;
+
+        a:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  &-bottom {
+    padding: var(--size-3);
+  }
+}

@@ -1,0 +1,25 @@
+.logotype {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: var(--size-7);
+  gap: 0.2em;
+
+  img {
+    width: 1em;
+  }
+
+  svg {
+    width: 0.8em;
+  }
+
+  &.horizontal {
+    img {
+      width: 0.8em;
+    }
+
+    svg {
+      width: 3em;
+    }
+  }
+}

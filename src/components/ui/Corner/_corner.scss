@@ -1,0 +1,121 @@
+.corner {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  &.reverse {
+    transform: scaleX(-1);
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 var(--corner-size);
+    background-color: var(--corner-bg);
+    z-index: -1;
+  }
+
+  &-top-bottom {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      height: var(--stroke-width);
+      width: calc(100% - var(--corner-size));
+      background: linear-gradient(
+        to right,
+        hsl(var(--color-h), var(--color-s), var(--color-l-1)),
+        hsl(var(--color-h), var(--color-s), var(--color-l-2)),
+        hsl(var(--color-h), var(--color-s), var(--color-l-3))
+      );
+    }
+
+    &::before {
+      top: 0;
+      right: 0;
+    }
+
+    &::after {
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  &-left,
+  &-right {
+    position: absolute;
+    width: var(--corner-size);
+    height: 100%;
+    overflow: hidden;
+    bottom: 0;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: var(--stroke-width);
+      background-color: hsl(var(--color-h), var(--color-s), var(--l));
+    }
+
+    &::after {
+      height: calc(var(--corner-size) * 1.5);
+    }
+
+    &::before {
+      height: calc(100% - var(--corner-size));
+    }
+  }
+
+  &-left {
+    --l: var(--color-l-1);
+    left: 0;
+
+    &::before,
+    &::after {
+      background-color: hsl(var(--color-h), var(--color-s), var(--l));
+    }
+
+    &::before {
+      left: 0;
+      bottom: 0;
+      box-shadow: var(--corner-size) var(--corner-size) 0 var(--corner-size)
+        var(--corner-bg);
+      z-index: 5;
+    }
+
+    &::after {
+      left: 0;
+      bottom: calc(100% - var(--corner-size));
+      transform: rotate(45deg);
+      transform-origin: bottom left;
+      box-shadow: var(--corner-size) 0 0 var(--corner-size) var(--corner-bg);
+    }
+  }
+
+  &-right {
+    --l: var(--color-l-3);
+    right: 0;
+
+    &::before {
+      right: 0;
+      top: 0;
+      box-shadow: calc(var(--corner-size) * -1) calc(var(--corner-size) * -1) 0
+        var(--corner-size) var(--corner-bg);
+      z-index: 5;
+    }
+
+    &::after {
+      right: 0;
+      top: calc(100% - var(--corner-size));
+      transform: rotate(45deg);
+      transform-origin: top right;
+      box-shadow: calc(var(--corner-size) * -1) 0 0 var(--corner-size)
+        var(--corner-bg);
+    }
+  }
+}

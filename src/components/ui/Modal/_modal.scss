@@ -1,0 +1,73 @@
+@import "../../../assets/css/mixins/styles";
+@import "../../../assets/css/mixins/medias";
+
+.modal {
+  --width: calc(450px + 150 * (100vw - 320px) / 1080);
+  --padding: var(--size-5);
+  width: var(--width);
+  max-width: var(--wrapper-max);
+  margin: auto;
+  padding: var(--padding);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--padding) / 1.5);
+
+  @include max($mobile) {
+    --padding: var(--size-4);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 10px 0 -10px;
+    background-color: #000;
+    z-index: -2;
+    border-radius: 30px;
+    filter: blur(15px);
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 20px;
+    height: 200px;
+    background: radial-gradient(var(--bg-secondary) 0%, transparent 70%);
+    background-position: 0 -125px;
+    background-repeat: no-repeat;
+  }
+
+  & > .corner {
+    --corner-bg: var(--bg-body);
+  }
+
+  &-overlay {
+    padding: var(--size-7) 0;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    overflow-y: scroll;
+    @include no-scrollbar;
+    background-color: rgba(var(--bg-body-rgb) / 75%);
+  }
+
+  &-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 1;
+    gap: 1em;
+
+    .btn {
+      align-self: flex-start;
+      font-size: 8px;
+    }
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) / 2);
+  }
+}

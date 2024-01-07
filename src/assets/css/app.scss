@@ -1,0 +1,221 @@
+@charset "UTF-8";
+
+/* Import base */
+
+@import "mixins/styles";
+@import "mixins/medias";
+@import "base/variables";
+@import "base/reset";
+@import "base/fonts";
+@import "base/ui";
+
+/* General Styles */
+
+html {
+  background: var(--bg-body);
+  font-family: var(--font-family-main);
+  color: var(--text-primary);
+  font-weight: 300;
+  font-size: var(--main-size);
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  padding: var(--main-padding);
+  padding-top: 0;
+  padding-bottom: 0;
+  @include no-scrollbar;
+
+  @include min($xs) {
+    &::before,
+    &::after {
+      content: "";
+      position: fixed;
+      background-color: var(--stroke-color);
+      width: var(--stroke-width);
+      height: 100vh;
+      top: 0;
+      z-index: 1000;
+    }
+
+    &::before {
+      left: var(--main-padding);
+    }
+
+    &::after {
+      right: var(--main-padding);
+    }
+  }
+
+  .toast {
+    border: var(--stroke-primary) !important;
+    background-color: rgba(var(--bg-body-rgb) / 0.7);
+    color: var(--text-secondary);
+    @include backdrop;
+  }
+}
+
+html,
+body {
+  overscroll-behavior-y: none;
+  scroll-behavior: smooth;
+}
+
+*::selection {
+  background-color: rgba(var(--text-secondary-rgb) / 0.7);
+  color: var(--bg-body);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  @include trueMinHeight;
+}
+
+/* Colors */
+
+$colors: primary secondary tertiary;
+
+@each $color in $colors {
+  [data-colors="#{$color}"] {
+    --color-l-1: var(--color-#{$color}-l-1);
+    --color-l-2: var(--color-#{$color}-l-2);
+    --color-l-3: var(--color-#{$color}-l-3);
+
+    @include variableColors;
+  }
+}
+
+/* Status */
+
+[data-status] {
+  --color-s: var(--color-status-s);
+}
+
+$statuses: info custom success warning danger;
+
+@each $status in $statuses {
+  [data-status="#{$status}"] {
+    --color-h: var(--color-#{$status}-h);
+    @include variableColors;
+  }
+}
+
+/* Main */
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Wrapper */
+
+.wrapper {
+  width: var(--wrapper-width);
+  max-width: var(--wrapper-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Default */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3em;
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  @include text-gradient;
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+}
+
+@for $i from 1 through 6 {
+  h#{$i},
+  .h#{$i} {
+    font-size: var(--h#{$i});
+  }
+}
+
+.intro {
+  font-size: var(--size-3);
+  max-width: 100%;
+  line-height: 1.7;
+}
+
+.p {
+  line-height: 1.6;
+
+  ul,
+  ol {
+    li {
+      &::before {
+        content: "— ";
+        position: absolute;
+        left: 0;
+        color: var(--text-secondary);
+        text-align: right;
+      }
+
+      padding-left: 1.5em;
+    }
+
+    & > li + li {
+      margin-top: 0.85em;
+    }
+  }
+
+  ol {
+    counter-reset: olCounter;
+
+    li {
+      counter-increment: olCounter;
+
+      &::before {
+        content: counter(olCounter);
+      }
+    }
+  }
+}
+
+.intro,
+.p {
+  & > * + * {
+    margin-top: 1em;
+  }
+
+  a:not(.btn) {
+    color: var(--text-secondary);
+    font-weight: 400;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+hr {
+  width: 100%;
+  border-top: var(--stroke-primary);
+}
+
+/* Toast */
+
+.toast-ct {
+  & > *:nth-child(4) ~ * {
+    display: none !important;
+  }
+}

@@ -1,0 +1,182 @@
+@import "../../../assets/css/mixins/styles";
+@import "../../../assets/css/mixins/medias";
+
+$responsiveAside: $xl;
+
+.gems {
+  .filter {
+    --padding: var(--size-3);
+    padding: var(--padding);
+    border-bottom: var(--stroke-primary);
+    display: flex;
+    align-items: stretch;
+    gap: var(--size-3);
+
+    &-actions {
+      display: flex;
+      align-items: stretch;
+      gap: inherit;
+    }
+
+    .input {
+      flex: 1;
+    }
+
+    .dropdown {
+      display: flex;
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75em;
+        padding-right: var(--size-4);
+      }
+
+      &.listing {
+        .dropdown-content {
+          width: calc(200px + 50 * (100vw - 320px) / 1080);
+        }
+
+        ul + ul {
+          margin-top: var(--size-3);
+        }
+
+        .categorie {
+          letter-spacing: var(--text-spacing);
+          font-size: 0.65em;
+          text-transform: uppercase;
+        }
+
+        .item {
+          font-size: 0.85em;
+        }
+      }
+    }
+
+    .btn {
+      font-size: 0.75em;
+      height: 100%;
+    }
+
+    &-opener {
+      align-self: center;
+      @include min($responsiveAside) {
+        display: none;
+      }
+    }
+
+    .save {
+      height: auto;
+      margin: var(--size-3);
+      position: sticky;
+      bottom: calc(var(--size-3) + 1px);
+      z-index: 150;
+
+      &:active {
+        transform: none;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: calc((var(--size-3) + 1px) * -1) calc(var(--size-3) * -1);
+        background-color: rgba(var(--bg-body-rgb) / 85%);
+        border-top: var(--stroke-primary);
+        @include backdrop;
+        z-index: -2;
+      }
+
+      @include min($responsiveAside) {
+        display: none;
+      }
+    }
+
+    @include max($responsiveAside) {
+      &-actions {
+        --width: calc(280px + 50 * (100vw - 320px) / 1080);
+        padding: 0;
+        gap: 0;
+        width: var(--width);
+        position: fixed;
+        top: 0;
+        right: 0;
+        @include trueMinHeight;
+        z-index: 9999;
+        background: var(--bg-body);
+        flex-direction: column;
+        border-left: var(--stroke-primary);
+        overflow-y: auto;
+        transform: translateX(101%);
+        @include no-scrollbar;
+
+        .range {
+          --width: 200px;
+          margin: auto;
+        }
+
+        .dropdown {
+          display: block;
+
+          &-opener {
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: var(--stroke-primary);
+            background-color: rgba(var(--bg-body-rgb) / 85%);
+            @include backdrop;
+
+            .btn {
+              width: 100%;
+              height: auto;
+
+              .corner {
+                display: none;
+              }
+
+              &-txt {
+                flex: 1;
+                justify-content: space-between;
+              }
+            }
+          }
+
+          &-content {
+            position: relative;
+            width: 100% !important;
+            top: 0;
+            left: 0;
+            border-bottom: var(--stroke-primary);
+            padding: var(--size-2);
+
+            .corner {
+              display: none;
+            }
+
+            &-scroll {
+              max-height: none;
+            }
+          }
+        }
+      }
+
+      &.open .filter-actions {
+        transform: translateX(0%);
+      }
+    }
+  }
+
+  .grid {
+    --grid-layout-gap: var(--size-4);
+    padding: var(--size-5);
+
+    @include max($mobile) {
+      --grid-layout-gap: var(--size-3);
+      padding: var(--size-3);
+    }
+  }
+
+  .gem {
+    height: 100%;
+  }
+}

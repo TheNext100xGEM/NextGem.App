@@ -1,0 +1,34 @@
+@import "../../assets/css/mixins/styles";
+
+.note {
+  --gradient: linear-gradient(var(--color-1), var(--color-2), var(--color-3));
+  padding: var(--size-3) var(--size-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &::before {
+    @include light-blur;
+    opacity: 0.1;
+  }
+
+  span {
+    font-size: 0.85em;
+    letter-spacing: var(--text-spacing);
+    text-transform: uppercase;
+  }
+
+  strong {
+    font-family: var(--font-family-heading);
+    font-size: 2.2em;
+    @include text-gradient(var(--gradient));
+    display: flex;
+    align-items: center;
+    gap: 0.2ch;
+
+    small {
+      font-size: 0.75em;
+      @include text-gradient(var(--gradient));
+    }
+  }
+}

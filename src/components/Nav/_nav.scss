@@ -1,0 +1,49 @@
+.nav {
+  --gap: var(--header-padding, var(--size-3));
+
+  ul {
+    display: flex;
+    align-items: stretch;
+    gap: var(--gap);
+
+    li {
+      a:not(.btn) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1em;
+        height: 100%;
+        transition: color var(--transition-link);
+
+        &:hover {
+          color: var(--text-secondary);
+        }
+
+        &::after {
+          transition:
+            opacity var(--transition-link),
+            transform var(--transition-link);
+          content: "";
+          position: absolute;
+          inset: 10% -10%;
+          background-color: var(--bg-secondary);
+          border-radius: 50%;
+          filter: blur(20px);
+          z-index: -1;
+          opacity: 0;
+          pointer-events: none;
+          transform: scale(0.5);
+        }
+
+        &.active {
+          color: var(--text-secondary);
+
+          &::after {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      }
+    }
+  }
+}

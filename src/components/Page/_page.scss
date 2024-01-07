@@ -1,0 +1,9 @@
+@import "../../assets/css/mixins/styles";
+
+.page {
+  padding: var(--size-7) 0;
+
+  .content {
+    gap: 2em;
+  }
+}
