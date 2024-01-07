@@ -230,7 +230,6 @@ function StakingPage() {
       end: 'bottom top',
       scrub: true
     }})
-
   })
 
   return (
@@ -248,10 +247,16 @@ function StakingPage() {
               <Total />
               <Separator />
               <Unlock />
+              <div className="more">
+                <div className="more-arrow">
+                  <div className="more-arrow-shape"></div>
+                </div>
+                <a href="#bottom" className="sub">More infos</a>
+              </div>
             </div>
           </div>
         </div>
-        <div className="staking-bottom">
+        <div id="bottom" className="staking-bottom">
           <div className="staking-bottom-overflow">
             <div className="wrapper">
               <div className="staking-bottom-content">

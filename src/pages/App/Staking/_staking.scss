@@ -65,6 +65,62 @@
     width: 50%;
     padding-top: var(--margin);
     z-index: 100;
+
+    .more {
+      position: sticky;
+      bottom: var(--main-padding);
+      z-index: 100;
+      transform: translateX(-100%);
+      width: 100%;
+
+      &-arrow {
+        --size: 3em;
+        position: absolute;
+        bottom: 200%;
+        height: var(--size);
+        width: 100%;
+        overflow: hidden;
+
+        &-shape {
+          height: 3em;
+          width: var(--stroke-width);
+          background-color: var(--stroke-color);
+          left: calc(var(--size) / 3);
+          animation: arrow 2s infinite linear;
+
+          &::before {
+            content: "";
+            width: calc(var(--size) / 2.5);
+            height: calc(var(--size) / 2.5);
+            border: var(--stroke-primary);
+            position: absolute;
+            border-width: 0 1px 1px 0;
+            transform: translateX(-100%) rotate(45deg);
+            transform-origin: bottom right;
+            bottom: 0;
+          }
+
+          @keyframes arrow {
+            from {
+              transform: translateY(0%);
+            }
+            50% {
+              transform: translateY(100%);
+            }
+            50.0001% {
+              transform: translateY(-100%);
+            }
+            to {
+              transform: translateY(0%);
+            }
+          }
+        }
+      }
+
+      @include max($ls) {
+        display: none;
+      }
+    }
   }
 
   @include max($ls) {
