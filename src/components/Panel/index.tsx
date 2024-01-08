@@ -3,11 +3,13 @@ import { Button, Corner, Grid, Item, Modal } from '@components/ui'
 import { SOUND_BUTTON_CLICK, SOUND_BUTTON_HOVER, VOLUME_BUTTON_CLICK, VOLUME_BUTTON_HOVER } from '@constants/index'
 import { Icon } from '@iconify/react'
 import { useState } from 'react'
+import { useEthers } from '@usedapp/core'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from 'use-sound'
 
 function Panel() {
+  const {account, activateBrowserWallet, deactivate} = useEthers()
   const [modalIsOpen, setIsOpen] = useState(false)
   const [logged, setLogged] = useState(false) 
 
@@ -16,13 +18,13 @@ function Panel() {
   const closeModal = () => setIsOpen(false)
   
   const ButtonPanel = () => {
-    if (logged) {
+    if (account) {
       return (
-        <Button icon="logos:metamask-icon" onClick={handleLogged}>0x123...4567</Button>
+        <Button icon="logos:metamask-icon" onClick={deactivate}>{`${account.slice(0, 6)}...${account.slice(account.length - 6, account.length)}`}</Button>
       )
     } else {
       return (
-        <Button icon="carbon:wallet" onClick={openModal}>Connect your wallet</Button>
+        <Button icon="carbon:wallet" onClick={activateBrowserWallet}>Connect your wallet</Button>
       )
     }
   }
@@ -94,7 +96,7 @@ function Panel() {
   return (
     <>
       <ButtonPanel />
-      <ModalConnect />
+      {/* <ModalConnect /> */}
     </>
   )
 }
