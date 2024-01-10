@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect
+} from "react"
+import { useLocation } from "react-router-dom"
 
 interface AppContextProps {
   isInApp: boolean
@@ -13,7 +19,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation()
 
   useEffect(() => {
-    const allowedPages = ['/gems', '/gem-ai', '/staking']
+    const allowedPages = ["/", "/gem-ai", "/staking"]
     setIsInApp(allowedPages.includes(location.pathname))
   }, [location.pathname])
 
@@ -29,7 +35,7 @@ export const useAppContext = () => {
   const context = useContext(AppContext)
 
   if (!context) {
-    throw new Error('useAppContext must be used within an AppContextProvider')
+    throw new Error("useAppContext must be used within an AppContextProvider")
   }
 
   return context
