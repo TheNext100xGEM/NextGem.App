@@ -21,6 +21,7 @@ import { Link, useLocation } from "react-router-dom"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
+import { useWeb3React } from "@web3-react/core"
 
 type PropsNavLink = {
   to: string

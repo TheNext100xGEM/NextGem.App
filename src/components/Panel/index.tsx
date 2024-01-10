@@ -1,28 +1,45 @@
-import './_panel.scss'
-import { Button, Corner, Grid, Item, Modal } from '@components/ui'
-import { SOUND_BUTTON_CLICK, SOUND_BUTTON_HOVER, VOLUME_BUTTON_CLICK, VOLUME_BUTTON_HOVER } from '@constants/index'
-import { Icon } from '@iconify/react'
-import { useState } from 'react'
+import "./_panel.scss"
+import { Button, Corner, Grid, Item, Modal } from "@components/ui"
+import {
+  SOUND_BUTTON_CLICK,
+  SOUND_BUTTON_HOVER,
+  VOLUME_BUTTON_CLICK,
+  VOLUME_BUTTON_HOVER
+} from "@constants/index"
+import { Icon } from "@iconify/react"
+import { truncateWalletAddress } from "@utils/wallet"
+import { useWeb3React } from "@web3-react/core"
+import { useState } from "react"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-import useSound from 'use-sound'
+import useSound from "use-sound"
+import {
+  ConnectionType,
+  getConnection,
+  tryActivateConnector
+} from "../../libs/connections"
 
 function Panel() {
-  const [modalIsOpen, setIsOpen] = useState(false)
-  const [logged, setLogged] = useState(false) 
+  const { account } = useWeb3React()
 
-  const handleLogged = () => setLogged(!logged)
+  const [modalIsOpen, setIsOpen] = useState(false)
+
+  const handleLogged = () => {}
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
-  
+
   const ButtonPanel = () => {
-    if (logged) {
+    if (account) {
       return (
-        <Button icon="logos:metamask-icon" onClick={handleLogged}>0x123...4567</Button>
+        <Button icon='logos:metamask-icon' onClick={handleLogged}>
+          {truncateWalletAddress(account)}
+        </Button>
       )
     } else {
       return (
-        <Button icon="carbon:wallet" onClick={openModal}>Connect your wallet</Button>
+        <Button icon='carbon:wallet' onClick={openModal}>
+          Connect your wallet
+        </Button>
       )
     }
   }
@@ -31,61 +48,86 @@ function Panel() {
     name: string
     icon: string
     desc: string
+    connectionType: ConnectionType
   }
 
   const listWallet: PropsWallet[] = [
     {
       name: "Metamask",
       icon: "arcticons:metamask",
-      desc: "Connect to your Metamask"
+      desc: "Connect to your Metamask",
+      connectionType: ConnectionType.INJECTED
     },
     {
       name: "WalletConnect",
       icon: "simple-icons:walletconnect",
-      desc: "Connect to your WalletConnect"
+      desc: "Connect to your WalletConnect",
+      connectionType: ConnectionType.WALLET_CONNECT
     },
     {
       name: "Binance Wallet",
       icon: "simple-icons:binance",
-      desc: "Connect with Binance Chain Wallet"
+      desc: "Connect with Binance Chain Wallet",
+      connectionType: ConnectionType.INJECTED
     },
     {
       name: "Coinbase Wallet",
       icon: "tabler:brand-coinbase",
-      desc: "Connect with Coinbase"
+      desc: "Connect with Coinbase",
+      connectionType: ConnectionType.COINBASE_WALLET
     }
   ]
 
   const ModalConnect = () => {
-    const Wallet = ({ name, icon, desc }: PropsWallet) => {
-      const [soundClick] = useSound(SOUND_BUTTON_CLICK, { volume: VOLUME_BUTTON_CLICK })
-      const [soundHover] = useSound(SOUND_BUTTON_HOVER, { volume: VOLUME_BUTTON_HOVER })
+    const Wallet = ({ name, icon, desc, connectionType }: PropsWallet) => {
+      const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
+        volume: VOLUME_BUTTON_CLICK
+      })
+      const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
+        volume: VOLUME_BUTTON_HOVER
+      })
 
-      const handleConnect = () => {
+      const handleConnect = async () => {
         soundClick()
+
+        const activation = await tryActivateConnector(
+          getConnection(connectionType).connector
+        )
+
+        if (!activation) {
+          return
+        }
+
         closeModal()
-        setLogged(true)
       }
 
       return (
-        <div className="wallet" onClick={handleConnect} onMouseEnter={soundHover}>
+        <div
+          className='wallet'
+          onClick={handleConnect}
+          onMouseEnter={soundHover}
+        >
           <Icon icon={icon} />
           <h6>{name}</h6>
           <p>{desc}</p>
           <Corner />
-          <Corner color="primary" className="corner-hover"/>
+          <Corner color='primary' className='corner-hover' />
         </div>
       )
     }
 
     return (
-      <Modal title="Connect your wallet" isOpen={modalIsOpen} onRequestClose={closeModal}>
-        <Grid className="grid-wallet">
-          {listWallet.map((wallet, id) => 
+      <Modal
+        title='Connect your wallet'
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+      >
+        <Grid className='grid-wallet'>
+          {listWallet.map((wallet, id) => (
             <Item key={id}>
               <Wallet {...wallet} />
             </Item>
-          )}
+          ))}
         </Grid>
       </Modal>
     )
