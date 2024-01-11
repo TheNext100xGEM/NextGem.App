@@ -5,16 +5,15 @@ import { Grid } from "@components/ui"
 import { NOTE_MAX, NOTE_MIN, SITE_NAME } from "@constants/index"
 import CryptoBlockChains from "@data/cryptoBlockChains"
 import CryptoMarketAreas from "@data/cryptoMarketArea"
-import { items } from "@data/TEST_gems"
 import { useGSAP } from "@gsap/react"
-import { useWeb3React } from "@web3-react/core"
+import { useQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
 import { ReactNode, useState } from "react"
 import { Helmet } from "react-helmet-async"
-import { ConnectionType } from "../../../libs/connections"
-import { ConnectionOptions } from "@components/ConnectionOptions"
+import { getGemCollection } from "../../../queries/api"
+import { mapGem } from "@models/GemCard"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -177,21 +176,40 @@ function GemsPage() {
     })
   })
 
+  const qGemCollection = useQuery({
+    queryKey: ["gemCollection"],
+    queryFn: getGemCollection,
+    select: (data) => {
+      return data
+        .map(mapGem)
+        .filter((gem) => gem.status !== 0)
+        .slice(0, 100)
+    }
+  })
+
   return (
     <>
       <Helmet>
         <title>{SITE_NAME} — Gems</title>
       </Helmet>
+
       <div className='gems'>
         <Filter />
-        <Grid>
-          {items &&
-            items.map((item, id) => (
-              <Item key={id}>
-                <GemCard {...item} />
-              </Item>
-            ))}
-        </Grid>
+        {qGemCollection.data && (
+          <>
+            {qGemCollection.data.length !== 0 && (
+              <>
+                <Grid>
+                  {qGemCollection.data.map((item, id) => (
+                    <Item key={id}>
+                      <GemCard {...item} />
+                    </Item>
+                  ))}
+                </Grid>
+              </>
+            )}
+          </>
+        )}
       </div>
     </>
   )
