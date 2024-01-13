@@ -29,7 +29,7 @@ const connectEagerly = async () => {
 
 export const Web3ContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
-    // connectEagerly()
+    connectEagerly()
   }, [])
 
   return (
