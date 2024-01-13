@@ -167,8 +167,8 @@ $responsiveAside: $xl;
   }
 
   .grid {
-    --grid-layout-gap: var(--size-4);
-    padding: var(--size-5);
+    --grid-layout-gap: var(--size-3);
+    padding: var(--size-3);
 
     @include max($mobile) {
       --grid-layout-gap: var(--size-3);
@@ -178,5 +178,16 @@ $responsiveAside: $xl;
 
   .gem {
     height: 100%;
+  }
+
+  &-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+
+    svg {
+      width: 30px;
+    }
   }
 }

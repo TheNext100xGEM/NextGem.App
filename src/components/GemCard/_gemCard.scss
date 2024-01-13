@@ -1,7 +1,7 @@
 @import "../../assets/css/mixins/styles";
 
 .gem {
-  --padding: var(--size-4);
+  --padding: var(--size-3);
   --gap: calc(var(--padding) / 2.5);
   display: flex;
   flex-direction: column;
@@ -62,7 +62,7 @@
   &-title {
     font-family: var(--font-family-heading);
     font-weight: 600;
-    font-size: 2.25em;
+    font-size: 2em;
     @include ellipsis;
     @include text-gradient;
     line-height: 1;
@@ -120,21 +120,9 @@
             color: var(--text-primary);
           }
 
-          &:not(:first-child):not(:last-child) {
+          & + li:not(.hidded) {
             &::before {
               content: ", ";
-            }
-          }
-
-          &:last-child {
-            margin-left: 0.5em;
-
-            &:not(.hidded) {
-              margin-left: 0;
-
-              &::before {
-                content: ", ";
-              }
             }
           }
         }

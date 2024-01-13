@@ -1,7 +1,7 @@
 .grid {
   --grid-layout-gap: var(--size-3);
-  --grid-column-count: 5;
-  --grid-item-min-width: calc(280px + 50 * (100vw - 320px) / 1080);
+  --grid-column-count: 6;
+  --grid-item-min-width: calc(200px + 50 * (100vw - 320px) / 1080);
   --gap-count: calc(var(--grid-column-count) - 1);
   --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
   --grid-item-max-width: calc(

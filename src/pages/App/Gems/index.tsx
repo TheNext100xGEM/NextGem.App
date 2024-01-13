@@ -1,6 +1,14 @@
 import "./_gems.scss"
 import GemCard from "@components/GemCard"
-import { Button, Checkbox, Dropdown, Input, Item, Range } from "@components/ui"
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Input,
+  Item,
+  Loader,
+  Range
+} from "@components/ui"
 import { Grid } from "@components/ui"
 import { NOTE_MAX, NOTE_MIN, SITE_NAME } from "@constants/index"
 import CryptoBlockChains from "@data/cryptoBlockChains"
@@ -10,7 +18,7 @@ import { useQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import { getGemCollection } from "../../../queries/api"
 import { mapGem } from "@models/GemCard"
@@ -156,26 +164,6 @@ const Filter = () => {
 }
 
 function GemsPage() {
-  useGSAP(() => {
-    gsap.set(".gem", {
-      opacity: 0,
-      y: 75
-    })
-    ScrollTrigger.batch(".gem", {
-      onEnter: (batch) => {
-        batch.forEach((card, index) =>
-          gsap.to(card, {
-            opacity: 1,
-            y: 0,
-            stagger: 0.25,
-            delay: index * 0.1
-          })
-        )
-      },
-      once: true
-    })
-  })
-
   const qGemCollection = useQuery({
     queryKey: ["gemCollection"],
     queryFn: getGemCollection,
@@ -187,6 +175,29 @@ function GemsPage() {
     }
   })
 
+  useGSAP(
+    () => {
+      gsap.set(".gem", {
+        opacity: 0,
+        y: 75
+      })
+      ScrollTrigger.batch(".gem", {
+        onEnter: (batch) => {
+          batch.forEach((card, index) =>
+            gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              stagger: 0.25,
+              delay: index * 0.1
+            })
+          )
+        },
+        once: true
+      })
+    },
+    { dependencies: [qGemCollection.data] }
+  )
+
   return (
     <>
       <Helmet>
@@ -195,6 +206,11 @@ function GemsPage() {
 
       <div className='gems'>
         <Filter />
+        {qGemCollection.isLoading && (
+          <div className='gems-loader'>
+            <Loader />
+          </div>
+        )}
         {qGemCollection.data && (
           <>
             {qGemCollection.data.length !== 0 && (

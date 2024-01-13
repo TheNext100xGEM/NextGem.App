@@ -156,7 +156,7 @@ function GemCard({
               <List>{chains.map((item) => item)}</List>
             </Row>
             <Row title='Launchpad'>
-              <List>{launchpad.map((item) => item.name)}</List>
+              <List>{launchpad.join(", ")}</List>
             </Row>
             <Row title='Analyser'>
               <List>{note.analyser.map((item) => item)}</List>
