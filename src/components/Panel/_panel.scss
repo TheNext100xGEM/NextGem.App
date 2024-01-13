@@ -33,10 +33,15 @@
     opacity: 0;
   }
 
-  &:hover {
+  &:not([data-disabled]):hover {
     .corner-hover {
       opacity: 1;
     }
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

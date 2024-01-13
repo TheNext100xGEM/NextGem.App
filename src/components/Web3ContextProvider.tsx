@@ -21,12 +21,15 @@ async function connect(connector: Connector) {
 }
 
 const connectEagerly = async () => {
+  await connect(getConnection(ConnectionType.INJECTED).connector)
   await connect(getConnection(ConnectionType.NETWORK).connector)
+  await connect(getConnection(ConnectionType.COINBASE_WALLET).connector)
+  await connect(getConnection(ConnectionType.WALLET_CONNECT).connector)
 }
 
 export const Web3ContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
-    connectEagerly()
+    // connectEagerly()
   }, [])
 
   return (

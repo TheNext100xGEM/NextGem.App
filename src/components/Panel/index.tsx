@@ -49,6 +49,7 @@ function Panel() {
     icon: string
     desc: string
     connectionType: ConnectionType
+    disabled?: boolean
   }
 
   const listWallet: PropsWallet[] = [
@@ -68,7 +69,8 @@ function Panel() {
       name: "Binance Wallet",
       icon: "simple-icons:binance",
       desc: "Connect with Binance Chain Wallet",
-      connectionType: ConnectionType.INJECTED
+      connectionType: ConnectionType.INJECTED,
+      disabled: true
     },
     {
       name: "Coinbase Wallet",
@@ -79,7 +81,13 @@ function Panel() {
   ]
 
   const ModalConnect = () => {
-    const Wallet = ({ name, icon, desc, connectionType }: PropsWallet) => {
+    const Wallet = ({
+      name,
+      icon,
+      desc,
+      connectionType,
+      disabled
+    }: PropsWallet) => {
       const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
         volume: VOLUME_BUTTON_CLICK
       })
@@ -104,8 +112,9 @@ function Panel() {
       return (
         <div
           className='wallet'
-          onClick={handleConnect}
-          onMouseEnter={soundHover}
+          onClick={!disabled ? () => handleConnect() : undefined}
+          onMouseEnter={!disabled ? () => soundHover() : undefined}
+          data-disabled={disabled}
         >
           <Icon icon={icon} />
           <h6>{name}</h6>
