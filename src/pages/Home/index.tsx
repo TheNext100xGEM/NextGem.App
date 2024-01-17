@@ -70,15 +70,15 @@ function HomePage() {
   return (
     <>
       <Helmet>
-        <title>{SITE_NAME} — The Next Winning Blockchain Tokens with the power AI</title>
+        <title>{SITE_NAME} — AI-Powered Insights for Smart Crypto Choices.</title>
       </Helmet>
       <div className="home">
         <div className="hero">
           <div className="wrapper">
             <div className="content">
-              <h1>The Next Winning Blockchain Tokens<br /> with the power AI.</h1>
+              <h1>AI-Powered Insights for <br /> Smart Crypto Choices.</h1>
               <div className="intro">
-                <p>Stationibus servabantur agrariis, laevorsum flexo itinere Osdroenae subsederat extimas partes.</p>
+                <p>Leveraging the most powerful artificial intelligence, we track and analyze crypto projects, making it easy for you to spot the next big success, let's find together the next gems.</p>
               </div>
               <div className="btn-group">
                 <OpenAppButton />

@@ -52,23 +52,23 @@ function StakingPage() {
     {
       duration: 1,
       durationLabel: "month",
-      token: 10000,
-      price: 29.99
+      token: 15000,
+      price: 76
     },
     {
       duration: 6,
       durationLabel: "months",
-      token: 40000,
-      price: 159.99,
-      percent: 30,
+      token: 75000,
+      price: 380,
+      percent: 17,
       status: "info"
     },
     {
       duration: 1,
       durationLabel: "year",
-      token: 75000,
-      price: 209.99,
-      percent: 40,
+      token: 120000,
+      price: 610,
+      percent: 34,
       status: "custom"
     }
   ]
@@ -78,8 +78,8 @@ function StakingPage() {
   const labelAccess = premium ? "Unlocked" : "Locked"
 
   const Total = () => {
-    const total = formatter(487332196)
-    const holders = formatter(14587)
+    const total = formatter(0)
+    const holders = formatter(0)
 
     const TotalInput = () => {
       return (
@@ -87,7 +87,7 @@ function StakingPage() {
           <LogoToken />
           <div className="total-input-content">
             <strong>{total}</strong>
-            <small>758,985.52 $</small>
+            <small>0$</small>
           </div>
           <Corner reverse />
         </div>
@@ -143,9 +143,9 @@ function StakingPage() {
             <LogoToken />
           </div>
           <div className="offer-token">
-            {formatter(token)}
+            {formatter(token)} NextGEM
           </div>
-          <div className="sub">{price} $</div>
+          <div className="sub">~ {price} $</div>
         </div>
         <div className="hovered">
           <Corner color="primary" />
@@ -163,8 +163,8 @@ function StakingPage() {
       return (
         <>
           <div className="p">
-            <p>Select a number of tokens to burn to unlock access to our services.</p>
-          </div>
+          <p>Select the subscription period for Next Gem services. Please note that the required token amount may vary, and costs could increase accordingly.</p>
+         </div>
           <ul className="unlock-list">
             {offers.map((item, id) => 
               <li key={id} onClick={() => setOfferActive(id)} className={(id === offerActive) ? 'active' : ''}>
@@ -180,12 +180,12 @@ function StakingPage() {
               </li>
               <li className="sub">
                 <small>Total Price:</small>
-                <span>{info.price} $</span>
+                <span>~ {info.price} $</span>
               </li>
             </ul>
             <Corner />
           </div>
-          <Button status="success" icon="carbon:unlocked" onClick={handlePremium}>Unlock my access</Button>
+          <Button status="success" icon="carbon:unlocked" onClick={handlePremium}>Get premium access</Button>
         </>
       )
     }
@@ -257,23 +257,33 @@ function StakingPage() {
           </div>
         </div>
         <div id="bottom" className="staking-bottom">
-          <div className="staking-bottom-overflow">
-            <div className="wrapper">
-              <div className="staking-bottom-content">
-                <h3>Lorem ipsum dolor sit amet</h3>
-                <div className="intro">
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur expedita earum eum odio ab delectus, et commodi omnis, ut modi tempora dolore maxime suscipit sapiente perferendis.</p>
-                </div>
-                <div className="p">
-                  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique, aperiam! Ipsum, cupiditate quae dignissimos vero placeat exercitationem deserunt totam enim doloremque eaque officiis maxime! Iusto, sint optio. Enim, repellat perspiciatis?</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ab natus quisquam excepturi aspernatur odit recusandae tempore sed in illo dicta, rem nulla id est, incidunt voluptatum suscipit rerum molestias.</p>
-                </div>
-              </div>
-            </div>
-            <div className="staking-bottom-bg">
-              <Scene id="ANnAzezL-kW4IEPO" />
-            </div>
+        <div className="staking-bottom-overflow">
+      <div className="wrapper">
+        <div className="staking-bottom-content">
+          <h3>Understanding the NextGem Service and Premium Benefits</h3>
+          <div className="intro">
+            <p>The NextGem service incorporates a burn mechanism to reduce the total supply of NextGEM tokens, achieved by permanently removing a portion of tokens from circulation. This scarcity can potentially increase the value of remaining tokens. Our automated process ensures regular, consistent impact on the token's supply and value.</p>
           </div>
+          <div className="p">
+            <p>Subscribing to the Premium NextGem service offers significant advantages. You can choose from three subscription periods: 1 month, 6 months, or one year, with discounts applied based on duration. This is facilitated by burning a specific amount of $NextGem through a transaction on the Ethereum chain, recorded on our deployed smart contract.</p>
+            <p>Here are some key features of our Premium service:
+              <ul>
+                <li>Access to Next Gem AI for querying specific data from our database dataset.</li>
+                <li>Sentiment Analysis based on community member engagement and trustability scores.</li>
+                <li>Detailed project insights, including direct pros and cons assessed by various AIs, with summarized information accessible on the web application.</li>
+                <li>Capability to request specialized analysis of any project by providing its website link, utilizing our LLM AI system for real-time evaluation and rating.</li>
+                <li>Customizable alerts based on pre-set criteria in our application, enabling users to receive timely information about new launches that meet their conditions via socials, emails, etc.</li>
+                <li>Exclusive real-time news and analysis updates from our system, delivered directly without delay.</li>
+              </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="staking-bottom-bg">
+        <Scene id="ANnAzezL-kW4IEPO" />
+      </div>
+    </div>
+
         </div>
       </div>
     </>

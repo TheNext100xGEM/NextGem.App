@@ -162,7 +162,7 @@ function GemAiPage() {
           <LogoImg />
           <h4>Welcome to {CHAT_NAME}</h4>
           <div className="intro">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam explicabo est dolorem totam ipsam etotam ipsam expedita ipsa excepturi.</p>
+            <p>Our AI have the knowledge of GPT, Grok, Mistral, Gemini AI and also it's own thoughts: ask anything related to a project that exist on our platform such as their note and more details.</p>
           </div>
           {!access && <>
             <Alert status="warning">
@@ -176,7 +176,7 @@ function GemAiPage() {
 
     return (
       <ul className="ai-chat-content">
-        {(conversationActive && !newConversation) && 
+        {(conversation !== undefined) && 
           conversation.messages.map((message, id) => 
             <Message key={id} {...message} />
           )

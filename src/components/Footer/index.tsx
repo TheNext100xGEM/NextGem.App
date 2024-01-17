@@ -17,8 +17,9 @@ function Footer() {
 
   const navFooter: NavItem[] = [
     { component: <a href={BUY_URL} rel="noopener noreferrer" target="_blank">Buy {TOKEN_NAME}</a> },
-    { component: <Link to="/default">Privacy policy</Link> },
-    { component: <Link to="/default">CGU</Link> }
+    { component: <Link to="/default">CoinMarketCap</Link> },
+    { component: <Link to="#">Telegram</Link> },
+    { component: <Link to="#">Join presale</Link> },
   ]
 
   return (

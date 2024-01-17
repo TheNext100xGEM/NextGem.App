@@ -1,4 +1,4 @@
-export const SITE_NAME: string = "Next100xGemAI"
+export const SITE_NAME: string = "The Next 100x Gem"
 export const CHAT_NAME: string = "NextGem AI"
 export const TOKEN_NAME: string = "$NextGem"
 

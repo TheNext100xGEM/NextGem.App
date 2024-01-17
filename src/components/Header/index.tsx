@@ -44,9 +44,9 @@ const NavLink = ({ to, title }: PropsNavLink) => {
 }
 
 const navLanding: NavItem[] = [
-  { component: <NavLink to='/infos#solutions' title='Solutions' /> },
-  { component: <NavLink to='/infos#products' title='Products' /> },
-  { component: <NavLink to='/infos#contact' title='Contact' /> },
+  { component: <NavLink to='pitchdeck.pdf' title='PitchDeck' /> },
+  { component: <NavLink to='whitepaper.pdf' title='Whitepaper' /> },
+  { component: <NavLink to='mailto:info@thenextgem.ai' title='Contact' /> },
   { component: <BuyNextGemButton /> },
   { component: <OpenAppButton /> }
 ]
