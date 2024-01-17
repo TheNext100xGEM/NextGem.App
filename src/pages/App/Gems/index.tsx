@@ -14,14 +14,15 @@ import { NOTE_MAX, NOTE_MIN, SITE_NAME } from "@constants/index"
 import CryptoBlockChains from "@data/cryptoBlockChains"
 import CryptoMarketAreas from "@data/cryptoMarketArea"
 import { useGSAP } from "@gsap/react"
-import { useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import { getGemCollection } from "../../../queries/api"
 import { mapGem } from "@models/GemCard"
+import React from "react"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -164,39 +165,50 @@ const Filter = () => {
 }
 
 function GemsPage() {
-  const qGemCollection = useQuery({
+  const qGemCollection = useInfiniteQuery({
     queryKey: ["gemCollection"],
     queryFn: getGemCollection,
     select: (data) => {
-      return data
-        .map(mapGem)
-        .filter((gem) => gem.status !== 0)
-        .slice(0, 100)
-    }
+      return data.pages.map((page) => page.docs.map(mapGem))
+    },
+    getPreviousPageParam: (lastPage) => lastPage.prevPage,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1
   })
 
-  useGSAP(
-    () => {
-      gsap.set(".gem", {
-        opacity: 0,
-        y: 75
-      })
-      ScrollTrigger.batch(".gem", {
-        onEnter: (batch) => {
-          batch.forEach((card, index) =>
-            gsap.to(card, {
-              opacity: 1,
-              y: 0,
-              stagger: 0.25,
-              delay: index * 0.1
-            })
-          )
-        },
-        once: true
-      })
-    },
-    { dependencies: [qGemCollection.data] }
-  )
+  // useGSAP(
+  //   () => {
+  //     ScrollTrigger.batch(".gem", {
+  //       onEnter: (batch) => {
+  //         batch.forEach((card, index) =>
+  //           gsap.to(card, {
+  //             opacity: 1,
+  //             y: 0,
+  //             stagger: 0.25,
+  //             delay: index * 0.1
+  //           })
+  //         )
+  //       },
+  //       once: true
+  //     })
+  //   },
+  //   { dependencies: [qGemCollection.data] }
+  // )
+
+  const bottom = useRef(null)
+
+  useEffect(() => {
+    if (!bottom.current) {
+      return
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        qGemCollection.fetchNextPage()
+      }
+    })
+    observer.observe(bottom.current)
+  }, [])
 
   return (
     <>
@@ -211,21 +223,25 @@ function GemsPage() {
             <Loader />
           </div>
         )}
-        {qGemCollection.data && (
-          <>
-            {qGemCollection.data.length !== 0 && (
-              <>
-                <Grid>
-                  {qGemCollection.data.map((item, id) => (
-                    <Item key={id}>
-                      <GemCard {...item} />
-                    </Item>
-                  ))}
-                </Grid>
-              </>
-            )}
-          </>
+
+        <Grid>
+          {qGemCollection.data &&
+            qGemCollection.data.map((page, i) => (
+              <React.Fragment key={i}>
+                {page.map((item, id) => (
+                  <Item key={id}>
+                    <GemCard {...item} />
+                  </Item>
+                ))}
+              </React.Fragment>
+            ))}
+        </Grid>
+        {qGemCollection.isFetching && (
+          <div className='gems-loader'>
+            <Loader />
+          </div>
         )}
+        <div style={{ height: "1px" }} ref={bottom} />
       </div>
     </>
   )

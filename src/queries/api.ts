@@ -1,8 +1,13 @@
 import { ApiGem } from "@models/GemCard"
 import { APP_API_URL } from "../libs/constants"
+import { ApiCollection } from "@models/API"
 
-export const getGemCollection = async () =>
-  request<ApiGem[]>(`${APP_API_URL}/projects`, "gemCollection", "GET")
+export const getGemCollection = async ({ pageParam = 0 }) =>
+  request<ApiCollection<ApiGem>>(
+    `${APP_API_URL}/projects?limit=20&page=${pageParam}`,
+    "gemCollection",
+    "GET"
+  )
 
 // Functions
 async function request<T>(

@@ -91,20 +91,21 @@ function GemCard({
 
   const List = ({ children }: PropsList): ReactNode => {
     const childrenArray = Children.toArray(children)
-    const [visibleItems, setVisibleItems] = useState(3)
+    const [visibleItems, setVisibleItems] = useState(1)
     const ulRef = useRef<HTMLUListElement>(null)
 
-    useEffect(() => {
-      const handleResize = () => {
-        if (ulRef.current) {
-          const itemsPerRow = Math.floor(ulRef.current.offsetWidth / 100)
-          setVisibleItems(itemsPerRow)
-        }
-      }
-      window.addEventListener("resize", handleResize)
-      handleResize()
-      return () => window.removeEventListener("resize", handleResize)
-    }, [])
+    // useEffect(() => {
+    //   const handleResize = () => {
+    //     console.log("handleResize")
+    //     if (ulRef.current) {
+    //       const itemsPerRow = Math.floor(ulRef.current.offsetWidth / 100)
+    //       setVisibleItems(itemsPerRow)
+    //     }
+    //   }
+    //   window.addEventListener("resize", handleResize)
+    //   handleResize()
+    //   return () => window.removeEventListener("resize", handleResize)
+    // }, [])
 
     const renderListWithOverflow = () => {
       const visibleItemsList = childrenArray.slice(0, visibleItems)
@@ -156,7 +157,7 @@ function GemCard({
               <List>{chains.map((item) => item)}</List>
             </Row>
             <Row title='Launchpad'>
-              <List>{launchpad.join(", ")}</List>
+              <List>{launchpad}</List>
             </Row>
             <Row title='Analyser'>
               <List>{note.analyser.map((item) => item)}</List>

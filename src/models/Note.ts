@@ -1,8 +1,8 @@
 export type PropsNote = {
-  total: number
+  total: number | null
 }
 
 export interface NoteInfo {
-  total: number
+  total: number | null
   analyser: string[]
 }
