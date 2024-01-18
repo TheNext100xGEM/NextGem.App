@@ -73,36 +73,38 @@ function App() {
       element: Container,
       children: [
         {
-          path: '/',
+          path: "/",
           element: <HomePage />
         },
         {
-          path: '/gems',
+          path: "/infos",
+          element: <HomePage />
+        },
+        {
+          path: "/gems",
           element: <GemsPage />
         },
         {
-          path: '/staking',
+          path: "/staking",
           element: <StakingPage />
         },
         {
-          path: '/gem-ai',
+          path: "/gem-ai",
           element: <GemAiPage />
         },
         {
-          path: '/default',
+          path: "/default",
           element: <DefaultPage />
         },
         {
-          path: '*',
-          element: <HomePage />
+          path: "*",
+          element: <GemsPage />
         }
-      ],
+      ]
     }
   ])
 
-  return (
-    <RouterProvider router={router} />
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App

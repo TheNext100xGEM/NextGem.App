@@ -6,20 +6,23 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { useEffect } from "react"
 import { Helmet } from "react-helmet-async"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 function HomePage() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const websiteVisited = localStorage.getItem("websiteVisited")
 
-    if (websiteVisited) {
+    const isInfosPage = location.pathname === "/infos"
+
+    if (websiteVisited && !isInfosPage) {
       navigate("/gems")
-    } else {
+    } else if (!websiteVisited && !isInfosPage) {
       localStorage.setItem("websiteVisited", "true")
     }
-  }, [navigate])
+  }, [navigate, location.pathname])
 
   useGSAP(() => {
     const tl = gsap.timeline()
