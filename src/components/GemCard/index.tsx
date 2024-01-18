@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
 import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
-import { Children, ReactNode, useEffect, useRef, useState } from "react"
+import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 
 const MenuGemCard = ({ name }: { name: string }) => {
@@ -91,7 +91,7 @@ function GemCard({
 
   const List = ({ children }: PropsList): ReactNode => {
     const childrenArray = Children.toArray(children)
-    const [visibleItems, setVisibleItems] = useState(1)
+    const [visibleItems] = useState(1)
     const ulRef = useRef<HTMLUListElement>(null)
 
     // useEffect(() => {

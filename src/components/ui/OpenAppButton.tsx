@@ -4,7 +4,7 @@ import { SOUND_OPEN_APP } from "@constants/index"
 function OpenAppButton() {
   return (
     <Button
-      href='/'
+      href='/gems'
       icon='carbon:text-mining-applier'
       pathSoundClick={SOUND_OPEN_APP}
     >

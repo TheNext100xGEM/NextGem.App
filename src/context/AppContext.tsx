@@ -19,7 +19,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation()
 
   useEffect(() => {
-    const allowedPages = ["/", "/gem-ai", "/staking"]
+    const allowedPages = ["/gems", "/gem-ai", "/staking"]
     setIsInApp(allowedPages.includes(location.pathname))
   }, [location.pathname])
 
