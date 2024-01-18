@@ -217,11 +217,11 @@ function GemsPage() {
 
       <div className='gems'>
         <Filter />
-        {qGemCollection.isLoading && (
+        {/* {qGemCollection.isLoading && (
           <div className='gems-loader'>
             <Loader />
           </div>
-        )}
+        )} */}
 
         <Grid>
           {qGemCollection.data &&
