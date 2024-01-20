@@ -72,22 +72,17 @@ const FilterBySort = () => {
 }
 
 const FilterByCategories = () => {
-  const countTotalAreas = (): number =>
-    CryptoMarketAreas.reduce(
-      (total, category) => total + category.list.length,
-      0
-    )
-
   return (
-    <FilterDrop name='Categories' right={countTotalAreas()} className='listing'>
+    <FilterDrop
+      name='Categories'
+      right={CryptoMarketAreas.length}
+      className='listing'
+    >
       {CryptoMarketAreas.map((category, index) => (
         <ul key={index}>
-          <li className='categorie'>{category.categorie}</li>
-          {category.list.map((list, i) => (
-            <li key={i} className='item'>
-              <Checkbox label={list} name='categorie' />
-            </li>
-          ))}
+          <li key={index} className='item'>
+            <Checkbox label={category} name='categorie' />
+          </li>
         </ul>
       ))}
     </FilterDrop>
