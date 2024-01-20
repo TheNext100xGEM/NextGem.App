@@ -16,6 +16,7 @@ export interface Gem {
   chains: string[]
   launchpad: string
   status: number
+  tokenSymbol: string
 }
 
 export interface ApiGem {
@@ -120,6 +121,7 @@ export const mapGem = (data: ApiGem): Gem => {
     socials,
     chains: data.chains,
     launchpad: data.launchpad,
-    status: data.status
+    status: data.status,
+    tokenSymbol: data.tokenSymbol
   }
 }

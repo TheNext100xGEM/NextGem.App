@@ -2,6 +2,7 @@ import "./_gemCard.scss"
 import { NoteCard } from "@components/Note"
 import { SocialList } from "@components/Socials"
 import { Button, Corner, Menu } from "@components/ui"
+import { useGemContext } from "@context/GemContext"
 import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
 import { cleanHTMLTags } from "@utils/string"
@@ -9,7 +10,15 @@ import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 
-const MenuGemCard = ({ name }: { name: string }) => {
+const MenuGemCard = ({
+  name,
+  tokenSymbol
+}: {
+  name: string
+  tokenSymbol: string
+}) => {
+  const { setTokenSymbol } = useGemContext()
+
   const [saved, setSaved] = useState(false)
   const handleSave = () => {
     setSaved(!saved)
@@ -32,7 +41,11 @@ const MenuGemCard = ({ name }: { name: string }) => {
     <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
       Ask Gem AI
     </Button>,
-    <Button icon='carbon:search' color='tertiary'>
+    <Button
+      icon='carbon:search'
+      color='tertiary'
+      onClick={() => setTokenSymbol(tokenSymbol)}
+    >
       See details
     </Button>,
     <Button icon='carbon:share' color='tertiary'>
@@ -54,7 +67,8 @@ function GemCard({
   desc,
   socials,
   chains,
-  launchpad
+  launchpad,
+  tokenSymbol
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -132,7 +146,7 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} />
+          <MenuGemCard name={name} tokenSymbol={tokenSymbol} />
         </div>
         <div className='gem-title'>{name}</div>
         <a

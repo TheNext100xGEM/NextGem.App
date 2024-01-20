@@ -1,0 +1,52 @@
+.wallet {
+  --padding: var(--size-4);
+  padding: var(--padding);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  gap: calc(var(--padding) / 2);
+  cursor: pointer;
+
+  svg {
+    width: 3em;
+  }
+
+  h6 {
+    font-size: 1.1em;
+  }
+
+  p {
+    font-size: 0.9em;
+    line-height: 1.2;
+  }
+
+  .corner {
+    --corner-size: var(--size-3);
+    z-index: 1;
+  }
+
+  .corner-hover {
+    transition: opacity var(--transition-link);
+    opacity: 0;
+  }
+
+  &:not([data-disabled]):hover {
+    .corner-hover {
+      opacity: 1;
+    }
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.grid-wallet {
+  --grid-layout-gap: var(--size-3);
+  --grid-column-count: 2;
+  --grid-item-min-width: calc(200px + 30 * (100vw - 320px) / 1080);
+}
