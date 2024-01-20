@@ -1,26 +1,16 @@
-.wallet {
-  --padding: var(--size-4);
-  padding: var(--padding);
-  height: 100%;
+.PanelGem {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  text-align: center;
-  gap: calc(var(--padding) / 2);
-  cursor: pointer;
+  line-height: 1.4;
+  gap: var(--padding);
 
-  svg {
-    width: 3em;
-  }
-
-  h6 {
-    font-size: 1.1em;
-  }
-
-  p {
-    font-size: 0.9em;
-    line-height: 1.2;
+  &-block {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) / 2);
+    p {
+      white-space: break-spaces;
+    }
   }
 
   .corner {
@@ -38,15 +28,4 @@
       opacity: 1;
     }
   }
-
-  &[data-disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-.grid-wallet {
-  --grid-layout-gap: var(--size-3);
-  --grid-column-count: 2;
-  --grid-item-min-width: calc(200px + 30 * (100vw - 320px) / 1080);
 }

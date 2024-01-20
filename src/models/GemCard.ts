@@ -17,6 +17,12 @@ export interface Gem {
   launchpad: string
   status: number
   tokenSymbol: string
+  gemini_raw?: string
+  gemini_score?: string
+  mistral_raw?: string
+  mistral_score?: string
+  gpt_raw?: string
+  gpt_score?: string
 }
 
 export interface ApiGem {
@@ -122,6 +128,12 @@ export const mapGem = (data: ApiGem): Gem => {
     chains: data.chains,
     launchpad: data.launchpad,
     status: data.status,
-    tokenSymbol: data.tokenSymbol
+    tokenSymbol: data.tokenSymbol,
+    gemini_raw: data.gemini_raw,
+    gemini_score: data.gemini_score,
+    mistral_raw: data.mistral_raw,
+    mistral_score: data.mistral_score,
+    gpt_raw: data.gpt_raw,
+    gpt_score: data.gpt_score
   }
 }

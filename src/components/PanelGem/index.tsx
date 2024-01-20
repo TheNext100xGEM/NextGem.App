@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { getGemSingle } from "../../queries/api"
 import { mapGem } from "@models/GemCard"
+import { NoteCard } from "@components/Note"
 
 function PanelGem() {
   const { tokenSymbol } = useGemContext()
@@ -38,8 +39,38 @@ function PanelGem() {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
       >
-        {tokenSymbol}
-        {JSON.stringify(qGemSingle.data)}
+        {qGemSingle.data && (
+          <div className='PanelGem'>
+            <p className='PanelGem-desc'>{qGemSingle.data.desc}</p>
+            {qGemSingle.data.gemini_score && qGemSingle.data.gemini_raw && (
+              <div className='PanelGem-block'>
+                <h3>Gemini</h3>
+                <p>{qGemSingle.data.gemini_raw}</p>
+                <NoteCard
+                  total={parseInt(qGemSingle.data.gemini_score)}
+                ></NoteCard>
+              </div>
+            )}
+            {qGemSingle.data.mistral_score && qGemSingle.data.mistral_raw && (
+              <div className='PanelGem-block'>
+                <h3>Mistral</h3>
+                <p>{qGemSingle.data.mistral_raw}</p>
+                <NoteCard
+                  total={parseInt(qGemSingle.data.mistral_score)}
+                ></NoteCard>
+              </div>
+            )}
+            {qGemSingle.data.gpt_score && qGemSingle.data.gpt_raw && (
+              <div className='PanelGem-block'>
+                <h3>GPT</h3>
+                <p>{qGemSingle.data.gpt_raw}</p>
+                <NoteCard
+                  total={parseInt(qGemSingle.data.gpt_score)}
+                ></NoteCard>
+              </div>
+            )}
+          </div>
+        )}
       </Modal>
     )
   }
