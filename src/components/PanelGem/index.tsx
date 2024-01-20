@@ -9,11 +9,14 @@ import { mapGem } from "@models/GemCard"
 import { NoteCard } from "@components/Note"
 
 function PanelGem() {
-  const { tokenSymbol } = useGemContext()
+  const { tokenSymbol, setTokenSymbol } = useGemContext()
   const [modalIsOpen, setIsOpen] = useState(false)
 
   const openModal = () => setIsOpen(true)
-  const closeModal = () => setIsOpen(false)
+  const closeModal = () => {
+    setIsOpen(false)
+    setTokenSymbol("")
+  }
 
   useEffect(() => {
     if (tokenSymbol) {
