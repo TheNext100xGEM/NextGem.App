@@ -4,10 +4,10 @@ export const TOKEN_NAME: string = "$NextGem"
 
 export const BUY_URL: string = "https://uniswap.org/"
 
-export const TWITTER: string = "https://x.com/"
-export const TELEGRAM: string = "https://web.telegram.org/"
-export const DISCORD: string = "https://discord.com/"
-export const GITHUB: string = "https://github.com/"
+export const TWITTER: string = "https://twitter.com/NextGemAI"
+export const TELEGRAM: string = "https://t.me/NextGemAI_Group"
+export const DISCORD: string = "https://discord.gg/rpPTF3DRFk"
+export const GITHUB: string = "https://github.com/TheNext100xGEM"
 export const COINMARKETCAP: string = "https://coinmarketcap.com/"
 
 export const TOAST_DURATION: number = 4000

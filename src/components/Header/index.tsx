@@ -25,6 +25,7 @@ import useSound from "use-sound"
 type PropsNavLink = {
   to: string
   title: string
+  isExternal?: boolean;
 }
 
 const NavLink = ({ to, title, isExternal }: PropsNavLink) => {
