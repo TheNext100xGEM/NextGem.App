@@ -1,6 +1,7 @@
 import { ApiGem } from "@models/GemCard"
 import { APP_API_URL } from "../libs/constants"
 import { ApiCollection } from "@models/API"
+import { ApiChat } from "@models/Chat"
 
 export const getGemCollection = async ({ pageParam = 0 }) =>
   request<ApiCollection<ApiGem>>(
@@ -8,6 +9,14 @@ export const getGemCollection = async ({ pageParam = 0 }) =>
     "gemCollection",
     "GET"
   )
+
+export const getGemSingle = async ({ id }: { id: string }) =>
+  request<ApiGem>(`${APP_API_URL}/projects/${id}`, "gemSingle", "GET")
+
+export const postChatMessage = async (body: {
+  message: string
+  chatId: string
+}) => request<ApiChat>(`${APP_API_URL}/chat`, "chatMessage", "POST", body)
 
 // Functions
 async function request<T>(

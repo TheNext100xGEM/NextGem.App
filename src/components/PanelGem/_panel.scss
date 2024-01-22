@@ -1,0 +1,31 @@
+.PanelGem {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+  gap: var(--padding);
+
+  &-block {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) / 2);
+    p {
+      white-space: break-spaces;
+    }
+  }
+
+  .corner {
+    --corner-size: var(--size-3);
+    z-index: 1;
+  }
+
+  .corner-hover {
+    transition: opacity var(--transition-link);
+    opacity: 0;
+  }
+
+  &:not([data-disabled]):hover {
+    .corner-hover {
+      opacity: 1;
+    }
+  }
+}

@@ -22,6 +22,8 @@ import { Helmet } from "react-helmet-async"
 import { getGemCollection } from "../../../queries/api"
 import { mapGem } from "@models/GemCard"
 import React from "react"
+import PanelGem from "@components/PanelGem"
+import { GemContextProvider } from "@context/GemContext"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -72,22 +74,17 @@ const FilterBySort = () => {
 }
 
 const FilterByCategories = () => {
-  const countTotalAreas = (): number =>
-    CryptoMarketAreas.reduce(
-      (total, category) => total + category.list.length,
-      0
-    )
-
   return (
-    <FilterDrop name='Categories' right={countTotalAreas()} className='listing'>
+    <FilterDrop
+      name='Categories'
+      right={CryptoMarketAreas.length}
+      className='listing'
+    >
       {CryptoMarketAreas.map((category, index) => (
         <ul key={index}>
-          <li className='categorie'>{category.categorie}</li>
-          {category.list.map((list, i) => (
-            <li key={i} className='item'>
-              <Checkbox label={list} name='categorie' />
-            </li>
-          ))}
+          <li key={index} className='item'>
+            <Checkbox label={category} name='categorie' />
+          </li>
         </ul>
       ))}
     </FilterDrop>
@@ -211,37 +208,36 @@ function GemsPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{SITE_NAME} — Gems</title>
-      </Helmet>
+      <GemContextProvider>
+        <Helmet>
+          <title>{SITE_NAME} — Gems</title>
+        </Helmet>
 
-      <div className='gems'>
-        <Filter />
-        {/* {qGemCollection.isLoading && (
-          <div className='gems-loader'>
-            <Loader />
-          </div>
-        )} */}
+        <div className='gems'>
+          <Filter />
 
-        <Grid>
-          {qGemCollection.data &&
-            qGemCollection.data.map((page, i) => (
-              <React.Fragment key={i}>
-                {page.map((item, id) => (
-                  <Item key={id}>
-                    <GemCard {...item} />
-                  </Item>
-                ))}
-              </React.Fragment>
-            ))}
-        </Grid>
-        {qGemCollection.isFetching && (
-          <div className='gems-loader'>
-            <Loader />
-          </div>
-        )}
-        <div style={{ height: "1px" }} ref={bottom} />
-      </div>
+          <Grid>
+            {qGemCollection.data &&
+              qGemCollection.data.map((page, i) => (
+                <React.Fragment key={i}>
+                  {page.map((item, id) => (
+                    <Item key={id}>
+                      <GemCard {...item} />
+                    </Item>
+                  ))}
+                </React.Fragment>
+              ))}
+          </Grid>
+          {qGemCollection.isFetching && (
+            <div className='gems-loader'>
+              <Loader />
+            </div>
+          )}
+          <div style={{ height: "1px" }} ref={bottom} />
+        </div>
+
+        <PanelGem />
+      </GemContextProvider>
     </>
   )
 }

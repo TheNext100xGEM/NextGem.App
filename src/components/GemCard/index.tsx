@@ -1,7 +1,7 @@
 import "./_gemCard.scss"
 import { NoteCard } from "@components/Note"
-import { SocialList } from "@components/Socials"
 import { Button, Corner, Menu } from "@components/ui"
+import { useGemContext } from "@context/GemContext"
 import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
 import { cleanHTMLTags } from "@utils/string"
@@ -9,7 +9,9 @@ import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 
-const MenuGemCard = ({ name }: { name: string }) => {
+const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
+  const { setId } = useGemContext()
+
   const [saved, setSaved] = useState(false)
   const handleSave = () => {
     setSaved(!saved)
@@ -32,7 +34,7 @@ const MenuGemCard = ({ name }: { name: string }) => {
     <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
       Ask Gem AI
     </Button>,
-    <Button icon='carbon:search' color='tertiary'>
+    <Button icon='carbon:search' color='tertiary' onClick={() => setId(id)}>
       See details
     </Button>,
     <Button icon='carbon:share' color='tertiary'>
@@ -47,14 +49,15 @@ const MenuGemCard = ({ name }: { name: string }) => {
 }
 
 function GemCard({
+  id,
   name,
   category,
-  note,
   href,
-  desc,
-  socials,
+  description,
   chains,
-  launchpad
+  launchpad,
+  llmList,
+  weightedScore
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -132,7 +135,7 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} />
+          <MenuGemCard name={name} id={id} />
         </div>
         <div className='gem-title'>{name}</div>
         <a
@@ -144,15 +147,15 @@ function GemCard({
           {urlTransform} <Icon icon='carbon:link' />
         </a>
         <div className='gem-desc'>
-          <p>{cleanHTMLTags(desc)}</p>
+          <p>{cleanHTMLTags(description)}</p>
         </div>
       </Section>
       <Section>
         <table>
           <tbody>
-            <Row title='Socials'>
+            {/* <Row title='Socials'>
               <SocialList items={socials} />
-            </Row>
+            </Row> */}
             <Row title='Chains'>
               <List>{chains.map((item) => item)}</List>
             </Row>
@@ -160,13 +163,13 @@ function GemCard({
               <List>{launchpad}</List>
             </Row>
             <Row title='Analyser'>
-              <List>{note.analyser.map((item) => item)}</List>
+              <List>{llmList.map((item) => item)}</List>
             </Row>
           </tbody>
         </table>
       </Section>
       <div className='gem-bottom'>
-        <NoteCard total={note.total} />
+        <NoteCard total={weightedScore ?? null} />
       </div>
       <Corner />
     </div>
