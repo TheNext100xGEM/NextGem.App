@@ -1,6 +1,3 @@
-import { NoteInfo } from "./Note"
-import { PropsSocialLink } from "./Socials"
-
 export interface Launchpad {
   name: string
   href: string

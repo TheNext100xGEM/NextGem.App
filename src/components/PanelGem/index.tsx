@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { getGemSingle } from "../../queries/api"
 import { mapGem } from "@models/GemCard"
-import { NoteCard } from "@components/Note"
 
 function PanelGem() {
   const { id, setId } = useGemContext()

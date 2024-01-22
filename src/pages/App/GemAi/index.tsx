@@ -38,7 +38,7 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
-  const { chatId, setStreamId, currentResponse, responseInProgress } =
+  const { chatId, setStreamId } =
     useChatContext()
 
   const [access] = useState(true)
