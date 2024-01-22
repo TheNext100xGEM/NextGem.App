@@ -1,20 +1,17 @@
 import React, { createContext, useContext, useState, ReactNode } from "react"
 
 interface GemContextProps {
-  tokenSymbol: string
-  setTokenSymbol: React.Dispatch<React.SetStateAction<string>>
+  id: string
+  setId: React.Dispatch<React.SetStateAction<string>>
 }
 
 const GemContext = createContext<GemContextProps | undefined>(undefined)
 
 export const GemContextProvider = ({ children }: { children: ReactNode }) => {
-  const [tokenSymbol, setTokenSymbol] =
-    useState<GemContextProps["tokenSymbol"]>("")
+  const [id, setId] = useState<GemContextProps["id"]>("")
 
   return (
-    <GemContext.Provider value={{ tokenSymbol, setTokenSymbol }}>
-      {children}
-    </GemContext.Provider>
+    <GemContext.Provider value={{ id, setId }}>{children}</GemContext.Provider>
   )
 }
 

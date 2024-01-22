@@ -9,30 +9,30 @@ import { mapGem } from "@models/GemCard"
 import { NoteCard } from "@components/Note"
 
 function PanelGem() {
-  const { tokenSymbol, setTokenSymbol } = useGemContext()
+  const { id, setId } = useGemContext()
   const [modalIsOpen, setIsOpen] = useState(false)
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => {
     setIsOpen(false)
-    setTokenSymbol("")
+    setId("")
   }
 
   useEffect(() => {
-    if (tokenSymbol) {
+    if (id) {
       openModal()
     } else {
       closeModal()
     }
-  }, [tokenSymbol])
+  }, [id])
 
   const qGemSingle = useQuery({
-    queryKey: ["gemSingle", tokenSymbol],
-    queryFn: () => getGemSingle({ tokenSymbol }),
+    queryKey: ["gemSingle", id],
+    queryFn: () => getGemSingle({ id }),
     select: (data) => {
       return mapGem(data)
     },
-    enabled: tokenSymbol !== ""
+    enabled: id !== ""
   })
 
   const PanelGemDetail = () => {
@@ -44,8 +44,8 @@ function PanelGem() {
       >
         {qGemSingle.data && (
           <div className='PanelGem'>
-            <p className='PanelGem-desc'>{qGemSingle.data.desc}</p>
-            {qGemSingle.data.gemini_score && qGemSingle.data.gemini_raw && (
+            <p className='PanelGem-desc'>{qGemSingle.data.description}</p>
+            {/* {qGemSingle.data.gemini_score && qGemSingle.data.gemini_raw && (
               <div className='PanelGem-block'>
                 <h3>Gemini</h3>
                 <p>{qGemSingle.data.gemini_raw}</p>
@@ -71,7 +71,7 @@ function PanelGem() {
                   total={parseInt(qGemSingle.data.gpt_score)}
                 ></NoteCard>
               </div>
-            )}
+            )} */}
           </div>
         )}
       </Modal>

@@ -10,8 +10,8 @@ export const getGemCollection = async ({ pageParam = 0 }) =>
     "GET"
   )
 
-export const getGemSingle = async ({ tokenSymbol }: { tokenSymbol: string }) =>
-  request<ApiGem>(`${APP_API_URL}/projects/${tokenSymbol}`, "gemSingle", "GET")
+export const getGemSingle = async ({ id }: { id: string }) =>
+  request<ApiGem>(`${APP_API_URL}/projects/${id}`, "gemSingle", "GET")
 
 export const postChatMessage = async (body: {
   message: string
