@@ -276,11 +276,11 @@ function GemAiPage() {
             <div className='ai-chat'>
               <Conversation />
 
-              <div style={{ padding: "40px" }}>
+              {/* <div style={{ padding: "40px" }}>
                 responseInProgress : {JSON.stringify(responseInProgress)}
                 <br />
                 currentResponse : {currentResponse}
-              </div>
+              </div> */}
               <FormAi />
             </div>
           </div>
