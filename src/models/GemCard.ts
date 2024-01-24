@@ -14,6 +14,7 @@ export interface Gem {
   tokenSymbol: string
   llmList: string[]
   weightedScore?: number
+  status?: number
 }
 
 export interface ApiGem {
@@ -27,6 +28,7 @@ export interface ApiGem {
   tokenSymbol: string
   llmList: string[]
   weightedScore: number | "none"
+  status?: number
 }
 
 export const mapGem = (data: ApiGem): Gem => {
@@ -64,6 +66,7 @@ export const mapGem = (data: ApiGem): Gem => {
     tokenSymbol: data.tokenSymbol,
     llmList: data.llmList,
     weightedScore:
-      typeof data.weightedScore === "number" ? data.weightedScore : undefined
+      typeof data.weightedScore === "number" ? data.weightedScore : undefined,
+    status: data.status
   }
 }

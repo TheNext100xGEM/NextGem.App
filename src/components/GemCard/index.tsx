@@ -57,7 +57,8 @@ function GemCard({
   chains,
   launchpad,
   llmList,
-  weightedScore
+  weightedScore,
+  status
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -131,7 +132,7 @@ function GemCard({
   }
 
   return (
-    <div className='gem' data-colors='tertiary'>
+    <div className='gem' data-colors='tertiary' data-project-status={status}>
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
