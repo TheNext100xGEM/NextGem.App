@@ -163,7 +163,7 @@ const Filter = () => {
 function GemsPage() {
   const qGemCollection = useInfiniteQuery({
     queryKey: ["gemCollection"],
-    queryFn: getGemCollection,
+    queryFn: () => getGemCollection({}),
     select: (data) => {
       return data.pages.map((page) => page.docs.map(mapGem))
     },
