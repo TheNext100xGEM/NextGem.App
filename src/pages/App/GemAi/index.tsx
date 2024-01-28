@@ -14,7 +14,7 @@ import {
 import { conversations } from "@data/TEST_conversations"
 import { Behavior } from "@enums/Behavior"
 import { Icon } from "@iconify/react"
-import { PropsConversation, PropsMessage } from "@models/Ai"
+import { PropsConversation } from "@models/Ai"
 import { useMutation } from "@tanstack/react-query"
 import { formatReadableDate } from "@utils/date"
 import classNames from "classnames"
