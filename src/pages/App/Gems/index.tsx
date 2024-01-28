@@ -316,6 +316,3 @@ function GemsPage() {
 }
 
 export default GemsPage
-function ref<T>(arg0: never[]) {
-  throw new Error("Function not implemented.")
-}
