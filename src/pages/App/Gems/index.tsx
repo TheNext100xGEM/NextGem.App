@@ -110,7 +110,7 @@ const FilterByCategories = () => {
               label={category.name}
               name='categories[]'
               value={category.id}
-              onChange={() => handleCheckboxChange(category.id.toString())}
+              onChange={() => handleCheckboxChange(category.id)}
             />
           </li>
         </ul>
@@ -147,10 +147,10 @@ const FilterByChains = () => {
         {CryptoBlockChains.map((chain, index) => (
           <li key={index} className='item'>
             <Checkbox
-              label={chain}
+              label={chain.name}
               name='chains[]'
-              value={chain}
-              onChange={() => handleCheckboxChange(chain)}
+              value={chain.id}
+              onChange={() => handleCheckboxChange(chain.id)}
             />
           </li>
         ))}
