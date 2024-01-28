@@ -1,15 +1,15 @@
 const CryptoBlockChains: string[] = [
-  "Bitcoin (BTC)",
-  "Ethereum (ETH)",
-  "Binance Smart Chain (BSC)",
-  "Cardano (ADA)",
-  "Solana (SOL)",
-  "Polkadot (DOT)",
-  "Ripple (XRP)",
-  "Litecoin (LTC)",
-  "Chainlink (LINK)",
-  "Tezos (XTZ)",
-  "Filecoin (FIL)"
+  "Bitcoin",
+  "Ethereum",
+  "BNB",
+  "Cardano",
+  "Solana",
+  "Polkadot",
+  "Ripple",
+  "Litecoin",
+  "Chainlink",
+  "Tezos",
+  "Filecoin"
 ]
 
 export default CryptoBlockChains

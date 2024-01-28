@@ -1,13 +1,19 @@
-import './_input.scss'
-import { Corner } from '@components/ui'
-import { SOUND_BUTTON_CLICK, VOLUME_BUTTON_CLICK } from '@constants/index'
-import { Colors, InputTypes, InputValues, Status, CheckboxTypes } from '@enums/index'
-import { Icon } from '@iconify/react'
-import classNames from 'classnames'
-import { ReactNode, useId } from 'react'
+import "./_input.scss"
+import { Corner } from "@components/ui"
+import { SOUND_BUTTON_CLICK, VOLUME_BUTTON_CLICK } from "@constants/index"
+import {
+  Colors,
+  InputTypes,
+  InputValues,
+  Status,
+  CheckboxTypes
+} from "@enums/index"
+import { Icon } from "@iconify/react"
+import classNames from "classnames"
+import { ReactNode, useId } from "react"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-import useSound from 'use-sound'
+import useSound from "use-sound"
 
 type PropsDefault = {
   id?: string
@@ -26,28 +32,29 @@ export type PropsInput = PropsDefault & {
   placeholder?: string
   status?: Status
   colors?: Colors
+  onChange?: (value: string) => void
 }
 
-export function Input({ 
+export function Input({
   id,
-  icon, 
-  sprite, 
-  className, 
-  type = 'text', 
-  label, 
-  value, 
-  name, 
+  icon,
+  sprite,
+  className,
+  type = "text",
+  label,
+  value,
+  name,
   placeholder,
   required,
   disabled,
-  colors = 'tertiary',
-  status
+  colors = "tertiary",
+  status,
+  onChange
 }: PropsInput) {
-  
   const defaultId = useId()
   const inputId = id ? id : defaultId
 
-  const commonProps = { 
+  const commonProps = {
     id: inputId,
     name: name,
     type: type,
@@ -56,18 +63,26 @@ export function Input({
     disabled: disabled,
     spellCheck: false
   }
-  
+
   return (
     <>
       {label && <label htmlFor={inputId}>{label}</label>}
-      <div className={classNames('input', className)} data-colors={colors} data-status={status}>
-        {(icon || sprite) && 
-          <div className="input-icon">
+      <div
+        className={classNames("input", className)}
+        data-colors={colors}
+        data-status={status}
+      >
+        {(icon || sprite) && (
+          <div className='input-icon'>
             {icon && <Icon icon={icon} />}
             {sprite && sprite}
           </div>
-        }
-        <input value={value} {...commonProps} />
+        )}
+        <input
+          value={value}
+          onChange={(evt) => onChange?.(evt.target.value)}
+          {...commonProps}
+        />
         <Corner />
       </div>
     </>
@@ -81,11 +96,11 @@ export type PropsCheckbox = PropsDefault & {
   children?: ReactNode
 }
 
-export function Checkbox({ 
-  id, 
-  label, 
-  name, 
-  type = "checkbox", 
+export function Checkbox({
+  id,
+  label,
+  name,
+  type = "checkbox",
   required,
   className,
   value,
@@ -94,11 +109,10 @@ export function Checkbox({
   onChange,
   children
 }: PropsCheckbox) {
-
   const defaultId = useId()
   const checkId = id ? id : defaultId
 
-  const commonProps = { 
+  const commonProps = {
     id: checkId,
     name: name,
     type: type,
@@ -107,17 +121,24 @@ export function Checkbox({
     checked: checked
   }
 
-  const [soundClick] = useSound(SOUND_BUTTON_CLICK, { volume: VOLUME_BUTTON_CLICK })
+  const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
+    volume: VOLUME_BUTTON_CLICK
+  })
 
   return (
-    <div className={classNames('checkbox', className)} >
-      <input value={value} onChange={onChange} onClick={soundClick} {...commonProps} />
-      {(label || children) && 
+    <div className={classNames("checkbox", className)}>
+      <input
+        value={value}
+        onChange={onChange}
+        onClick={soundClick}
+        {...commonProps}
+      />
+      {(label || children) && (
         <label htmlFor={checkId} onClick={soundClick}>
           {label && label}
           {children && children}
         </label>
-        }
+      )}
     </div>
   )
 }

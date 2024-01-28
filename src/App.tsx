@@ -15,6 +15,7 @@ import {
   RouterProvider,
   ScrollRestoration
 } from "react-router-dom"
+import { GemContextProvider } from "@context/GemContext"
 
 function App() {
   useWindowHeight()
@@ -85,7 +86,11 @@ function App() {
         },
         {
           path: "/gems",
-          element: <GemsPage />
+          element: (
+            <GemContextProvider>
+              <GemsPage />
+            </GemContextProvider>
+          )
         },
         {
           path: "/staking",
@@ -101,7 +106,11 @@ function App() {
         },
         {
           path: "*",
-          element: <GemsPage />
+          element: (
+            <GemContextProvider>
+              <GemsPage />
+            </GemContextProvider>
+          )
         }
       ]
     }
