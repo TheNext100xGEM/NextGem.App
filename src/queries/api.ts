@@ -23,10 +23,10 @@ export const getGemCollection = async ({
   const queryString = Object.entries({
     pageParam,
     limit,
-    categories: categories ? `[${categories.join(",")}]` : undefined,
+    categories: categories && categories.length ? JSON.stringify(categories) : undefined,
     noteMin,
     noteMax,
-    chains: chains ? `[${chains.join(",")}]` : undefined,
+    chains: chains && chains.length ? JSON.stringify(chains) : undefined,
     searchQuery
   })
     .filter(([_, value]) => value !== undefined)

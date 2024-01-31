@@ -1,60 +1,24 @@
 const CryptoBlockChains = [
-  {
-    id: "1",
-    name: "Ethereum"
-  },
-  {
-    id: "56",
-    name: "BSC"
-  },
-  {
-    id: "40",
-    name: "Telos"
-  },
-  {
-    id: "137",
-    name: "Polygon"
-  },
-  {
-    id: "25",
-    name: "Cronos"
-  },
-  {
-    id: "2000",
-    name: "Dogechain"
-  },
-  {
-    id: "3797",
-    name: "Alvey"
-  },
-  {
-    id: "42161",
-    name: "Arbitrum"
-  },
-  {
-    id: "1116",
-    name: "Core"
-  },
-  {
-    id: "369",
-    name: "PulseChain"
-  },
-  {
-    id: "8453",
-    name: "Base"
-  },
-  {
-    id: "204",
-    name: "opBNB"
-  },
-  {
-    id: "109",
-    name: "Shibarium"
-  },
-  {
-    id: "10201",
-    name: "MaxxChain"
-  }
+  { name: 'Bitcoin', id: 'bitcoin' },
+  { name: 'Ethereum', id: 'ethereum' },
+  { name: 'BSC', id: 'bsc' },
+  { name: 'Cardano', id: 'cardano' },
+  { name: 'Solana', id: 'solana' },
+  { name: 'Polkadot', id: 'polkadot' },
+  { name: 'Ripple', id: 'ripple' },
+  { name: 'Litecoin', id: 'litecoin' },
+  { name: 'Chainlink', id: 'chainlink' },
+  { name: 'Tezos', id: 'tezos' },
+  { name: 'Filecoin', id: 'filecoin' },
+  { name: 'Telos', id: 'telos' },
+  { name: 'Cronos', id: 'cronos' },
+  { name: 'Dogechain', id: 'dogechain' },
+  { name: 'Arbitrum', id: 'arbitrum' },
+  { name: 'Core', id: 'core' },
+  { name: 'PulseChain', id: 'pulsechain' },
+  { name: 'opBNB', id: 'opbnb' },
+  { name: 'Shibarium', id: 'shibarium' },
+  { name: 'MaxxChain', id: 'maxxchain' }
 ]
 
 export default CryptoBlockChains

@@ -74,28 +74,22 @@ const FilterBySort = () => {
 }
 
 const FilterByCategories = () => {
-  const { setCategories } = useGemContext()
-
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const { categories, setCategories } = useGemContext()
 
   const handleCheckboxChange = (category: string) => {
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories((prevSelectedCategories) =>
-        prevSelectedCategories.filter(
+    if (categories.includes(category)) {
+      setCategories((prevCategories) =>
+        prevCategories?.filter(
           (prevCategory) => prevCategory !== category
         )
       )
     } else {
-      setSelectedCategories((prevSelectedCategories) => [
-        ...prevSelectedCategories,
+      setCategories((prevCategories) => [
+        ...prevCategories,
         category
       ])
     }
   }
-
-  useEffect(() => {
-    setCategories(selectedCategories.length ? selectedCategories : undefined)
-  }, [selectedCategories])
 
   return (
     <FilterDrop
@@ -110,7 +104,8 @@ const FilterByCategories = () => {
               label={category.name}
               name='categories[]'
               value={category.id}
-              onChange={() => handleCheckboxChange(category.id)}
+              onChange={() => handleCheckboxChange(category.id.toString())}
+              checked={categories?.includes(category.id.toString())}
             />
           </li>
         </ul>
@@ -120,23 +115,19 @@ const FilterByCategories = () => {
 }
 
 const FilterByChains = () => {
-  const { setChains } = useGemContext()
+  const { chains, setChains } = useGemContext()
 
-  const [selectedChains, setSelectedChains] = useState<string[]>([])
 
   const handleCheckboxChange = (chain: string) => {
-    if (selectedChains.includes(chain)) {
-      setSelectedChains((prevSelectedChains) =>
-        prevSelectedChains.filter((prevChain) => prevChain !== chain)
+    if (chains.includes(chain)) {
+      setChains((prevChains) =>
+      prevChains.filter((prevChain) => prevChain !== chain)
       )
     } else {
-      setSelectedChains((prevSelectedChains) => [...prevSelectedChains, chain])
+      setChains((prevChains) => [...prevChains, chain])
     }
   }
 
-  useEffect(() => {
-    setChains(selectedChains.length ? selectedChains : undefined)
-  }, [selectedChains])
   return (
     <FilterDrop
       name='Chains'
@@ -151,6 +142,7 @@ const FilterByChains = () => {
               name='chains[]'
               value={chain.id}
               onChange={() => handleCheckboxChange(chain.id)}
+              checked={chains.includes(chain.id)}
             />
           </li>
         ))}
@@ -165,8 +157,10 @@ const FilterAiNote = () => {
   return (
     <FilterDrop name='Ai Note' right={`${noteMin}-${noteMax}`}>
       <Range
-        min={NOTE_MIN}
-        max={NOTE_MAX}
+        min={noteMin}
+        max={noteMax}
+        minBound={NOTE_MIN}
+        maxBound={NOTE_MAX}
         onChange={({ min, max }) => {
           setNoteMin(min)
           setNoteMax(max)
@@ -305,6 +299,11 @@ function GemsPage() {
         {qGemCollection.isFetching && (
           <div className='gems-loader'>
             <Loader />
+          </div>
+        )}
+        {qGemCollection.isFetched && qGemCollection.data && qGemCollection.data[0].length === 0 && (
+          <div className='gems-empty'>
+            No gems available with current filters.
           </div>
         )}
         <div style={{ height: "1px" }} ref={bottom} />
