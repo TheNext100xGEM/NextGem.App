@@ -147,4 +147,16 @@
   &-bottom {
     padding: var(--size-3);
   }
+
+  &[data-project-status="1"] {
+    .gem-section-light:before {
+      --stroke-color: #03ff0047;
+    }
+  }
+
+  &[data-project-status="2"] {
+    .gem-section-light:before {
+      --stroke-color: #f2ff0047;
+    }
+  }
 }

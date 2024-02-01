@@ -2,13 +2,15 @@ import './_range.scss'
 import { FC, useCallback, useEffect, useState, useRef, ChangeEvent } from 'react'
 
 interface PropsRange {
+  minBound: number
+  maxBound: number
   min: number
   max: number
   step?: number
   onChange: (values: { min: number; max: number }) => void
 }
 
-const Range: FC<PropsRange> = ({ min, max, step = 1, onChange }) => {
+const Range: FC<PropsRange> = ({ minBound, maxBound, min, max, step = 1, onChange }) => {
   const [minVal, setMinVal] = useState(min)
   const [maxVal, setMaxVal] = useState(max)
   const minValRef = useRef(min)
@@ -16,19 +18,19 @@ const Range: FC<PropsRange> = ({ min, max, step = 1, onChange }) => {
   const slider = useRef<HTMLDivElement>(null)
 
   const getPercent = useCallback(
-    (value: number) => Math.round(((value - min) / (max - min)) * 100),
-    [min, max]
+    (value: number) => Math.round(((value - minBound) / (maxBound - minBound)) * 100),
+    [minBound, maxBound]
   )
 
   useEffect(() => {
     const minPercent = getPercent(minVal)
-    const maxPercent = getPercent(maxValRef.current)
+    const maxPercent = getPercent(maxVal)
 
     if (slider.current) {
       slider.current.style.left = `${minPercent}%`
       slider.current.style.width = `${maxPercent - minPercent}%`
     }
-  }, [minVal, getPercent])
+  }, [minVal, maxVal, getPercent])
 
   useEffect(() => {
     const minPercent = getPercent(minValRef.current)
@@ -54,8 +56,8 @@ const Range: FC<PropsRange> = ({ min, max, step = 1, onChange }) => {
           <div ref={slider} className="range-slider" />
           <input
             type="range"
-            min={min}
-            max={max}
+            min={minBound}
+            max={maxBound}
             step={step}
             value={minVal}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -68,8 +70,8 @@ const Range: FC<PropsRange> = ({ min, max, step = 1, onChange }) => {
           />
           <input
             type="range"
-            min={min}
-            max={max}
+            min={minBound}
+            max={maxBound}
             step={step}
             value={maxVal}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {

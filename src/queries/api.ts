@@ -3,12 +3,40 @@ import { APP_API_URL } from "../libs/constants"
 import { ApiCollection } from "@models/API"
 import { ApiChat } from "@models/Chat"
 
-export const getGemCollection = async ({ pageParam = 0 }) =>
-  request<ApiCollection<ApiGem>>(
-    `${APP_API_URL}/projects?limit=20&page=${pageParam}`,
-    "gemCollection",
-    "GET"
-  )
+export const getGemCollection = async ({
+  page = 0,
+  limit = 20,
+  categories,
+  noteMin,
+  noteMax,
+  chains,
+  searchQuery
+}: {
+  page?: number
+  limit?: number
+  categories?: string[]
+  noteMin?: number
+  noteMax?: number
+  chains?: string[]
+  searchQuery?: string
+}) => {
+  const queryString = Object.entries({
+    page,
+    limit,
+    categories: categories && categories.length ? JSON.stringify(categories) : undefined,
+    noteMin,
+    noteMax,
+    chains: chains && chains.length ? JSON.stringify(chains) : undefined,
+    searchQuery
+  })
+    .filter(([_, value]) => value !== undefined)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&")
+
+  const url = `${APP_API_URL}/projects?${queryString}`
+
+  return request<ApiCollection<ApiGem>>(url, "gemCollection", "GET")
+}
 
 export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGem>(`${APP_API_URL}/projects/${id}`, "gemSingle", "GET")

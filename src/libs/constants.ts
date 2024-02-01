@@ -44,5 +44,5 @@ export const CHAIN_INFO: { [key: string]: ChainInfo } = {
 
 // URLs
 export const METAMASK_URL = "https://metamask.io/"
-export const APP_API_URL = "https://api.thenextgem.ai/api/v1"
-export const CHAT_API_URL = "http://34.165.22.141:4200"
+export const APP_API_URL = import.meta.env.VITE_APP_API_URL
+export const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL

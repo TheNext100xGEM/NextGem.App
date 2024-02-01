@@ -23,7 +23,7 @@ import { getGemCollection } from "../../../queries/api"
 import { mapGem } from "@models/GemCard"
 import React from "react"
 import PanelGem from "@components/PanelGem"
-import { GemContextProvider } from "@context/GemContext"
+import { useGemContext } from "@context/GemContext"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -49,7 +49,7 @@ const FilterDrop = ({ name, right, children, className }: PropsFilterDrop) => {
   )
 }
 const FilterBySort = () => {
-  const options: string[] = ["AI Note", "Favorites", "Tokens", "Categories"]
+  const options: string[] = ["AI Note", "Tokens", "Categories"]
   const [selectedLabel, setSelectedLabel] = useState(options[0])
 
   const handleCheckboxChange = (label: string) => setSelectedLabel(label)
@@ -74,6 +74,23 @@ const FilterBySort = () => {
 }
 
 const FilterByCategories = () => {
+  const { categories, setCategories } = useGemContext()
+
+  const handleCheckboxChange = (category: string) => {
+    if (categories.includes(category)) {
+      setCategories((prevCategories) =>
+        prevCategories?.filter(
+          (prevCategory) => prevCategory !== category
+        )
+      )
+    } else {
+      setCategories((prevCategories) => [
+        ...prevCategories,
+        category
+      ])
+    }
+  }
+
   return (
     <FilterDrop
       name='Categories'
@@ -83,7 +100,13 @@ const FilterByCategories = () => {
       {CryptoMarketAreas.map((category, index) => (
         <ul key={index}>
           <li key={index} className='item'>
-            <Checkbox label={category} name='categorie' />
+            <Checkbox
+              label={category.name}
+              name='categories[]'
+              value={category.id}
+              onChange={() => handleCheckboxChange(category.id.toString())}
+              checked={categories?.includes(category.id.toString())}
+            />
           </li>
         </ul>
       ))}
@@ -92,14 +115,35 @@ const FilterByCategories = () => {
 }
 
 const FilterByChains = () => {
-  const countTotalChains = CryptoBlockChains.length
+  const { chains, setChains } = useGemContext()
+
+
+  const handleCheckboxChange = (chain: string) => {
+    if (chains.includes(chain)) {
+      setChains((prevChains) =>
+      prevChains.filter((prevChain) => prevChain !== chain)
+      )
+    } else {
+      setChains((prevChains) => [...prevChains, chain])
+    }
+  }
 
   return (
-    <FilterDrop name='Chains' right={countTotalChains} className='listing'>
+    <FilterDrop
+      name='Chains'
+      right={CryptoBlockChains.length}
+      className='listing'
+    >
       <ul>
         {CryptoBlockChains.map((chain, index) => (
           <li key={index} className='item'>
-            <Checkbox label={chain} name='chain' />
+            <Checkbox
+              label={chain.name}
+              name='chains[]'
+              value={chain.id}
+              onChange={() => handleCheckboxChange(chain.id)}
+              checked={chains.includes(chain.id)}
+            />
           </li>
         ))}
       </ul>
@@ -108,20 +152,34 @@ const FilterByChains = () => {
 }
 
 const FilterAiNote = () => {
-  const [minShow, setMinShow] = useState(NOTE_MIN)
-  const [maxShow, setMaxShow] = useState(NOTE_MAX)
+  const { noteMin, setNoteMin, noteMax, setNoteMax } = useGemContext()
 
   return (
-    <FilterDrop name='Ai Note' right={`${minShow}-${maxShow}`}>
+    <FilterDrop name='Ai Note' right={`${noteMin}-${noteMax}`}>
       <Range
-        min={NOTE_MIN}
-        max={NOTE_MAX}
+        min={noteMin}
+        max={noteMax}
+        minBound={NOTE_MIN}
+        maxBound={NOTE_MAX}
         onChange={({ min, max }) => {
-          setMinShow(min)
-          setMaxShow(max)
+          setNoteMin(min)
+          setNoteMax(max)
         }}
       />
     </FilterDrop>
+  )
+}
+
+const FilterSearchQuery = () => {
+  const { setSearchQuery } = useGemContext()
+
+  return (
+    <Input
+      icon='carbon:search'
+      type='search'
+      placeholder='Research a project or token...'
+      onChange={setSearchQuery}
+    />
   )
 }
 
@@ -130,11 +188,7 @@ const Filter = () => {
 
   return (
     <div className={classNames("filter", open && "open")}>
-      <Input
-        icon='carbon:search'
-        type='search'
-        placeholder='Research a project or token...'
-      />
+      <FilterSearchQuery />
       <div className='filter-actions'>
         <FilterBySort />
         <FilterAiNote />
@@ -161,9 +215,26 @@ const Filter = () => {
 }
 
 function GemsPage() {
+  const { noteMin, noteMax, categories, chains, searchQuery } = useGemContext()
+
   const qGemCollection = useInfiniteQuery({
-    queryKey: ["gemCollection"],
-    queryFn: getGemCollection,
+    queryKey: [
+      "gemCollection",
+      noteMin,
+      noteMax,
+      categories,
+      chains,
+      searchQuery
+    ],
+    queryFn: ({pageParam}) =>
+      getGemCollection({
+        page: pageParam,
+        noteMin,
+        noteMax,
+        categories,
+        chains,
+        searchQuery
+      }),
     select: (data) => {
       return data.pages.map((page) => page.docs.map(mapGem))
     },
@@ -208,36 +279,38 @@ function GemsPage() {
 
   return (
     <>
-      <GemContextProvider>
-        <Helmet>
-          <title>{SITE_NAME} — Gems</title>
-        </Helmet>
+      <Helmet>
+        <title>{SITE_NAME} — Gems</title>
+      </Helmet>
 
-        <div className='gems'>
-          <Filter />
+      <div className='gems'>
+        <Filter />
+        <Grid>
+          {qGemCollection.data &&
+            qGemCollection.data.map((page, i) => (
+              <React.Fragment key={i}>
+                {page.map((item, id) => (
+                  <Item key={id}>
+                    <GemCard {...item} />
+                  </Item>
+                ))}
+              </React.Fragment>
+            ))}
+        </Grid>
+        {qGemCollection.isFetching && (
+          <div className='gems-loader'>
+            <Loader />
+          </div>
+        )}
+        {qGemCollection.isFetched && qGemCollection.data && qGemCollection.data[0].length === 0 && (
+          <div className='gems-empty'>
+            No gems available with current filters.
+          </div>
+        )}
+        <div style={{ height: "1px" }} ref={bottom} />
+      </div>
 
-          <Grid>
-            {qGemCollection.data &&
-              qGemCollection.data.map((page, i) => (
-                <React.Fragment key={i}>
-                  {page.map((item, id) => (
-                    <Item key={id}>
-                      <GemCard {...item} />
-                    </Item>
-                  ))}
-                </React.Fragment>
-              ))}
-          </Grid>
-          {qGemCollection.isFetching && (
-            <div className='gems-loader'>
-              <Loader />
-            </div>
-          )}
-          <div style={{ height: "1px" }} ref={bottom} />
-        </div>
-
-        <PanelGem />
-      </GemContextProvider>
+      <PanelGem />
     </>
   )
 }

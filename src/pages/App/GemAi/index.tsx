@@ -14,7 +14,7 @@ import {
 import { conversations } from "@data/TEST_conversations"
 import { Behavior } from "@enums/Behavior"
 import { Icon } from "@iconify/react"
-import { PropsConversation, PropsMessage } from "@models/Ai"
+import { PropsConversation } from "@models/Ai"
 import { useMutation } from "@tanstack/react-query"
 import { formatReadableDate } from "@utils/date"
 import classNames from "classnames"
@@ -26,6 +26,7 @@ import TextareaAutosize from "react-textarea-autosize"
 import useSound from "use-sound"
 import { postChatMessage } from "../../../queries/api"
 import { useChatContext } from "@context/ChatContext"
+import { ChatMessage } from "@models/Chat"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
@@ -38,14 +39,12 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
-  const { chatId, setStreamId } =
-    useChatContext()
+  const { chatId, setStreamId, currentChat, setCurrentChat } = useChatContext()
 
   const [access] = useState(true)
   const [asideResponsive, setAsideResponsive] = useState(false)
   const [newConversation, setNewConversation] = useState(true)
   const [conversationActive, setConversationActive] = useState(9)
-  const conversation = conversations[conversationActive]
 
   const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
     volume: VOLUME_BUTTON_CLICK
@@ -69,6 +68,22 @@ function GemAiPage() {
   const handlePostMessage = () => {
     if (message.current) {
       qChatMessage.mutate({ message: message.current.value, chatId })
+      setCurrentChat({
+        ...currentChat,
+        messages: [
+          ...currentChat.messages,
+          {
+            role: "user",
+            date: new Date().toString(),
+            content: message.current.value
+          },
+          {
+            role: "ai",
+            date: new Date().toString(),
+            content: ""
+          }
+        ]
+      })
     }
   }
 
@@ -185,7 +200,7 @@ function GemAiPage() {
     )
   }
 
-  const Message = ({ author, message, date }: PropsMessage) => {
+  const Message = ({ role, content, date }: ChatMessage) => {
     const dateFormat = formatReadableDate(date)
 
     const menuItems = [
@@ -195,20 +210,20 @@ function GemAiPage() {
     ]
 
     return (
-      <li className={classNames("message", author)}>
+      <li className={classNames("message", role)}>
         <div className='avatar'>
-          {author == "ai" ? <LogoImg /> : <Icon icon='carbon:user' />}
+          {role == "ai" ? <LogoImg /> : <Icon icon='carbon:user' />}
         </div>
         <div className='top'>
           <div className='author'>
-            <strong>{author === "user" ? "You" : CHAT_NAME}</strong>
+            <strong>{role === "user" ? "You" : CHAT_NAME}</strong>
             <time>{dateFormat}</time>
           </div>
           <div className='right'>
             <Menu items={menuItems} />
           </div>
         </div>
-        <div className='p'>{message}</div>
+        <div className='p'>{content}</div>
       </li>
     )
   }
@@ -247,11 +262,11 @@ function GemAiPage() {
 
     return (
       <ul className='ai-chat-content'>
-        {conversation !== undefined &&
-          conversation.messages.map((message, id) => (
+        {currentChat.messages.length &&
+          currentChat.messages.map((message, id) => (
             <Message key={id} {...message} />
           ))}
-        {newConversation && <NewConversation />}
+        {!currentChat.messages.length && <NewConversation />}
       </ul>
     )
   }

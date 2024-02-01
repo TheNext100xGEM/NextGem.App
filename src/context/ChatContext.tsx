@@ -8,6 +8,7 @@ import React, {
 } from "react"
 import { io } from "socket.io-client"
 import { CHAT_API_URL } from "../libs/constants"
+import { CurrentChat } from "@models/Chat"
 
 interface ChatContextProps {
   chatId: string
@@ -18,6 +19,8 @@ interface ChatContextProps {
   setCurrentResponse: React.Dispatch<React.SetStateAction<string>>
   responseInProgress: boolean
   setResponseInProgress: React.Dispatch<React.SetStateAction<boolean>>
+  currentChat: CurrentChat
+  setCurrentChat: React.Dispatch<React.SetStateAction<CurrentChat>>
 }
 
 const ChatContext = createContext<ChatContextProps | undefined>(undefined)
@@ -29,6 +32,12 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     useState<ChatContextProps["currentResponse"]>("")
   const [responseInProgress, setResponseInProgress] =
     useState<ChatContextProps["responseInProgress"]>(false)
+  const [currentChat, setCurrentChat] = useState<
+    ChatContextProps["currentChat"]
+  >({
+    title: "",
+    messages: []
+  })
 
   const socket = io(CHAT_API_URL, {
     autoConnect: false
@@ -48,6 +57,32 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
 
     const handleNewMessagePart = (messagePart: string) => {
       setResponseInProgress(true)
+
+      if (!currentChat.messages.length) {
+        setCurrentChat({
+          ...currentChat,
+          messages: [
+            {
+              role: "ai",
+              content: messagePart,
+              date: new Date().toString()
+            }
+          ]
+        })
+      } else {
+        const messages = currentChat.messages.map((m, i) => {
+          if (i === currentChat.messages.length - 1) {
+            m.content += messagePart
+          }
+          return m
+        })
+
+        setCurrentChat({
+          ...currentChat,
+          messages
+        })
+      }
+
       setCurrentResponse((prevResponse) => prevResponse + messagePart)
     }
 
@@ -69,7 +104,9 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         currentResponse,
         setCurrentResponse,
         responseInProgress,
-        setResponseInProgress
+        setResponseInProgress,
+        currentChat,
+        setCurrentChat
       }}
     >
       {children}
