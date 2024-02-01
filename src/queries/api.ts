@@ -4,7 +4,7 @@ import { ApiCollection } from "@models/API"
 import { ApiChat } from "@models/Chat"
 
 export const getGemCollection = async ({
-  pageParam = 0,
+  page = 0,
   limit = 20,
   categories,
   noteMin,
@@ -12,7 +12,7 @@ export const getGemCollection = async ({
   chains,
   searchQuery
 }: {
-  pageParam?: number
+  page?: number
   limit?: number
   categories?: string[]
   noteMin?: number
@@ -21,7 +21,7 @@ export const getGemCollection = async ({
   searchQuery?: string
 }) => {
   const queryString = Object.entries({
-    pageParam,
+    page,
     limit,
     categories: categories && categories.length ? JSON.stringify(categories) : undefined,
     noteMin,

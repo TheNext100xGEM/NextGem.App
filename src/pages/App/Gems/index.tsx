@@ -226,8 +226,9 @@ function GemsPage() {
       chains,
       searchQuery
     ],
-    queryFn: () =>
+    queryFn: ({pageParam}) =>
       getGemCollection({
+        page: pageParam,
         noteMin,
         noteMax,
         categories,
