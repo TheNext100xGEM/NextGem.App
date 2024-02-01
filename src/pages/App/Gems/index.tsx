@@ -49,7 +49,7 @@ const FilterDrop = ({ name, right, children, className }: PropsFilterDrop) => {
   )
 }
 const FilterBySort = () => {
-  const options: string[] = ["AI Note", "Favorites", "Tokens", "Categories"]
+  const options: string[] = ["AI Note", "Tokens", "Categories"]
   const [selectedLabel, setSelectedLabel] = useState(options[0])
 
   const handleCheckboxChange = (label: string) => setSelectedLabel(label)
