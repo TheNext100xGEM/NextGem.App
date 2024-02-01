@@ -42,6 +42,7 @@
   label {
     transition: var(--transition-input);
     cursor: pointer;
+    white-space: nowrap;
 
     &:hover {
       color: var(--text-secondary);

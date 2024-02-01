@@ -10,7 +10,8 @@ export const getGemCollection = async ({
   noteMin,
   noteMax,
   chains,
-  searchQuery
+  searchQuery,
+  sortBy
 }: {
   page?: number
   limit?: number
@@ -19,6 +20,7 @@ export const getGemCollection = async ({
   noteMax?: number
   chains?: string[]
   searchQuery?: string
+  sortBy?: string[]
 }) => {
   const queryString = Object.entries({
     page,
@@ -27,7 +29,8 @@ export const getGemCollection = async ({
     noteMin,
     noteMax,
     chains: chains && chains.length ? JSON.stringify(chains) : undefined,
-    searchQuery
+    searchQuery,
+    sortBy: sortBy && sortBy.length ? JSON.stringify(sortBy) : undefined
   })
     .filter(([_, value]) => value !== undefined)
     .map(([key, value]) => `${key}=${value}`)

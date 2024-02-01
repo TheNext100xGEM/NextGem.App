@@ -13,6 +13,8 @@ interface GemContextProps {
   setChains: React.Dispatch<React.SetStateAction<string[]>>
   searchQuery: string | undefined
   setSearchQuery: React.Dispatch<React.SetStateAction<string | undefined>>
+  sortBy: string[]
+  setSortBy: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const GemContext = createContext<GemContextProps | undefined>(undefined)
@@ -26,6 +28,7 @@ export const GemContextProvider = ({ children }: { children: ReactNode }) => {
   const [chains, setChains] = useState<GemContextProps["chains"]>([])
   const [searchQuery, setSearchQuery] =
     useState<GemContextProps["searchQuery"]>(undefined)
+    const [sortBy, setSortBy] = useState<GemContextProps["chains"]>([])
 
   return (
     <GemContext.Provider
@@ -41,7 +44,9 @@ export const GemContextProvider = ({ children }: { children: ReactNode }) => {
         chains,
         setChains,
         searchQuery,
-        setSearchQuery
+        setSearchQuery,
+        sortBy, 
+        setSortBy
       }}
     >
       {children}
