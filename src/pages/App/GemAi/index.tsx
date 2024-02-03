@@ -1,6 +1,6 @@
 import "./_gemAi.scss"
 import logo from "@assets/img/logo-next-gem.webp"
-import { Alert, Button, Corner, Menu } from "@components/ui"
+import { Alert, Button, Corner, Loader, Menu } from "@components/ui"
 import {
   CHAT_NAME,
   SITE_NAME,
@@ -223,7 +223,7 @@ function GemAiPage() {
             <Menu items={menuItems} />
           </div>
         </div>
-        <div className='p'>{content}</div>
+        <div className='p'>{content === '' ? <Loader/> : content}</div>
       </li>
     )
   }

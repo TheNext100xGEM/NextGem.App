@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react'
 
 function Loader() {
   return (
-    <Icon icon="svg-spinners:90-ring-with-bg" />
+    <Icon icon="eos-icons:three-dots-loading" />
   )
 }
 
