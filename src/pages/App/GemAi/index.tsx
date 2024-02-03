@@ -39,7 +39,7 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
-  const { chatId, setStreamId, currentChat, setCurrentChat } = useChatContext()
+  const { chatId, setChatId, setWssUrl, currentChat, setCurrentChat } = useChatContext()
 
   const [access] = useState(true)
   const [asideResponsive, setAsideResponsive] = useState(false)
@@ -61,9 +61,12 @@ function GemAiPage() {
 
   useEffect(() => {
     if (qChatMessage.data) {
-      setStreamId(qChatMessage.data.streamId)
+      setWssUrl(qChatMessage.data.wssUrl)
+      if (qChatMessage.data.chatId) {
+        setChatId(qChatMessage.data.chatId)
+      }
     }
-  }, [qChatMessage.data, setStreamId])
+  }, [qChatMessage.data, setWssUrl])
 
   const handlePostMessage = () => {
     if (message.current) {

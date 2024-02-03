@@ -37,7 +37,10 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     const getToken = async () => {
       const token = await Web3Token.sign(
         (msg: string) => provider.getSigner().signMessage(msg),
-        "1d"
+        {
+          domain: 'thenextgem.ai',
+          expires_in: '1 day'
+        }
       )
       Cookies.set("web3TokenAuth", token, { expires: 1 })
     }

@@ -1,5 +1,6 @@
 export type ApiChat = {
-  streamId: string
+  wssUrl: string
+  chatId?: string
 }
 
 export type ChatMessage = {

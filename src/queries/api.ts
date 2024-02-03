@@ -48,7 +48,7 @@ export const getGemSingle = async ({ id }: { id: string }) =>
 
 export const postChatMessage = async (body: {
   message: string
-  chatId: string
+  chatId?: string
 }) => request<ApiChat>(`${APP_API_URL}/chat`, "chatMessage", "POST", body)
 
 // Functions
@@ -67,7 +67,7 @@ async function request<T>(
 
   // Ajouter le token à l'en-tête Authorization s'il existe
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers['Authorization'] = token;
   }
 
   const response: Response = await fetch(url, {

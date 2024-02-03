@@ -42,7 +42,6 @@
     "react-router-dom": "^6.21.0",
     "react-textarea-autosize": "^8.5.3",
     "sass": "^1.69.5",
-    "socket.io-client": "^4.7.4",
     "sort-by": "^0.0.2",
     "use-sound": "^4.0.1",
     "web3-token": "^1.0.6"
