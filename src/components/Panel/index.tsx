@@ -9,7 +9,7 @@ import {
 import { Icon } from "@iconify/react"
 import { truncateWalletAddress } from "@utils/wallet"
 import { useWeb3React } from "@web3-react/core"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
@@ -18,7 +18,6 @@ import {
   getConnection,
   tryActivateConnector
 } from "../../libs/connections"
-import Web3Token from 'web3-token';
 
 function Panel() {
   const { account } = useWeb3React()
@@ -152,7 +151,4 @@ function Panel() {
 }
 
 export default Panel
-function ref(arg0: boolean) {
-  throw new Error("Function not implemented.")
-}
 

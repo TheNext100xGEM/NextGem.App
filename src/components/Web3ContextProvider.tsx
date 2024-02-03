@@ -1,4 +1,4 @@
-import { Web3ReactProvider, useWeb3React } from "@web3-react/core"
+import { Web3ReactProvider } from "@web3-react/core"
 import { ReactNode, useEffect } from "react"
 
 import {

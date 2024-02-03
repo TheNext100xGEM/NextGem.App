@@ -1,5 +1,6 @@
 import "./_gemCard.scss"
 import { NoteCard } from "@components/Note"
+import { SocialList } from "@components/Socials"
 import { Button, Corner, Menu } from "@components/ui"
 import { useGemContext } from "@context/GemContext"
 import { Icon } from "@iconify/react"
@@ -58,7 +59,8 @@ function GemCard({
   launchpad,
   llmList,
   weightedScore,
-  status
+  status,
+  socials
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -154,9 +156,9 @@ function GemCard({
       <Section>
         <table>
           <tbody>
-            {/* <Row title='Socials'>
+             <Row title='Socials'>
               <SocialList items={socials} />
-            </Row> */}
+            </Row>
             <Row title='Chains'>
               <List>{chains.map((item) => item)}</List>
             </Row>
