@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { ApiGem } from "@models/GemCard"
 import { APP_API_URL } from "../libs/constants"
 import { ApiCollection } from "@models/API"
@@ -56,19 +57,29 @@ async function request<T>(
   method: "GET" | "POST" = "GET",
   body?: any
 ) {
-  const response: Response = await fetch(url, {
-    method: method,
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: method === "POST" ? JSON.stringify(body) : undefined
-  })
+  // Récupérer le token depuis les cookies
+  const token = Cookies.get('web3TokenAuth');
 
-  if (!response.ok) {
-    throw new Error(`${name} call failed.`)
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  // Ajouter le token à l'en-tête Authorization s'il existe
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const data: T = await response.json()
+  const response: Response = await fetch(url, {
+    method: method,
+    headers: headers,
+    body: method === "POST" ? JSON.stringify(body) : undefined,
+  });
 
-  return data
+  if (!response.ok) {
+    throw new Error(`${name} call failed.`);
+  }
+
+  const data: T = await response.json();
+
+  return data;
 }

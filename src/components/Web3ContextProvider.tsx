@@ -1,4 +1,4 @@
-import { Web3ReactProvider } from "@web3-react/core"
+import { Web3ReactProvider, useWeb3React } from "@web3-react/core"
 import { ReactNode, useEffect } from "react"
 
 import {
@@ -15,6 +15,8 @@ async function connect(connector: Connector) {
     } else {
       await connector.activate()
     }
+
+
   } catch (error) {
     console.debug(`web3-react eager connection error: ${error}`)
   }
