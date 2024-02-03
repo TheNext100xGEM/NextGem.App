@@ -23,7 +23,7 @@ import { getGemCollection } from "../../../queries/api"
 import { mapGem } from "@models/GemCard"
 import React from "react"
 import PanelGem from "@components/PanelGem"
-import { useGemContext } from "@context/GemContext"
+import { useGemsContext } from "@context/GemsContext"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -62,7 +62,7 @@ const FilterBySort = () => {
     label: "Tokens"
   }
 ]
-  const { sortBy, setSortBy } = useGemContext();
+  const { sortBy, setSortBy } = useGemsContext();
 
   const handleCheckboxChange = (label: string) => {
     setSortBy(label !== '' ? [label] : []);
@@ -88,7 +88,7 @@ const FilterBySort = () => {
 }
 
 const FilterByCategories = () => {
-  const { categories, setCategories } = useGemContext()
+  const { categories, setCategories } = useGemsContext()
 
   const handleCheckboxChange = (category: string) => {
     if (categories.includes(category)) {
@@ -129,7 +129,7 @@ const FilterByCategories = () => {
 }
 
 const FilterByChains = () => {
-  const { chains, setChains } = useGemContext()
+  const { chains, setChains } = useGemsContext()
 
 
   const handleCheckboxChange = (chain: string) => {
@@ -166,7 +166,7 @@ const FilterByChains = () => {
 }
 
 const FilterAiNote = () => {
-  const { noteMin, setNoteMin, noteMax, setNoteMax } = useGemContext()
+  const { noteMin, setNoteMin, noteMax, setNoteMax } = useGemsContext()
 
   return (
     <FilterDrop name='Ai Note' right={`${noteMin}-${noteMax}`}>
@@ -185,7 +185,7 @@ const FilterAiNote = () => {
 }
 
 const FilterSearchQuery = () => {
-  const { setSearchQuery } = useGemContext()
+  const { setSearchQuery } = useGemsContext()
 
   return (
     <Input
@@ -229,7 +229,7 @@ const Filter = () => {
 }
 
 function GemsPage() {
-  const { noteMin, noteMax, categories, chains, searchQuery, sortBy } = useGemContext()
+  const { noteMin, noteMax, categories, chains, searchQuery, sortBy } = useGemsContext()
 
   const qGemCollection = useInfiniteQuery({
     queryKey: [
@@ -290,7 +290,10 @@ function GemsPage() {
         qGemCollection.fetchNextPage()
       }
     })
+    
     observer.observe(bottom.current)
+
+    return () => observer.disconnect();
   }, [])
 
   return (

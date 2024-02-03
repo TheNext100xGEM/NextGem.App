@@ -2,16 +2,15 @@ import "./_gemCard.scss"
 import { NoteCard } from "@components/Note"
 import { SocialList } from "@components/Socials"
 import { Button, Corner, Menu } from "@components/ui"
-import { useGemContext } from "@context/GemContext"
 import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
 import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
+import { NavLink } from "react-router-dom"
 
 const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
-  const { setId } = useGemContext()
 
   const [saved, setSaved] = useState(false)
   const handleSave = () => {
@@ -35,9 +34,11 @@ const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
     <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
       Ask Gem AI
     </Button>,
-    <Button icon='carbon:search' color='tertiary' onClick={() => setId(id)}>
-      See details
-    </Button>,
+    <NavLink to={`/gems/${id}`}>
+      <Button icon='carbon:search' color='tertiary'>
+        See details
+      </Button>
+    </NavLink>,
     <Button icon='carbon:share' color='tertiary'>
       Share
     </Button>,
@@ -156,7 +157,7 @@ function GemCard({
       <Section>
         <table>
           <tbody>
-             <Row title='Socials'>
+            <Row title='Socials'>
               <SocialList items={socials} />
             </Row>
             <Row title='Chains'>

@@ -3,8 +3,10 @@ import Header from "@components/Header"
 import { TOAST_DURATION } from "@constants/index"
 import { AppContextProvider } from "@context/AppContext"
 import { ChatContextProvider } from "@context/ChatContext"
+import { GemsContextProvider } from "@context/GemsContext"
 import useWindowHeight from "@hooks/useWindowHeight"
 import { GemsPage, StakingPage, GemAiPage } from "@pages/App"
+import GemDetailPage from "@pages/App/GemDetail"
 import { HomePage, DefaultPage } from "@pages/index"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
@@ -15,7 +17,6 @@ import {
   RouterProvider,
   ScrollRestoration
 } from "react-router-dom"
-import { GemContextProvider } from "@context/GemContext"
 
 function App() {
   useWindowHeight()
@@ -87,10 +88,14 @@ function App() {
         {
           path: "/gems",
           element: (
-            <GemContextProvider>
+            <GemsContextProvider>
               <GemsPage />
-            </GemContextProvider>
-          )
+            </GemsContextProvider>
+          ),
+        },
+        {
+          path: '/gems/:token',
+          element: <GemDetailPage/>
         },
         {
           path: "/staking",
@@ -107,9 +112,9 @@ function App() {
         {
           path: "*",
           element: (
-            <GemContextProvider>
+            <GemsContextProvider>
               <GemsPage />
-            </GemContextProvider>
+            </GemsContextProvider>
           )
         }
       ]

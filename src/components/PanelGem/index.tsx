@@ -1,14 +1,14 @@
 import "./_panel.scss"
 import { Modal } from "@components/ui"
-import { useGemContext } from "@context/GemContext"
+import { useGemsContext } from "@context/GemsContext"
 import { useQuery } from "@tanstack/react-query"
 
 import { useEffect, useState } from "react"
 import { getGemSingle } from "../../queries/api"
-import { mapGem } from "@models/GemCard"
+import { mapGemFull } from "@models/GemFull"
 
 function PanelGem() {
-  const { id, setId } = useGemContext()
+  const { id, setId } = useGemsContext()
   const [modalIsOpen, setIsOpen] = useState(false)
 
   const openModal = () => setIsOpen(true)
@@ -29,7 +29,7 @@ function PanelGem() {
     queryKey: ["gemSingle", id],
     queryFn: () => getGemSingle({ id }),
     select: (data) => {
-      return mapGem(data)
+      return mapGemFull(data)
     },
     enabled: id !== ""
   })

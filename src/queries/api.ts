@@ -3,6 +3,7 @@ import { ApiGem } from "@models/GemCard"
 import { APP_API_URL } from "../libs/constants"
 import { ApiCollection } from "@models/API"
 import { ApiChat } from "@models/Chat"
+import { ApiGemFull } from '@models/GemFull';
 
 export const getGemCollection = async ({
   page = 0,

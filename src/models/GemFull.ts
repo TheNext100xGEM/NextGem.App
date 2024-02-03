@@ -18,6 +18,12 @@ export interface GemFull {
   note: NoteInfo
   status?: number
   socials: PropsSocialLink[]
+  gemini_raw?: string;
+  gemini_score?: string;
+  gpt_raw?: string;
+  gpt_score?: string;
+  mistral_raw?: string;
+  mistral_score?: string;
 }
 
 export interface ApiGemFull {
@@ -55,12 +61,12 @@ export interface ApiGemFull {
   launchpads: string[];
   analyzed: boolean;
   blockchain_area: string;
-  gemini_raw: string;
-  gemini_score: string;
-  gpt_raw: string;
-  gpt_score: string;
-  mistral_raw: string;
-  mistral_score: string;
+  gemini_raw?: string;
+  gemini_score?: string;
+  gpt_raw?: string;
+  gpt_score?: string;
+  mistral_raw?: string;
+  mistral_score?: string;
   category: string;
   updatedAt: string;
   area_project: string;
@@ -114,6 +120,12 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     launchpad: data.launchpad,
     tokenSymbol: data.tokenSymbol,
     note,
+    gemini_score: data.gemini_score,
+    gemini_raw: data.gemini_raw,
+    gpt_score: data.gpt_score,
+    gpt_raw: data.gpt_raw,
+    mistral_score: data.mistral_score,
+    mistral_raw: data.mistral_raw,
     status: data.status,
     socials
   }
