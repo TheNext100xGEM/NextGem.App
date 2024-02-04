@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { formatReadableDate } from "@utils/date"
 import classNames from "classnames"
 import { useEffect, useRef, useState } from "react"
+import Cookies from "js-cookie"
 import { Helmet } from "react-helmet-async"
 import TextareaAutosize from "react-textarea-autosize"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -34,6 +35,7 @@ import {
   mapChatMessage,
   mapUserChat
 } from "@models/Chat"
+import { useAppContext } from "@context/AppContext"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
@@ -46,16 +48,16 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
+  const { web3Token} = useAppContext()
   const {
     chatId,
     setChatId,
     setWssUrl,
     currentChat,
-    setCurrentChat,
-    responseInProgress
+    setCurrentChat
   } = useChatContext()
 
-  const [access] = useState(true)
+  const [access, setAccess] = useState(false)
   const [asideResponsive, setAsideResponsive] = useState(false)
   const [newConversation, setNewConversation] = useState(true)
   const [conversationInProgress, setConversationInProgress] = useState(true)
@@ -70,6 +72,8 @@ function GemAiPage() {
   const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
     volume: VOLUME_BUTTON_HOVER
   })
+
+  useEffect(() => setAccess(!!web3Token), [web3Token])
 
   useEffect(() => ScrollToBottom("instant"), [])
   useEffect(() => ScrollToBottom("instant"), [currentChat.messages])
@@ -122,7 +126,7 @@ function GemAiPage() {
   }
 
   const qUserChats = useQuery({
-    queryKey: ["userChats", newConversation],
+    queryKey: ["userChats", newConversation, web3Token],
     queryFn: getUserChats,
     select: (data) => data.data.map(mapUserChat)
   })
@@ -336,7 +340,6 @@ function GemAiPage() {
 
     return (
       <ul className='ai-chat-content'>
-        responseInProgress : {JSON.stringify(responseInProgress)}
         {!newConversation &&
           currentChat.messages.length !== 0 &&
           currentChat.messages.map((message, id) => (

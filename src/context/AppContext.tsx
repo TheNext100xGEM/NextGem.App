@@ -14,21 +14,30 @@ import Web3Token from "web3-token"
 interface AppContextProps {
   isInApp: boolean
   setIsInApp: React.Dispatch<React.SetStateAction<boolean>>
+  web3Token: string | null
+  setWeb3Token: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined)
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [isInApp, setIsInApp] = useState<boolean>(false)
+  const [isInApp, setIsInApp] = useState<AppContextProps["isInApp"]>(false)
+  const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
   const location = useLocation()
 
-  const { provider } = useWeb3React()
+  const { provider, account } = useWeb3React()
   const hasCalledGetToken = useRef(false)
 
   useEffect(() => {
-    const web3Token = Cookies.get('web3TokenAuth');
+    const storedToken = Cookies.get("web3TokenAuth")
 
-    if (!provider || hasCalledGetToken.current || web3Token) {
+    if (storedToken) {
+      setWeb3Token(storedToken)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!provider || hasCalledGetToken.current || web3Token || !account) {
       return
     }
 
@@ -38,24 +47,29 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       const token = await Web3Token.sign(
         (msg: string) => provider.getSigner().signMessage(msg),
         {
-          domain: 'thenextgem.ai',
-          expires_in: '1 day'
+          domain: "thenextgem.ai",
+          expires_in: "1 day"
         }
       )
       Cookies.set("web3TokenAuth", token, { expires: 1 })
+      setWeb3Token(token)
     }
 
     getToken().catch(console.error)
-  }, [provider])
+  }, [provider, account, web3Token])
 
   useEffect(() => {
     const allowedPages = ["/gems", "/gem-ai", "/staking"]
-    const isInApp = allowedPages.some(page => location.pathname.startsWith(page));
-    setIsInApp(isInApp);
+    const isInApp = allowedPages.some((page) =>
+      location.pathname.startsWith(page)
+    )
+    setIsInApp(isInApp)
   }, [location.pathname])
 
   return (
-    <AppContext.Provider value={{ isInApp, setIsInApp }}>
+    <AppContext.Provider
+      value={{ isInApp, setIsInApp, web3Token, setWeb3Token }}
+    >
       {children}
     </AppContext.Provider>
   )
