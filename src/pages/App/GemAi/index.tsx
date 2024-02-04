@@ -11,31 +11,31 @@ import {
   VOLUME_BUTTON_CLICK,
   VOLUME_BUTTON_HOVER
 } from "@constants/index"
+import { useAppContext } from "@context/AppContext"
+import { useChatContext } from "@context/ChatContext"
 import { Behavior } from "@enums/Behavior"
 import { Icon } from "@iconify/react"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { formatReadableDate } from "@utils/date"
-import classNames from "classnames"
-import { useEffect, useRef, useState } from "react"
-import Cookies from "js-cookie"
-import { Helmet } from "react-helmet-async"
-import TextareaAutosize from "react-textarea-autosize"
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import useSound from "use-sound"
-import {
-  getUserChatId,
-  getUserChats,
-  postChatMessage
-} from "../../../queries/api"
-import { useChatContext } from "@context/ChatContext"
 import {
   ChatMessage,
   UserChat,
   mapChatMessage,
   mapUserChat
 } from "@models/Chat"
-import { useAppContext } from "@context/AppContext"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { formatReadableDate } from "@utils/date"
+import classNames from "classnames"
+import { useEffect, useRef, useState } from "react"
+import { Helmet } from "react-helmet-async"
+import TextareaAutosize from "react-textarea-autosize"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import useSound from "use-sound"
+
+import {
+  getUserChatId,
+  getUserChats,
+  postChatMessage
+} from "../../../queries/api"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
