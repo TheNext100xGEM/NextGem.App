@@ -150,6 +150,15 @@ $responsiveList: $l;
         }
       }
     }
+
+    &-loader {
+      text-align: center;
+      padding: var(--padding);
+
+      svg {
+        width: 40px;
+      }
+    }
   }
 
   &-module {
@@ -370,6 +379,10 @@ $responsiveList: $l;
 
         .p {
           font-size: 1.1em;
+
+          svg {
+            width: 40px;
+          }
         }
 
         &:hover {

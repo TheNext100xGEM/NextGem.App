@@ -11,11 +11,9 @@ import {
   VOLUME_BUTTON_CLICK,
   VOLUME_BUTTON_HOVER
 } from "@constants/index"
-import { conversations } from "@data/TEST_conversations"
 import { Behavior } from "@enums/Behavior"
 import { Icon } from "@iconify/react"
-import { PropsConversation } from "@models/Ai"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { formatReadableDate } from "@utils/date"
 import classNames from "classnames"
 import { useEffect, useRef, useState } from "react"
@@ -24,9 +22,18 @@ import TextareaAutosize from "react-textarea-autosize"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
-import { postChatMessage } from "../../../queries/api"
+import {
+  getUserChatId,
+  getUserChats,
+  postChatMessage
+} from "../../../queries/api"
 import { useChatContext } from "@context/ChatContext"
-import { ChatMessage } from "@models/Chat"
+import {
+  ChatMessage,
+  UserChat,
+  mapChatMessage,
+  mapUserChat
+} from "@models/Chat"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
@@ -39,12 +46,23 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
-  const { chatId, setChatId, setWssUrl, currentChat, setCurrentChat } = useChatContext()
+  const {
+    chatId,
+    setChatId,
+    setWssUrl,
+    currentChat,
+    setCurrentChat,
+    responseInProgress
+  } = useChatContext()
 
   const [access] = useState(true)
   const [asideResponsive, setAsideResponsive] = useState(false)
   const [newConversation, setNewConversation] = useState(true)
-  const [conversationActive, setConversationActive] = useState(9)
+  const [conversationInProgress, setConversationInProgress] = useState(true)
+  const [conversationActive, setConversationActive] = useState<{
+    id: string
+    name: string
+  } | null>(null)
 
   const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
     volume: VOLUME_BUTTON_CLICK
@@ -54,23 +72,36 @@ function GemAiPage() {
   })
 
   useEffect(() => ScrollToBottom("instant"), [])
+  useEffect(() => ScrollToBottom("instant"), [currentChat.messages])
 
-  const qChatMessage = useMutation({
+  const qPostChatMessage = useMutation({
     mutationFn: postChatMessage
   })
 
   useEffect(() => {
-    if (qChatMessage.data) {
-      setWssUrl(qChatMessage.data.wssUrl)
-      if (qChatMessage.data.chatId) {
-        setChatId(qChatMessage.data.chatId)
+    if (qPostChatMessage.data) {
+      setWssUrl(qPostChatMessage.data.wssUrl)
+      if (qPostChatMessage.data.chatId) {
+        setConversationActive({
+          name: qPostChatMessage.data.assignedName,
+          id: qPostChatMessage.data.chatId
+        })
+        setNewConversation(false)
       }
     }
-  }, [qChatMessage.data, setWssUrl])
+  }, [qPostChatMessage.data, setWssUrl])
+
+  useEffect(() => {
+    if (conversationActive) {
+      setChatId(conversationActive.id)
+    }
+  }, [conversationActive, setChatId])
 
   const handlePostMessage = () => {
     if (message.current) {
-      qChatMessage.mutate({ message: message.current.value, chatId })
+      setConversationInProgress(true)
+
+      qPostChatMessage.mutate({ message: message.current.value, chatId })
       setCurrentChat({
         ...currentChat,
         messages: [
@@ -81,7 +112,7 @@ function GemAiPage() {
             content: message.current.value
           },
           {
-            role: "ai",
+            role: "assistant",
             date: new Date().toString(),
             content: ""
           }
@@ -89,6 +120,28 @@ function GemAiPage() {
       })
     }
   }
+
+  const qUserChats = useQuery({
+    queryKey: ["userChats", newConversation],
+    queryFn: getUserChats,
+    select: (data) => data.data.map(mapUserChat)
+  })
+
+  const qUserChatId = useQuery({
+    queryKey: ["chatMessage", conversationActive],
+    queryFn: () => getUserChatId({ id: conversationActive!.id }),
+    select: (data) => data.map(mapChatMessage),
+    enabled: !!conversationActive && !conversationInProgress
+  })
+
+  useEffect(() => {
+    if (qUserChatId.data) {
+      setCurrentChat({
+        title: conversationActive?.name ?? "Unnamed chat",
+        messages: qUserChatId.data
+      })
+    }
+  }, [qUserChatId.data])
 
   const FormAi = () => {
     const min = 1
@@ -136,27 +189,31 @@ function GemAiPage() {
   }
 
   const List = () => {
-    const Item = ({ title }: PropsConversation) => {
-      const actions = [
-        <Button icon='carbon:pen' color='tertiary'>
-          Rename
-        </Button>,
-        <Button icon='carbon:trash-can' color='secondary' status='danger'>
-          Delete Chat
-        </Button>
-      ]
+    const Item = ({ name }: UserChat) => {
+      // const actions = [
+      //   <Button icon='carbon:pen' color='tertiary'>
+      //     Rename
+      //   </Button>,
+      //   <Button icon='carbon:trash-can' color='secondary' status='danger'>
+      //     Delete Chat
+      //   </Button>
+      // ]
 
       return (
         <>
-          <div className='ai-list-item-title'>{title}</div>
-          <Menu sub={actions} />
+          <div className='ai-list-item-title'>{name}</div>
+          {/* <Menu sub={actions} /> */}
         </>
       )
     }
 
-    const setConversation = (id: number) => {
+    const setConversation = ({ id, name }: { id: string; name: string }) => {
       setNewConversation(false)
-      setConversationActive(id)
+      setConversationInProgress(false)
+      setConversationActive({
+        name: name,
+        id: id
+      })
       soundClick()
       ScrollToBottom()
       setAsideResponsive(false)
@@ -165,6 +222,7 @@ function GemAiPage() {
     const handleNewConversation = () => {
       setNewConversation(true)
       setAsideResponsive(false)
+      setConversationActive(null)
     }
 
     return (
@@ -180,9 +238,12 @@ function GemAiPage() {
               onClick={handleNewConversation}
             />
           </li>
-          {conversations &&
-            conversations.map((conversation, id) => {
-              const active = id === conversationActive && !newConversation
+          {qUserChats.data ? (
+            qUserChats.data.map((conversation, id) => {
+              const active =
+                conversationActive &&
+                conversation.id === conversationActive.id &&
+                !newConversation
               return (
                 <li
                   key={id}
@@ -191,13 +252,23 @@ function GemAiPage() {
                   <Item key={id} {...conversation} />
                   <div
                     className='ai-list-item-clicker'
-                    onClick={() => setConversation(id)}
+                    onClick={() =>
+                      setConversation({
+                        id: conversation.id,
+                        name: conversation.name
+                      })
+                    }
                     onMouseEnter={() => soundHover()}
                   />
                   <Corner color={active ? "primary" : "tertiary"} />
                 </li>
               )
-            })}
+            })
+          ) : (
+            <li className='ai-list-loader'>
+              <Loader />
+            </li>
+          )}
         </ul>
       </aside>
     )
@@ -215,7 +286,7 @@ function GemAiPage() {
     return (
       <li className={classNames("message", role)}>
         <div className='avatar'>
-          {role == "ai" ? <LogoImg /> : <Icon icon='carbon:user' />}
+          {role == "assistant" ? <LogoImg /> : <Icon icon='carbon:user' />}
         </div>
         <div className='top'>
           <div className='author'>
@@ -226,7 +297,7 @@ function GemAiPage() {
             <Menu items={menuItems} />
           </div>
         </div>
-        <div className='p'>{content === '' ? <Loader/> : content}</div>
+        <div className='p'>{content === "" ? <Loader /> : content}</div>
       </li>
     )
   }
@@ -265,11 +336,15 @@ function GemAiPage() {
 
     return (
       <ul className='ai-chat-content'>
-        {currentChat.messages.length &&
+        responseInProgress : {JSON.stringify(responseInProgress)}
+        {!newConversation &&
+          currentChat.messages.length !== 0 &&
           currentChat.messages.map((message, id) => (
             <Message key={id} {...message} />
           ))}
-        {!currentChat.messages.length && <NewConversation />}
+        {(newConversation || !currentChat.messages.length) && (
+          <NewConversation />
+        )}
       </ul>
     )
   }

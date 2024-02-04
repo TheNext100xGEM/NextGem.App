@@ -41,17 +41,23 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       return
     }
 
+
     const ws = new WebSocket(wssUrl)
     ws.onmessage = (evt) => {
+      setResponseInProgress(true)
+
       const json = JSON.parse(evt.data)
       if (json.type === "chat_stream_packet" && json.body.content) {
         handleNewMessagePart(json.body.content)
       }
+
+      if (json.type === "chat_stream_end") {
+        
+        setResponseInProgress(false)
+      }
     }
 
     const handleNewMessagePart = (message: string) => {
-      setResponseInProgress(true)
-
       if (!currentChat.messages.length) {
         setCurrentChat({
           ...currentChat,

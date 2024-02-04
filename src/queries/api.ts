@@ -1,9 +1,9 @@
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie"
 import { ApiGem } from "@models/GemCard"
 import { APP_API_URL } from "../libs/constants"
 import { ApiCollection } from "@models/API"
-import { ApiChat } from "@models/Chat"
-import { ApiGemFull } from '@models/GemFull';
+import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
+import { ApiGemFull } from "@models/GemFull"
 
 export const getGemCollection = async ({
   page = 0,
@@ -27,7 +27,8 @@ export const getGemCollection = async ({
   const queryString = Object.entries({
     page,
     limit,
-    categories: categories && categories.length ? JSON.stringify(categories) : undefined,
+    categories:
+      categories && categories.length ? JSON.stringify(categories) : undefined,
     noteMin,
     noteMax,
     chains: chains && chains.length ? JSON.stringify(chains) : undefined,
@@ -46,6 +47,12 @@ export const getGemCollection = async ({
 export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "gemSingle", "GET")
 
+export const getUserChats = async () =>
+  request<ApiUserChats>(`${APP_API_URL}/user/chats`, "userChats", "GET")
+
+export const getUserChatId = async ({ id }: { id: string }) =>
+  request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "chatMessage", "GET")
+
 export const postChatMessage = async (body: {
   message: string
   chatId?: string
@@ -59,28 +66,28 @@ async function request<T>(
   body?: any
 ) {
   // Récupérer le token depuis les cookies
-  const token = Cookies.get('web3TokenAuth');
+  const token = Cookies.get("web3TokenAuth")
 
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+    "Content-Type": "application/json"
+  }
 
   // Ajouter le token à l'en-tête Authorization s'il existe
   if (token) {
-    headers['Authorization'] = token;
+    headers["Authorization"] = token
   }
 
   const response: Response = await fetch(url, {
     method: method,
     headers: headers,
-    body: method === "POST" ? JSON.stringify(body) : undefined,
-  });
+    body: method === "POST" ? JSON.stringify(body) : undefined
+  })
 
   if (!response.ok) {
-    throw new Error(`${name} call failed.`);
+    throw new Error(`${name} call failed.`)
   }
 
-  const data: T = await response.json();
+  const data: T = await response.json()
 
-  return data;
+  return data
 }
