@@ -47,11 +47,13 @@ export type ApiUserChats = {
 export type UserChat = {
   id: string
   name: string
+  date: string
 }
 
 export const mapUserChat = (data: ApiUserChat): UserChat => {
   return {
     id: data._id,
-    name: data.name
+    name: data.name,
+    date: data.updatedAt
   }
 }

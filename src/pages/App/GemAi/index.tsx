@@ -22,7 +22,7 @@ import {
   mapUserChat
 } from "@models/Chat"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { formatReadableDate } from "@utils/date"
+import { filterUsersByDate, formatReadableDate } from "@utils/date"
 import classNames from "classnames"
 import { useEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet-async"
@@ -49,7 +49,7 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
-  const { web3Token} = useAppContext()
+  const { web3Token } = useAppContext()
   const {
     chatId,
     setChatId,
@@ -176,12 +176,12 @@ function GemAiPage() {
     )
 
     const handleKeyPress = (evt: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (evt.key === 'Enter' && !evt.shiftKey) {
-        handlePostMessage();
+      if (evt.key === "Enter" && !evt.shiftKey) {
+        handlePostMessage()
       }
     }
 
-    const disabled = !access || responseInProgress; 
+    const disabled = !access || responseInProgress
 
     return (
       <div className='ai-chat-form'>
@@ -195,7 +195,9 @@ function GemAiPage() {
             ref={message}
             onKeyDown={handleKeyPress}
           />
-          <div className='btn-right'>{disabled ? ButtonLocked : ButtonSend}</div>
+          <div className='btn-right'>
+            {disabled ? ButtonLocked : ButtonSend}
+          </div>
           <Corner color='primary' />
         </div>
         <p>
@@ -242,6 +244,16 @@ function GemAiPage() {
       setConversationActive(null)
     }
 
+    const usersToday = qUserChats.data
+      ? filterUsersByDate(qUserChats.data, 1)
+      : []
+    const usersLast7Days = qUserChats.data
+      ? filterUsersByDate(qUserChats.data, 7).filter(user => !usersToday.includes(user))
+      : []
+    const usersLast30Days = qUserChats.data
+      ? filterUsersByDate(qUserChats.data, 30).filter(user => !usersToday.includes(user) && !usersLast7Days.includes(user))
+      : []
+
     return (
       <aside className={classNames("ai-list", { opened: asideResponsive })}>
         <ul>
@@ -255,33 +267,99 @@ function GemAiPage() {
               onClick={handleNewConversation}
             />
           </li>
-          {qUserChats.data ? (
-            qUserChats.data.map((conversation, id) => {
-              const active =
-                conversationActive &&
-                conversation.id === conversationActive.id &&
-                !newConversation
-              return (
+
+          {usersLast30Days.length > 0 && (
+            <>
+              {usersLast30Days.map((conversation, id) => (
                 <li
                   key={id}
-                  className={classNames("ai-list-item", { active: active })}
+                  className={classNames("ai-list-item", {
+                    active:
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                  })}
                 >
-                  <Item key={id} {...conversation} />
+                  <Item {...conversation} />
                   <div
                     className='ai-list-item-clicker'
-                    onClick={() =>
-                      setConversation({
-                        id: conversation.id,
-                        name: conversation.name
-                      })
-                    }
+                    onClick={() => setConversation(conversation)}
                     onMouseEnter={() => soundHover()}
                   />
-                  <Corner color={active ? "primary" : "tertiary"} />
+                  <Corner
+                    color={
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                        ? "primary"
+                        : "tertiary"
+                    }
+                  />
                 </li>
-              )
-            })
-          ) : (
+              ))}
+              <li className='ai-list-subheading'>Last 30 days</li>
+            </>
+          )}
+          {usersLast7Days.length > 0 && (
+            <>
+              {usersLast7Days.map((conversation, id) => (
+                <li
+                  key={id}
+                  className={classNames("ai-list-item", {
+                    active:
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                  })}
+                >
+                  <Item {...conversation} />
+                  <div
+                    className='ai-list-item-clicker'
+                    onClick={() => setConversation(conversation)}
+                    onMouseEnter={() => soundHover()}
+                  />
+                  <Corner
+                    color={
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                        ? "primary"
+                        : "tertiary"
+                    }
+                  />
+                </li>
+              ))}
+              <li className='ai-list-subheading'>Last 7 days</li>
+            </>
+          )}
+          {usersToday.length > 0 && (
+            <>
+              {usersToday.map((conversation, id) => (
+                <li
+                  key={id}
+                  className={classNames("ai-list-item", {
+                    active:
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                  })}
+                >
+                  <Item {...conversation} />
+                  <div
+                    className='ai-list-item-clicker'
+                    onClick={() => setConversation(conversation)}
+                    onMouseEnter={() => soundHover()}
+                  />
+                  <Corner
+                    color={
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                        ? "primary"
+                        : "tertiary"
+                    }
+                  />
+                </li>
+              ))}
+              <li className='ai-list-subheading'>Today</li>
+            </>
+          )}
+          {/* Loader */}
+          {!qUserChats.data && (
             <li className='ai-list-loader'>
               <Loader />
             </li>
@@ -314,7 +392,9 @@ function GemAiPage() {
             <Menu items={menuItems} />
           </div>
         </div>
-        <div className='content'>{content === "" ? <Loader /> : <Markdown>{content}</Markdown>}</div>
+        <div className='content'>
+          {content === "" ? <Loader /> : <Markdown>{content}</Markdown>}
+        </div>
       </li>
     )
   }
