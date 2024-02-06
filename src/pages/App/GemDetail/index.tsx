@@ -10,15 +10,18 @@ import { getGemSingle } from "../../../queries/api"
 import { ReactNode } from "react"
 import classNames from "classnames"
 import { Corner } from "@components/ui"
+import Markdown from "@components/ui/Markdown"
+
 
 function GemDetailPage() {
-  const {tokenId} = useParams();
-  let token = '', id = '';
+  const { tokenId } = useParams()
+  let token = "",
+    id = ""
 
   if (tokenId) {
-    const split = tokenId.split('-');
-    token = split[0];
-    id = split[1];
+    const split = tokenId.split("-")
+    token = split[0]
+    id = split[1]
   }
 
   const qGemSingle = useQuery({
@@ -46,15 +49,16 @@ function GemDetailPage() {
   return (
     <>
       <Helmet>
-      <title>{`${SITE_NAME} — ${token}`}</title>
-
+        <title>{`${SITE_NAME} — ${token}`}</title>
       </Helmet>
       <div className='gemDetail'>
         <div className='wrapper'>
           {qGemSingle.data && (
             <div className='gemDetail-content'>
               <h1 className='gemDetail-title'>{qGemSingle.data?.name ?? ""}</h1>
-              <p className='gemDetail-desc'>{qGemSingle.data.description}</p>
+              <div className='gemDetail-desc'>
+                <Markdown>{qGemSingle.data.description}</Markdown>
+              </div>
               {qGemSingle.data.gemini_score && qGemSingle.data.gemini_raw && (
                 <Card>
                   <div className='gemDetail-block'>
@@ -64,7 +68,11 @@ function GemDetailPage() {
                         total={parseInt(qGemSingle.data.gemini_score)}
                       ></NoteCard>
                     </div>
-                    <p>{qGemSingle.data.gemini_raw}</p>
+                    <div className='gemDetail-block-content'>
+                      <Markdown>
+                        {qGemSingle.data.gemini_raw}
+                      </Markdown>
+                    </div>
                   </div>
                 </Card>
               )}
@@ -77,8 +85,11 @@ function GemDetailPage() {
                         total={parseInt(qGemSingle.data.mistral_score)}
                       ></NoteCard>
                     </div>
-
-                    <p>{qGemSingle.data.mistral_raw}</p>
+                    <div className='gemDetail-block-content'>
+                      <Markdown>
+                        {qGemSingle.data.mistral_raw}
+                      </Markdown>
+                    </div>
                   </div>
                 </Card>
               )}
@@ -91,7 +102,9 @@ function GemDetailPage() {
                         total={parseInt(qGemSingle.data.gpt_score)}
                       ></NoteCard>
                     </div>
-                    <p>{qGemSingle.data.gpt_raw}</p>
+                    <div className='gemDetail-block-content'>
+                      <Markdown>{qGemSingle.data.gpt_raw}</Markdown>
+                    </div>
                   </div>
                 </Card>
               )}
