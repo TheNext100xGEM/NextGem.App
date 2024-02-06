@@ -248,10 +248,14 @@ function GemAiPage() {
       ? filterUsersByDate(qUserChats.data, 1)
       : []
     const usersLast7Days = qUserChats.data
-      ? filterUsersByDate(qUserChats.data, 7).filter(user => !usersToday.includes(user))
+      ? filterUsersByDate(qUserChats.data, 7).filter(
+          (user) => !usersToday.includes(user)
+        )
       : []
     const usersLast30Days = qUserChats.data
-      ? filterUsersByDate(qUserChats.data, 30).filter(user => !usersToday.includes(user) && !usersLast7Days.includes(user))
+      ? filterUsersByDate(qUserChats.data, 30).filter(
+          (user) => !usersToday.includes(user) && !usersLast7Days.includes(user)
+        )
       : []
 
     return (
@@ -407,9 +411,10 @@ function GemAiPage() {
           <h4>Welcome to {CHAT_NAME}</h4>
           <div className='intro'>
             <p>
-              Our AI have the knowledge of GPT, Grok, Mistral, Gemini AI and
-              also it's own thoughts: ask anything related to a project that
-              exist on our platform such as their note and more details.
+              The Nextgem LLM is comprised of knowledge garnered through the
+              analysis of multiple LLM models such as GPT, Grok, Mistral and
+              Gemini AI.<br/> 
+              Ask any question related to any project(s) below.
             </p>
           </div>
           {!access && (
