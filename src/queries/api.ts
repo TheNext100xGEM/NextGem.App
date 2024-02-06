@@ -5,6 +5,10 @@ import { ApiCollection } from "@models/API"
 import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
 import { ApiGemFull } from "@models/GemFull"
 
+export type DeleteResponse = {
+  status: boolean
+}
+
 export const getGemCollection = async ({
   page = 0,
   limit = 20,
@@ -41,22 +45,28 @@ export const getGemCollection = async ({
 
   const url = `${APP_API_URL}/projects?${queryString}`
 
-  return request<ApiCollection<ApiGem>>(url, "gemCollection", "GET")
+  return request<ApiCollection<ApiGem>>(url, "getGemCollection", "GET")
 }
 
 export const getGemSingle = async ({ id }: { id: string }) =>
-  request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "gemSingle", "GET")
+  request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
 
 export const getUserChats = async () =>
-  request<ApiUserChats>(`${APP_API_URL}/user/chats`, "userChats", "GET")
+  request<ApiUserChats>(`${APP_API_URL}/user/chats`, "getUserChats", "GET")
+
+  export const deleteUserChat = async (body: {
+    chatId: string
+  }) => request<DeleteResponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
 
 export const getUserChatId = async ({ id }: { id: string }) =>
-  request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "chatMessage", "GET")
+  request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "getUserChatId", "GET")
 
 export const postChatMessage = async (body: {
   message: string
   chatId?: string
-}) => request<ApiChat>(`${APP_API_URL}/chat`, "chatMessage", "POST", body)
+}) => request<ApiChat>(`${APP_API_URL}/chat`, "postChatMessage", "POST", body)
+
+
 
 // Functions
 async function request<T>(

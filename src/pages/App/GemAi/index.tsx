@@ -32,6 +32,7 @@ import TextareaAutosize from "react-textarea-autosize"
 import useSound from "use-sound"
 
 import {
+  deleteUserChat,
   getUserChatId,
   getUserChats,
   postChatMessage
@@ -83,6 +84,10 @@ function GemAiPage() {
 
   const qPostChatMessage = useMutation({
     mutationFn: postChatMessage
+  })
+
+  const qDeleteUserChat = useMutation({
+    mutationFn: deleteUserChat
   })
 
   useEffect(() => {
@@ -208,20 +213,24 @@ function GemAiPage() {
   }
 
   const List = () => {
-    const Item = ({ name }: UserChat) => {
-      // const actions = [
-      //   <Button icon='carbon:pen' color='tertiary'>
-      //     Rename
-      //   </Button>,
-      //   <Button icon='carbon:trash-can' color='secondary' status='danger'>
-      //     Delete Chat
-      //   </Button>
-      // ]
+    const Item = ({ id, name }: UserChat) => {
+      const handleDelete = async () => {
+        await qDeleteUserChat.mutateAsync({chatId: id});
+        qUserChats.refetch();
+      }
+      const actions = [
+        // <Button icon='carbon:pen' color='tertiary'>
+        //   Rename
+        // </Button>,
+        <Button icon='carbon:trash-can' color='secondary' status='danger' onClick={handleDelete}>
+          Delete Chat
+        </Button>
+      ]
 
       return (
         <>
           <div className='ai-list-item-title'>{name}</div>
-          {/* <Menu sub={actions} /> */}
+          <Menu sub={actions} />
         </>
       )
     }
@@ -362,7 +371,6 @@ function GemAiPage() {
               <li className='ai-list-subheading'>Today</li>
             </>
           )}
-          {/* Loader */}
           {!qUserChats.data && (
             <li className='ai-list-loader'>
               <Loader />
