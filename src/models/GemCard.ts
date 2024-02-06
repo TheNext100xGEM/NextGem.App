@@ -8,6 +8,7 @@ export interface Launchpad {
 export interface Gem {
   id: string
   name: string
+  slug: string
   category: string
   href: string
   description: string
@@ -23,6 +24,7 @@ export interface Gem {
 export interface ApiGem {
   id: string
   name: string
+  slug: string
   category?: string
   href: string
   description: string
@@ -58,6 +60,7 @@ export const mapGem = (data: ApiGem): Gem => {
   return {
     id: data.id,
     name: data.name,
+    slug: data.slug,
     category: data.category ?? "",
     href: data.href,
     description: data.description,

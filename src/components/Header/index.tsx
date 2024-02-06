@@ -71,11 +71,11 @@ const navApp: NavItem[] = [
   { component: <NavLink to='/staking' title='Staking' /> },
   { component: <NavLink to='/gem-ai' title={CHAT_NAME} /> },
   { component: <Panel /> },
-  {
-    component: (
-      <Button icon='carbon:settings' minus color='secondary' title='Settings' />
-    )
-  },
+  // {
+  //   component: (
+  //     <Button icon='carbon:settings' minus color='secondary' title='Settings' />
+  //   )
+  // },
   {
     component: (
       <Button

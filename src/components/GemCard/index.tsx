@@ -10,7 +10,7 @@ import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { NavLink } from "react-router-dom"
 
-const MenuGemCard = ({ name, token, id }: { name: string; token: string; id: string }) => {
+const MenuGemCard = ({ name, slug }: { name: string; slug: string }) => {
 
   const [saved, setSaved] = useState(false)
   const handleSave = () => {
@@ -31,27 +31,26 @@ const MenuGemCard = ({ name, token, id }: { name: string; token: string; id: str
   ]
 
   const subMenuItems = [
-    <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
-      Ask Gem AI
-    </Button>,
-    <NavLink to={`/gems/${token}-${id}`}>
+    // <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
+    //   Ask Gem AI
+    // </Button>,
+    <NavLink to={`/gems/${slug}`}>
       <Button icon='carbon:search' color='tertiary'>
         See details
       </Button>
     </NavLink>,
-    <Button icon='carbon:share' color='tertiary'>
-      Share
-    </Button>,
-    <Button icon='carbon:debug' color='tertiary'>
-      Reported
-    </Button>
+    // <Button icon='carbon:share' color='tertiary'>
+    //   Share
+    // </Button>,
+    // <Button icon='carbon:debug' color='tertiary'>
+    //   Reported
+    // </Button>
   ]
 
   return <Menu items={menuItems} sub={subMenuItems} />
 }
 
 function GemCard({
-  id,
   name,
   category,
   href,
@@ -62,7 +61,7 @@ function GemCard({
   weightedScore,
   status,
   socials,
-  token
+  slug
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -140,7 +139,7 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} id={id} token={token} />
+          <MenuGemCard name={name} slug={slug} />
         </div>
         <div className='gem-title'>{name}</div>
         <a
