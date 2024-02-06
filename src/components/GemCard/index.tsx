@@ -10,7 +10,7 @@ import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { NavLink } from "react-router-dom"
 
-const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
+const MenuGemCard = ({ name, token, id }: { name: string; token: string; id: string }) => {
 
   const [saved, setSaved] = useState(false)
   const handleSave = () => {
@@ -34,7 +34,7 @@ const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
     <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
       Ask Gem AI
     </Button>,
-    <NavLink to={`/gems/${id}`}>
+    <NavLink to={`/gems/${token}-${id}`}>
       <Button icon='carbon:search' color='tertiary'>
         See details
       </Button>
@@ -61,7 +61,8 @@ function GemCard({
   llmList,
   weightedScore,
   status,
-  socials
+  socials,
+  token
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -139,7 +140,7 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} id={id} />
+          <MenuGemCard name={name} id={id} token={token} />
         </div>
         <div className='gem-title'>{name}</div>
         <a

@@ -94,7 +94,7 @@ function App() {
           ),
         },
         {
-          path: '/gems/:token',
+          path: '/gems/:tokenId',
           element: <GemDetailPage/>
         },
         {

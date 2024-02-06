@@ -13,7 +13,7 @@ export interface Gem {
   description: string
   chains: string[]
   launchpad: string
-  tokenSymbol: string
+  token: string
   llmList: string[]
   weightedScore?: number
   status?: number
@@ -63,7 +63,7 @@ export const mapGem = (data: ApiGem): Gem => {
     description: data.description,
     chains: data.chains,
     launchpad: data.launchpad,
-    tokenSymbol: data.tokenSymbol,
+    token: data.tokenSymbol,
     llmList: data.llmList,
     weightedScore:
       typeof data.weightedScore === "number" ? data.weightedScore : undefined,

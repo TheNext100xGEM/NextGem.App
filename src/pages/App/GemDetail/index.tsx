@@ -12,13 +12,20 @@ import classNames from "classnames"
 import { Corner } from "@components/ui"
 
 function GemDetailPage() {
-  const { token } = useParams()
+  const {tokenId} = useParams();
+  let token = '', id = '';
+
+  if (tokenId) {
+    const split = tokenId.split('-');
+    token = split[0];
+    id = split[1];
+  }
 
   const qGemSingle = useQuery({
-    queryKey: ["gemSingle", token],
-    queryFn: () => getGemSingle({ id: token! }),
+    queryKey: ["gemSingle", id],
+    queryFn: () => getGemSingle({ id: id! }),
     select: mapGemFull,
-    enabled: !!token
+    enabled: !!id
   })
 
   type PropsCard = {
@@ -39,9 +46,8 @@ function GemDetailPage() {
   return (
     <>
       <Helmet>
-        <title>
-          {SITE_NAME} — {token}
-        </title>
+      <title>{`${SITE_NAME} — ${token}`}</title>
+
       </Helmet>
       <div className='gemDetail'>
         <div className='wrapper'>
