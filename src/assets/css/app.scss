@@ -181,7 +181,7 @@ h6,
   ol {
     counter-reset: olCounter;
 
-    li {
+    > li {
       counter-increment: olCounter;
 
       &::before {

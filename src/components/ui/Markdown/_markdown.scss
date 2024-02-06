@@ -5,11 +5,16 @@
     font-size: 16px;
     line-height: 1.6;
 
-    ul {
+    ul, ol {
       display: flex;
       flex-direction: column;
-      gap:8px;
-      padding-left: 20px;
+      gap: 16px;
+      padding-left: 16px;
       list-style: disc;
+
+      ul, ol {
+        padding-left: 32px;
+        margin-top: 16px;
+      }
     }
 }

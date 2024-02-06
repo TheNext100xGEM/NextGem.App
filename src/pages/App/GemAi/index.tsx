@@ -36,6 +36,7 @@ import {
   getUserChats,
   postChatMessage
 } from "../../../queries/api"
+import Markdown from "@components/ui/Markdown"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
@@ -54,7 +55,9 @@ function GemAiPage() {
     setChatId,
     setWssUrl,
     currentChat,
-    setCurrentChat
+    setCurrentChat,
+    responseInProgress,
+    setResponseInProgress
   } = useChatContext()
 
   const [access, setAccess] = useState(false)
@@ -104,6 +107,7 @@ function GemAiPage() {
   const handlePostMessage = () => {
     if (message.current) {
       setConversationInProgress(true)
+      setResponseInProgress(true)
 
       qPostChatMessage.mutate({ message: message.current.value, chatId })
       setCurrentChat({
@@ -171,6 +175,14 @@ function GemAiPage() {
       />
     )
 
+    const handleKeyPress = (evt: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (evt.key === 'Enter' && !evt.shiftKey) {
+        handlePostMessage();
+      }
+    }
+
+    const disabled = !access || responseInProgress; 
+
     return (
       <div className='ai-chat-form'>
         <div className='ai-chat-form-text'>
@@ -179,10 +191,11 @@ function GemAiPage() {
             maxRows={max}
             placeholder={placeholder}
             spellCheck='false'
-            disabled={!access}
+            disabled={disabled}
             ref={message}
+            onKeyDown={handleKeyPress}
           />
-          <div className='btn-right'>{access ? ButtonSend : ButtonLocked}</div>
+          <div className='btn-right'>{disabled ? ButtonLocked : ButtonSend}</div>
           <Corner color='primary' />
         </div>
         <p>
@@ -301,7 +314,7 @@ function GemAiPage() {
             <Menu items={menuItems} />
           </div>
         </div>
-        <div className='p'>{content === "" ? <Loader /> : content}</div>
+        <div className='content'>{content === "" ? <Loader /> : <Markdown>{content}</Markdown>}</div>
       </li>
     )
   }
