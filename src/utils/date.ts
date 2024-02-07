@@ -8,6 +8,8 @@ const formatReadableDate = (dateString: string): string => {
 
 const filterUsersByDate = (users: UserChat[], days: number): UserChat[] => {
   const currentDate = new Date();
+  currentDate.setMinutes(currentDate.getMinutes() + 1);
+
   const dateThreshold = new Date(currentDate.getTime() - days * 24 * 60 * 60 * 1000);
 
   return users.filter(user => {

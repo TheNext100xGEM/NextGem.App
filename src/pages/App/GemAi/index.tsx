@@ -69,6 +69,9 @@ function GemAiPage() {
     id: string
     name: string
   } | null>(null)
+  const [usersToday, setUsersToday] = useState<UserChat[]>([]);
+  const [usersLast7Days, setUsersLast7Days] = useState<UserChat[]>([]);
+  const [usersLast30Days, setUsersLast30Days] = useState<UserChat[]>([]);
 
   const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
     volume: VOLUME_BUTTON_CLICK
@@ -81,6 +84,7 @@ function GemAiPage() {
 
   useEffect(() => ScrollToBottom("instant"), [])
   useEffect(() => ScrollToBottom("instant"), [currentChat.messages])
+  
 
   const qPostChatMessage = useMutation({
     mutationFn: postChatMessage
@@ -109,12 +113,16 @@ function GemAiPage() {
     }
   }, [conversationActive, setChatId])
 
-  const handlePostMessage = () => {
+  const handlePostMessage = async () => {
     if (message.current) {
+      const userMessage = message.current.value;
+
       setConversationInProgress(true)
       setResponseInProgress(true)
 
-      qPostChatMessage.mutate({ message: message.current.value, chatId })
+      await qPostChatMessage.mutateAsync({ message: userMessage, chatId })
+      qUserChats.refetch()
+
       setCurrentChat({
         ...currentChat,
         messages: [
@@ -122,7 +130,7 @@ function GemAiPage() {
           {
             role: "user",
             date: new Date().toString(),
-            content: message.current.value
+            content: userMessage
           },
           {
             role: "assistant",
@@ -135,25 +143,39 @@ function GemAiPage() {
   }
 
   const qUserChats = useQuery({
-    queryKey: ["userChats", newConversation, web3Token],
+    queryKey: ["userChats", web3Token],
     queryFn: getUserChats,
-    select: (data) => data.data.map(mapUserChat)
+    select: (data) => data.data.map(mapUserChat),
+    refetchOnWindowFocus: false,
   })
+
+  
+  useEffect(() => {
+    if (!qUserChats.data) return;
+
+    const today = filterUsersByDate(qUserChats.data, 1);
+    setUsersToday(today);
+
+    const last7Days = filterUsersByDate(qUserChats.data, 7).filter(user => !today.includes(user));
+    setUsersLast7Days(last7Days);
+
+    const last30Days = filterUsersByDate(qUserChats.data, 30).filter(user => !today.includes(user) && !last7Days.includes(user));
+    setUsersLast30Days(last30Days);
+  }, [qUserChats.data]);
 
   const qUserChatId = useQuery({
     queryKey: ["chatMessage", conversationActive],
     queryFn: () => getUserChatId({ id: conversationActive!.id }),
     select: (data) => data.map(mapChatMessage),
+    refetchOnWindowFocus: false,
     enabled: !!conversationActive && !conversationInProgress
   })
 
   useEffect(() => {
-    if (qUserChatId.data) {
       setCurrentChat({
         title: conversationActive?.name ?? "Unnamed chat",
-        messages: qUserChatId.data
+        messages: qUserChatId.data || []
       })
-    }
   }, [qUserChatId.data])
 
   const FormAi = () => {
@@ -252,20 +274,6 @@ function GemAiPage() {
       setAsideResponsive(false)
       setConversationActive(null)
     }
-
-    const usersToday = qUserChats.data
-      ? filterUsersByDate(qUserChats.data, 1)
-      : []
-    const usersLast7Days = qUserChats.data
-      ? filterUsersByDate(qUserChats.data, 7).filter(
-          (user) => !usersToday.includes(user)
-        )
-      : []
-    const usersLast30Days = qUserChats.data
-      ? filterUsersByDate(qUserChats.data, 30).filter(
-          (user) => !usersToday.includes(user) && !usersLast7Days.includes(user)
-        )
-      : []
 
     return (
       <aside className={classNames("ai-list", { opened: asideResponsive })}>
@@ -447,13 +455,13 @@ function GemAiPage() {
     return (
       <ul className='ai-chat-content'>
         {!newConversation &&
+        !qUserChatId.isFetching &&
           currentChat.messages.length !== 0 &&
           currentChat.messages.map((message, id) => (
             <Message key={id} {...message} />
           ))}
-        {(newConversation || !currentChat.messages.length) && (
-          <NewConversation />
-        )}
+        {newConversation && <NewConversation />}
+        {qUserChatId.isFetching && <Loader big={true}/>}
       </ul>
     )
   }
