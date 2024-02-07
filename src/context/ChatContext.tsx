@@ -6,6 +6,7 @@ import React, {
   useEffect
 } from "react"
 import { CurrentChat } from "@models/Chat"
+import { ApiEmbed, Embed, mapEmbed } from "@models/ChatEmbed"
 
 interface ChatContextProps {
   chatId: string | undefined
@@ -52,7 +53,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (json.type === "chat_stream_end") {
-        
+        handleEmbeds(json.body.embeds, json.body.contextResponse)
         setResponseInProgress(false)
       }
     }
@@ -65,7 +66,8 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
             {
               role: "ai",
               content: message,
-              date: new Date().toString()
+              date: new Date().toString(),
+              embeds: []
             }
           ]
         })
@@ -86,6 +88,21 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       setCurrentResponse((prevResponse) => prevResponse + message)
     }
   }, [wssUrl, currentChat])
+
+  const handleEmbeds = (embeds: ApiEmbed[], contextResponse?: string) => {
+    const messages = currentChat.messages.map((m, i) => {
+      if (i === currentChat.messages.length - 1) {
+        m.embeds = embeds.map(mapEmbed)
+        m.contextResponse = contextResponse
+      }
+      return m
+    })
+
+    setCurrentChat({
+      ...currentChat,
+      messages
+    })
+  }
 
   return (
     <ChatContext.Provider

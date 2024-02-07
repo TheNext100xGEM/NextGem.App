@@ -1,6 +1,6 @@
 import "./_gemAi.scss"
 import logo from "@assets/img/logo-next-gem.webp"
-import { Alert, Button, Corner, Loader, Menu } from "@components/ui"
+import { Alert, Button, Corner, Grid, Loader, Menu } from "@components/ui"
 import {
   CHAT_NAME,
   SITE_NAME,
@@ -38,6 +38,7 @@ import {
   postChatMessage
 } from "../../../queries/api"
 import Markdown from "@components/ui/Markdown"
+import ChatEmbed from "@components/ui/ChatEmbed"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
@@ -69,9 +70,9 @@ function GemAiPage() {
     id: string
     name: string
   } | null>(null)
-  const [usersToday, setUsersToday] = useState<UserChat[]>([]);
-  const [usersLast7Days, setUsersLast7Days] = useState<UserChat[]>([]);
-  const [usersLast30Days, setUsersLast30Days] = useState<UserChat[]>([]);
+  const [usersToday, setUsersToday] = useState<UserChat[]>([])
+  const [usersLast7Days, setUsersLast7Days] = useState<UserChat[]>([])
+  const [usersLast30Days, setUsersLast30Days] = useState<UserChat[]>([])
 
   const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
     volume: VOLUME_BUTTON_CLICK
@@ -84,7 +85,6 @@ function GemAiPage() {
 
   useEffect(() => ScrollToBottom("instant"), [])
   useEffect(() => ScrollToBottom("instant"), [currentChat.messages])
-  
 
   const qPostChatMessage = useMutation({
     mutationFn: postChatMessage
@@ -115,7 +115,7 @@ function GemAiPage() {
 
   const handlePostMessage = async () => {
     if (message.current) {
-      const userMessage = message.current.value;
+      const userMessage = message.current.value
 
       setConversationInProgress(true)
       setResponseInProgress(true)
@@ -147,22 +147,25 @@ function GemAiPage() {
     queryKey: ["userChats", web3Token],
     queryFn: getUserChats,
     select: (data) => data.data.map(mapUserChat),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: false
   })
 
-  
   useEffect(() => {
-    if (!qUserChats.data) return;
+    if (!qUserChats.data) return
 
-    const today = filterUsersByDate(qUserChats.data, 1);
-    setUsersToday(today);
+    const today = filterUsersByDate(qUserChats.data, 1)
+    setUsersToday(today)
 
-    const last7Days = filterUsersByDate(qUserChats.data, 7).filter(user => !today.includes(user));
-    setUsersLast7Days(last7Days);
+    const last7Days = filterUsersByDate(qUserChats.data, 7).filter(
+      (user) => !today.includes(user)
+    )
+    setUsersLast7Days(last7Days)
 
-    const last30Days = filterUsersByDate(qUserChats.data, 30).filter(user => !today.includes(user) && !last7Days.includes(user));
-    setUsersLast30Days(last30Days);
-  }, [qUserChats.data]);
+    const last30Days = filterUsersByDate(qUserChats.data, 30).filter(
+      (user) => !today.includes(user) && !last7Days.includes(user)
+    )
+    setUsersLast30Days(last30Days)
+  }, [qUserChats.data])
 
   const qUserChatId = useQuery({
     queryKey: ["chatMessage", conversationActive],
@@ -240,14 +243,19 @@ function GemAiPage() {
   const List = () => {
     const Item = ({ id, name }: UserChat) => {
       const handleDelete = async () => {
-        await qDeleteUserChat.mutateAsync({chatId: id});
-        qUserChats.refetch();
+        await qDeleteUserChat.mutateAsync({ chatId: id })
+        qUserChats.refetch()
       }
       const actions = [
         // <Button icon='carbon:pen' color='tertiary'>
         //   Rename
         // </Button>,
-        <Button icon='carbon:trash-can' color='secondary' status='danger' onClick={handleDelete}>
+        <Button
+          icon='carbon:trash-can'
+          color='secondary'
+          status='danger'
+          onClick={handleDelete}
+        >
           Delete Chat
         </Button>
       ]
@@ -397,7 +405,7 @@ function GemAiPage() {
     )
   }
 
-  const Message = ({ role, content, date }: ChatMessage) => {
+  const Message = ({ role, content, date, embeds, contextResponse }: ChatMessage) => {
     const dateFormat = formatReadableDate(date)
 
     // const menuItems = [
@@ -423,6 +431,16 @@ function GemAiPage() {
         <div className='content'>
           {content === "" ? <Loader /> : <Markdown>{content}</Markdown>}
         </div>
+        {embeds && (
+          <>
+                    <Grid className='embeds'>
+            {embeds.map((embed, i) => (
+              <ChatEmbed embed={embed} key={i} />
+            ))}
+          </Grid>
+          {contextResponse && (<p>{contextResponse}</p>)}
+          </>
+        )}
       </li>
     )
   }
@@ -437,7 +455,8 @@ function GemAiPage() {
             <p>
               The Nextgem LLM is comprised of knowledge garnered through the
               analysis of multiple LLM models such as GPT, Grok, Mistral and
-              Gemini AI.<br/> 
+              Gemini AI.
+              <br />
               Ask any question related to any project(s) below.
             </p>
           </div>
@@ -463,13 +482,13 @@ function GemAiPage() {
     return (
       <ul className='ai-chat-content'>
         {!newConversation &&
-        !qUserChatId.isFetching &&
+          !qUserChatId.isFetching &&
           currentChat.messages.length !== 0 &&
           currentChat.messages.map((message, id) => (
             <Message key={id} {...message} />
           ))}
         {newConversation && <NewConversation />}
-        {qUserChatId.isFetching && <Loader big={true}/>}
+        {qUserChatId.isFetching && <Loader big={true} />}
       </ul>
     )
   }

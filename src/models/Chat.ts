@@ -1,3 +1,5 @@
+import { ApiEmbed, Embed, mapEmbed } from "./ChatEmbed"
+
 export type ApiChat = {
   wssUrl: string
   chatId?: string
@@ -10,19 +12,25 @@ export type ApiChatMessage = {
   content: string
   createdAt: string
   updatedAt: string
+  embeds: ApiEmbed[]
+  contextResponse?: string
 }
 
 export type ChatMessage = {
   role: string
   content: string
   date: string
+  embeds: Embed[]
+  contextResponse?: string
 }
 
 export const mapChatMessage = (data: ApiChatMessage): ChatMessage => {
   return {
     role: data.role,
     content: data.content,
-    date: data.updatedAt
+    date: data.updatedAt,
+    embeds: data.embeds.map(mapEmbed),
+    contextResponse: data.contextResponse
   }
 }
 
