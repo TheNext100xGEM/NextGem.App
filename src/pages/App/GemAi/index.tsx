@@ -121,8 +121,9 @@ function GemAiPage() {
       setResponseInProgress(true)
 
       await qPostChatMessage.mutateAsync({ message: userMessage, chatId })
-      qUserChats.refetch()
-
+      if (!chatId) {
+        qUserChats.refetch()
+      }
       setCurrentChat({
         ...currentChat,
         messages: [
@@ -172,10 +173,12 @@ function GemAiPage() {
   })
 
   useEffect(() => {
+    if (qUserChatId.data) {
       setCurrentChat({
         title: conversationActive?.name ?? "Unnamed chat",
-        messages: qUserChatId.data || []
+        messages: qUserChatId.data
       })
+    }
   }, [qUserChatId.data])
 
   const FormAi = () => {
@@ -273,6 +276,11 @@ function GemAiPage() {
       setNewConversation(true)
       setAsideResponsive(false)
       setConversationActive(null)
+      setCurrentChat({
+        title: "Unnamed chat",
+        messages: []
+      })
+      setChatId(undefined)
     }
 
     return (
@@ -392,11 +400,11 @@ function GemAiPage() {
   const Message = ({ role, content, date }: ChatMessage) => {
     const dateFormat = formatReadableDate(date)
 
-    const menuItems = [
-      <Button icon='carbon:bookmark' minus color='tertiary' title='Save' />,
-      <Button icon='carbon:copy' minus color='tertiary' title='Copy' />,
-      <Button icon='carbon:debug' minus color='tertiary' title='Report' />
-    ]
+    // const menuItems = [
+    //   <Button icon='carbon:bookmark' minus color='tertiary' title='Save' />,
+    //   <Button icon='carbon:copy' minus color='tertiary' title='Copy' />,
+    //   <Button icon='carbon:debug' minus color='tertiary' title='Report' />
+    // ]
 
     return (
       <li className={classNames("message", role)}>
@@ -408,9 +416,9 @@ function GemAiPage() {
             <strong>{role === "user" ? "You" : CHAT_NAME}</strong>
             <time>{dateFormat}</time>
           </div>
-          <div className='right'>
+          {/* <div className='right'>
             <Menu items={menuItems} />
-          </div>
+          </div> */}
         </div>
         <div className='content'>
           {content === "" ? <Loader /> : <Markdown>{content}</Markdown>}
