@@ -6,7 +6,7 @@ import React, {
   useEffect
 } from "react"
 import { CurrentChat } from "@models/Chat"
-import { ApiEmbed, Embed, mapEmbed } from "@models/ChatEmbed"
+import { ApiEmbed, mapEmbed } from "@models/ChatEmbed"
 
 interface ChatContextProps {
   chatId: string | undefined

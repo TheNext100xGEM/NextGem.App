@@ -131,12 +131,14 @@ function GemAiPage() {
           {
             role: "user",
             date: new Date().toString(),
-            content: userMessage
+            content: userMessage,
+            embeds: []
           },
           {
             role: "assistant",
             date: new Date().toString(),
-            content: ""
+            content: "",
+            embeds: []
           }
         ]
       })
