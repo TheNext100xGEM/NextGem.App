@@ -76,6 +76,7 @@ const navApp: NavItem[] = [
   //     <Button icon='carbon:settings' minus color='secondary' title='Settings' />
   //   )
   // },
+          { component: <BuyNextGemButton /> },
   {
     component: (
       <Button
@@ -129,7 +130,7 @@ function Header() {
         </div>
         <div ref={navRef} className="header-wrapper-content header-app">
           <div className="header-left">
-            <BuyNextGemButton />
+          <SocialListNext />
           </div>
           <div 
             className={classNames('header-right', { opened: navResponsive })}
