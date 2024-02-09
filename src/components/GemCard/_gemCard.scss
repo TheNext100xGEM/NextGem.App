@@ -57,9 +57,10 @@
   }
 
   &-sub {
-    font-size: 0.85em;
+    font-size: 0.75em;
     letter-spacing: var(--text-spacing);
     text-transform: uppercase;
+    @include clamp(2);
   }
 
   &-title {
@@ -91,7 +92,7 @@
     line-height: 1.8;
     font-weight: 200;
     padding-top: 0.5em;
-    @include clamp(2);
+    @include clamp(4);
   }
 
   table {
