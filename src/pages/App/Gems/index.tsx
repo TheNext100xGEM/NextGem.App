@@ -23,7 +23,7 @@ import { getGemCollection } from "../../../queries/api"
 import { mapGem } from "@models/GemCard"
 import React from "react"
 import PanelGem from "@components/PanelGem"
-import { useGemContext } from "@context/GemContext"
+import { useGemsContext } from "@context/GemsContext"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -49,22 +49,36 @@ const FilterDrop = ({ name, right, children, className }: PropsFilterDrop) => {
   )
 }
 const FilterBySort = () => {
-  const options: string[] = ["AI Note", "Tokens", "Categories"]
-  const [selectedLabel, setSelectedLabel] = useState(options[0])
+  const options = [
+    {
+    id: '',
+    label: "None"
+  },
+  {
+  id: 'note',
+  label: "AI Note"
+}, {
+    id: 'tokens',
+    label: "Tokens"
+  }
+]
+  const { sortBy, setSortBy } = useGemsContext();
 
-  const handleCheckboxChange = (label: string) => setSelectedLabel(label)
+  const handleCheckboxChange = (label: string) => {
+    setSortBy(label !== '' ? [label] : []);
+  }
 
   return (
-    <FilterDrop name='Sort by' right={selectedLabel}>
+    <FilterDrop name='Sort by' right={sortBy.join(',')}>
       <ul>
-        {options.map((label, index) => (
+        {options.map((option, index) => (
           <li key={index}>
             <Checkbox
-              label={label}
+              label={option.label}
               type='radio'
               name='sort'
-              onChange={() => handleCheckboxChange(label)}
-              checked={selectedLabel === label}
+              onChange={() => handleCheckboxChange(option.id)}
+              checked={sortBy.length ? sortBy.includes(option.id) : option.id === ''}
             />
           </li>
         ))}
@@ -74,7 +88,7 @@ const FilterBySort = () => {
 }
 
 const FilterByCategories = () => {
-  const { categories, setCategories } = useGemContext()
+  const { categories, setCategories } = useGemsContext()
 
   const handleCheckboxChange = (category: string) => {
     if (categories.includes(category)) {
@@ -115,7 +129,7 @@ const FilterByCategories = () => {
 }
 
 const FilterByChains = () => {
-  const { chains, setChains } = useGemContext()
+  const { chains, setChains } = useGemsContext()
 
 
   const handleCheckboxChange = (chain: string) => {
@@ -152,7 +166,7 @@ const FilterByChains = () => {
 }
 
 const FilterAiNote = () => {
-  const { noteMin, setNoteMin, noteMax, setNoteMax } = useGemContext()
+  const { noteMin, setNoteMin, noteMax, setNoteMax } = useGemsContext()
 
   return (
     <FilterDrop name='Ai Note' right={`${noteMin}-${noteMax}`}>
@@ -171,7 +185,7 @@ const FilterAiNote = () => {
 }
 
 const FilterSearchQuery = () => {
-  const { setSearchQuery } = useGemContext()
+  const { setSearchQuery } = useGemsContext()
 
   return (
     <Input
@@ -215,7 +229,7 @@ const Filter = () => {
 }
 
 function GemsPage() {
-  const { noteMin, noteMax, categories, chains, searchQuery } = useGemContext()
+  const { noteMin, noteMax, categories, chains, searchQuery, sortBy } = useGemsContext()
 
   const qGemCollection = useInfiniteQuery({
     queryKey: [
@@ -224,7 +238,8 @@ function GemsPage() {
       noteMax,
       categories,
       chains,
-      searchQuery
+      searchQuery,
+      sortBy
     ],
     queryFn: ({pageParam}) =>
       getGemCollection({
@@ -233,7 +248,8 @@ function GemsPage() {
         noteMax,
         categories,
         chains,
-        searchQuery
+        searchQuery,
+        sortBy
       }),
     select: (data) => {
       return data.pages.map((page) => page.docs.map(mapGem))
@@ -274,7 +290,10 @@ function GemsPage() {
         qGemCollection.fetchNextPage()
       }
     })
+    
     observer.observe(bottom.current)
+
+    return () => observer.disconnect();
   }, [])
 
   return (

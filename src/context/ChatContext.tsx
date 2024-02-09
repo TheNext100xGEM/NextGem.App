@@ -1,4 +1,3 @@
-import { generateId } from "@utils/id"
 import React, {
   createContext,
   useContext,
@@ -6,15 +5,14 @@ import React, {
   ReactNode,
   useEffect
 } from "react"
-import { io } from "socket.io-client"
-import { CHAT_API_URL } from "../libs/constants"
 import { CurrentChat } from "@models/Chat"
+import { ApiEmbed, mapEmbed } from "@models/ChatEmbed"
 
 interface ChatContextProps {
-  chatId: string
-  setChatId: React.Dispatch<React.SetStateAction<string>>
-  streamId: string
-  setStreamId: React.Dispatch<React.SetStateAction<string>>
+  chatId: string | undefined
+  setChatId: React.Dispatch<React.SetStateAction<string | undefined>>
+  wssUrl: string
+  setWssUrl: React.Dispatch<React.SetStateAction<string>>
   currentResponse: string
   setCurrentResponse: React.Dispatch<React.SetStateAction<string>>
   responseInProgress: boolean
@@ -26,8 +24,8 @@ interface ChatContextProps {
 const ChatContext = createContext<ChatContextProps | undefined>(undefined)
 
 export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
-  const [chatId, setChatId] = useState<ChatContextProps["chatId"]>("")
-  const [streamId, setStreamId] = useState<ChatContextProps["streamId"]>("")
+  const [chatId, setChatId] = useState<ChatContextProps["chatId"]>(undefined)
+  const [wssUrl, setWssUrl] = useState<ChatContextProps["wssUrl"]>("")
   const [currentResponse, setCurrentResponse] =
     useState<ChatContextProps["currentResponse"]>("")
   const [responseInProgress, setResponseInProgress] =
@@ -39,40 +37,44 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     messages: []
   })
 
-  const socket = io(CHAT_API_URL, {
-    autoConnect: false
-  })
-
   useEffect(() => {
-    setChatId(generateId())
-  }, [])
-
-  useEffect(() => {
-    if (streamId === "") {
+    if (wssUrl === "") {
       return
     }
-    socket.connect()
 
-    socket.emit(`listen_${streamId}`)
 
-    const handleNewMessagePart = (messagePart: string) => {
+    const ws = new WebSocket(wssUrl)
+    ws.onmessage = (evt) => {
       setResponseInProgress(true)
 
+      const json = JSON.parse(evt.data)
+      if (json.type === "chat_stream_packet" && json.body.content) {
+        handleNewMessagePart(json.body.content)
+      }
+
+      if (json.type === "chat_stream_end") {
+        handleEmbeds(json.body.embeds, json.body.contextResponse)
+        setResponseInProgress(false)
+      }
+    }
+
+    const handleNewMessagePart = (message: string) => {
       if (!currentChat.messages.length) {
         setCurrentChat({
           ...currentChat,
           messages: [
             {
               role: "ai",
-              content: messagePart,
-              date: new Date().toString()
+              content: message,
+              date: new Date().toString(),
+              embeds: []
             }
           ]
         })
       } else {
         const messages = currentChat.messages.map((m, i) => {
           if (i === currentChat.messages.length - 1) {
-            m.content += messagePart
+            m.content = message
           }
           return m
         })
@@ -83,24 +85,32 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         })
       }
 
-      setCurrentResponse((prevResponse) => prevResponse + messagePart)
+      setCurrentResponse((prevResponse) => prevResponse + message)
     }
+  }, [wssUrl, currentChat])
 
-    socket.on(`chat_stream_packet_${streamId}`, handleNewMessagePart)
-
-    socket.once(`chat_stream_end_${streamId}`, () => {
-      setResponseInProgress(false)
-      socket.off(`chat_stream_packet_${streamId}`, handleNewMessagePart)
+  const handleEmbeds = (embeds: ApiEmbed[], contextResponse?: string) => {
+    const messages = currentChat.messages.map((m, i) => {
+      if (i === currentChat.messages.length - 1) {
+        m.embeds = embeds.map(mapEmbed)
+        m.contextResponse = contextResponse
+      }
+      return m
     })
-  }, [streamId])
+
+    setCurrentChat({
+      ...currentChat,
+      messages
+    })
+  }
 
   return (
     <ChatContext.Provider
       value={{
         chatId,
         setChatId,
-        streamId,
-        setStreamId,
+        wssUrl,
+        setWssUrl,
         currentResponse,
         setCurrentResponse,
         responseInProgress,

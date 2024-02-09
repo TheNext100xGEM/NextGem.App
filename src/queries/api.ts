@@ -1,7 +1,13 @@
+import Cookies from "js-cookie"
 import { ApiGem } from "@models/GemCard"
 import { APP_API_URL } from "../libs/constants"
 import { ApiCollection } from "@models/API"
-import { ApiChat } from "@models/Chat"
+import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
+import { ApiGemFull } from "@models/GemFull"
+
+export type DeleteResponse = {
+  status: boolean
+}
 
 export const getGemCollection = async ({
   page = 0,
@@ -10,7 +16,8 @@ export const getGemCollection = async ({
   noteMin,
   noteMax,
   chains,
-  searchQuery
+  searchQuery,
+  sortBy
 }: {
   page?: number
   limit?: number
@@ -19,15 +26,18 @@ export const getGemCollection = async ({
   noteMax?: number
   chains?: string[]
   searchQuery?: string
+  sortBy?: string[]
 }) => {
   const queryString = Object.entries({
     page,
     limit,
-    categories: categories && categories.length ? JSON.stringify(categories) : undefined,
+    categories:
+      categories && categories.length ? JSON.stringify(categories) : undefined,
     noteMin,
     noteMax,
     chains: chains && chains.length ? JSON.stringify(chains) : undefined,
-    searchQuery
+    searchQuery,
+    sortBy: sortBy && sortBy.length ? JSON.stringify(sortBy) : undefined
   })
     .filter(([_, value]) => value !== undefined)
     .map(([key, value]) => `${key}=${value}`)
@@ -35,16 +45,28 @@ export const getGemCollection = async ({
 
   const url = `${APP_API_URL}/projects?${queryString}`
 
-  return request<ApiCollection<ApiGem>>(url, "gemCollection", "GET")
+  return request<ApiCollection<ApiGem>>(url, "getGemCollection", "GET")
 }
 
 export const getGemSingle = async ({ id }: { id: string }) =>
-  request<ApiGem>(`${APP_API_URL}/projects/${id}`, "gemSingle", "GET")
+  request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
+
+export const getUserChats = async () =>
+  request<ApiUserChats>(`${APP_API_URL}/user/chats`, "getUserChats", "GET")
+
+  export const deleteUserChat = async (body: {
+    chatId: string
+  }) => request<DeleteResponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
+
+export const getUserChatId = async ({ id }: { id: string }) =>
+  request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "getUserChatId", "GET")
 
 export const postChatMessage = async (body: {
   message: string
-  chatId: string
-}) => request<ApiChat>(`${APP_API_URL}/chat`, "chatMessage", "POST", body)
+  chatId?: string
+}) => request<ApiChat>(`${APP_API_URL}/chat`, "postChatMessage", "POST", body)
+
+
 
 // Functions
 async function request<T>(
@@ -53,11 +75,21 @@ async function request<T>(
   method: "GET" | "POST" = "GET",
   body?: any
 ) {
+  // Récupérer le token depuis les cookies
+  const token = Cookies.get("web3TokenAuth")
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json"
+  }
+
+  // Ajouter le token à l'en-tête Authorization s'il existe
+  if (token) {
+    headers["Authorization"] = token
+  }
+
   const response: Response = await fetch(url, {
     method: method,
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: headers,
     body: method === "POST" ? JSON.stringify(body) : undefined
   })
 

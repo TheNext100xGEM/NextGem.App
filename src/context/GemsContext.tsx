@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react"
 
-interface GemContextProps {
+interface GemsContextProps {
   id: string
   setId: React.Dispatch<React.SetStateAction<string>>
   categories: string[]
@@ -13,22 +13,25 @@ interface GemContextProps {
   setChains: React.Dispatch<React.SetStateAction<string[]>>
   searchQuery: string | undefined
   setSearchQuery: React.Dispatch<React.SetStateAction<string | undefined>>
+  sortBy: string[]
+  setSortBy: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-const GemContext = createContext<GemContextProps | undefined>(undefined)
+const GemsContext = createContext<GemsContextProps | undefined>(undefined)
 
-export const GemContextProvider = ({ children }: { children: ReactNode }) => {
-  const [id, setId] = useState<GemContextProps["id"]>("")
+export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
+  const [id, setId] = useState<GemsContextProps["id"]>("")
   const [categories, setCategories] =
-    useState<GemContextProps["categories"]>([])
-  const [noteMin, setNoteMin] = useState<GemContextProps["noteMin"]>(1)
-  const [noteMax, setNoteMax] = useState<GemContextProps["noteMax"]>(10)
-  const [chains, setChains] = useState<GemContextProps["chains"]>([])
+    useState<GemsContextProps["categories"]>([])
+  const [noteMin, setNoteMin] = useState<GemsContextProps["noteMin"]>(1)
+  const [noteMax, setNoteMax] = useState<GemsContextProps["noteMax"]>(10)
+  const [chains, setChains] = useState<GemsContextProps["chains"]>([])
   const [searchQuery, setSearchQuery] =
-    useState<GemContextProps["searchQuery"]>(undefined)
+    useState<GemsContextProps["searchQuery"]>(undefined)
+    const [sortBy, setSortBy] = useState<GemsContextProps["chains"]>([])
 
   return (
-    <GemContext.Provider
+    <GemsContext.Provider
       value={{
         id,
         setId,
@@ -41,20 +44,22 @@ export const GemContextProvider = ({ children }: { children: ReactNode }) => {
         chains,
         setChains,
         searchQuery,
-        setSearchQuery
+        setSearchQuery,
+        sortBy, 
+        setSortBy
       }}
     >
       {children}
-    </GemContext.Provider>
+    </GemsContext.Provider>
   )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useGemContext = () => {
-  const context = useContext(GemContext)
+export const useGemsContext = () => {
+  const context = useContext(GemsContext)
 
   if (!context) {
-    throw new Error("useGemContext must be used within an GemContextProvider")
+    throw new Error("useGemsContext must be used within an GemsContextProvider")
   }
 
   return context

@@ -1,6 +1,6 @@
 import "./_gemAi.scss"
 import logo from "@assets/img/logo-next-gem.webp"
-import { Alert, Button, Corner, Menu } from "@components/ui"
+import { Alert, Button, Corner, Grid, Loader, Menu } from "@components/ui"
 import {
   CHAT_NAME,
   SITE_NAME,
@@ -11,12 +11,18 @@ import {
   VOLUME_BUTTON_CLICK,
   VOLUME_BUTTON_HOVER
 } from "@constants/index"
-import { conversations } from "@data/TEST_conversations"
+import { useAppContext } from "@context/AppContext"
+import { useChatContext } from "@context/ChatContext"
 import { Behavior } from "@enums/Behavior"
 import { Icon } from "@iconify/react"
-import { PropsConversation } from "@models/Ai"
-import { useMutation } from "@tanstack/react-query"
-import { formatReadableDate } from "@utils/date"
+import {
+  ChatMessage,
+  UserChat,
+  mapChatMessage,
+  mapUserChat
+} from "@models/Chat"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { filterUsersByDate, formatReadableDate } from "@utils/date"
 import classNames from "classnames"
 import { useEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet-async"
@@ -24,9 +30,15 @@ import TextareaAutosize from "react-textarea-autosize"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
-import { postChatMessage } from "../../../queries/api"
-import { useChatContext } from "@context/ChatContext"
-import { ChatMessage } from "@models/Chat"
+
+import {
+  deleteUserChat,
+  getUserChatId,
+  getUserChats,
+  postChatMessage
+} from "../../../queries/api"
+import Markdown from "@components/ui/Markdown"
+import ChatEmbed from "@components/ui/ChatEmbed"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
@@ -39,12 +51,28 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
-  const { chatId, setStreamId, currentChat, setCurrentChat } = useChatContext()
+  const { web3Token } = useAppContext()
+  const {
+    chatId,
+    setChatId,
+    setWssUrl,
+    currentChat,
+    setCurrentChat,
+    responseInProgress,
+    setResponseInProgress
+  } = useChatContext()
 
-  const [access] = useState(true)
+  const [access, setAccess] = useState(false)
   const [asideResponsive, setAsideResponsive] = useState(false)
   const [newConversation, setNewConversation] = useState(true)
-  const [conversationActive, setConversationActive] = useState(9)
+  const [conversationInProgress, setConversationInProgress] = useState(true)
+  const [conversationActive, setConversationActive] = useState<{
+    id: string
+    name: string
+  } | null>(null)
+  const [usersToday, setUsersToday] = useState<UserChat[]>([])
+  const [usersLast7Days, setUsersLast7Days] = useState<UserChat[]>([])
+  const [usersLast30Days, setUsersLast30Days] = useState<UserChat[]>([])
 
   const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
     volume: VOLUME_BUTTON_CLICK
@@ -53,21 +81,49 @@ function GemAiPage() {
     volume: VOLUME_BUTTON_HOVER
   })
 
-  useEffect(() => ScrollToBottom("instant"), [])
+  useEffect(() => setAccess(!!web3Token), [web3Token])
 
-  const qChatMessage = useMutation({
+  useEffect(() => ScrollToBottom("instant"), [])
+  useEffect(() => ScrollToBottom("instant"), [currentChat.messages])
+
+  const qPostChatMessage = useMutation({
     mutationFn: postChatMessage
   })
 
-  useEffect(() => {
-    if (qChatMessage.data) {
-      setStreamId(qChatMessage.data.streamId)
-    }
-  }, [qChatMessage.data, setStreamId])
+  const qDeleteUserChat = useMutation({
+    mutationFn: deleteUserChat
+  })
 
-  const handlePostMessage = () => {
+  useEffect(() => {
+    if (qPostChatMessage.data) {
+      setWssUrl(qPostChatMessage.data.wssUrl)
+      if (qPostChatMessage.data.chatId) {
+        setConversationActive({
+          name: qPostChatMessage.data.assignedName,
+          id: qPostChatMessage.data.chatId
+        })
+        setNewConversation(false)
+      }
+    }
+  }, [qPostChatMessage.data, setWssUrl])
+
+  useEffect(() => {
+    if (conversationActive) {
+      setChatId(conversationActive.id)
+    }
+  }, [conversationActive, setChatId])
+
+  const handlePostMessage = async () => {
     if (message.current) {
-      qChatMessage.mutate({ message: message.current.value, chatId })
+      const userMessage = message.current.value
+
+      setConversationInProgress(true)
+      setResponseInProgress(true)
+
+      await qPostChatMessage.mutateAsync({ message: userMessage, chatId })
+      if (!chatId) {
+        qUserChats.refetch()
+      }
       setCurrentChat({
         ...currentChat,
         messages: [
@@ -75,17 +131,60 @@ function GemAiPage() {
           {
             role: "user",
             date: new Date().toString(),
-            content: message.current.value
+            content: userMessage,
+            embeds: []
           },
           {
-            role: "ai",
+            role: "assistant",
             date: new Date().toString(),
-            content: ""
+            content: "",
+            embeds: []
           }
         ]
       })
     }
   }
+
+  const qUserChats = useQuery({
+    queryKey: ["userChats", web3Token],
+    queryFn: getUserChats,
+    select: (data) => data.data.map(mapUserChat),
+    refetchOnWindowFocus: false
+  })
+
+  useEffect(() => {
+    if (!qUserChats.data) return
+
+    const today = filterUsersByDate(qUserChats.data, 1)
+    setUsersToday(today)
+
+    const last7Days = filterUsersByDate(qUserChats.data, 7).filter(
+      (user) => !today.includes(user)
+    )
+    setUsersLast7Days(last7Days)
+
+    const last30Days = filterUsersByDate(qUserChats.data, 30).filter(
+      (user) => !today.includes(user) && !last7Days.includes(user)
+    )
+    setUsersLast30Days(last30Days)
+  }, [qUserChats.data])
+
+  const qUserChatId = useQuery({
+    queryKey: ["chatMessage", conversationActive],
+    queryFn: () => getUserChatId({ id: conversationActive!.id }),
+    select: (data) => data.map(mapChatMessage),
+    refetchOnWindowFocus: false,
+    enabled: !!conversationActive && !conversationInProgress
+  })
+
+  useEffect(() => {
+    if (qUserChatId.data) {
+      setCurrentChat({
+        title: conversationActive?.name ?? "Unnamed chat",
+        messages: qUserChatId.data
+      })
+    }
+  }, [qUserChatId.data])
 
   const FormAi = () => {
     const min = 1
@@ -111,6 +210,14 @@ function GemAiPage() {
       />
     )
 
+    const handleKeyPress = (evt: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (evt.key === "Enter" && !evt.shiftKey) {
+        handlePostMessage()
+      }
+    }
+
+    const disabled = !access || responseInProgress
+
     return (
       <div className='ai-chat-form'>
         <div className='ai-chat-form-text'>
@@ -119,10 +226,13 @@ function GemAiPage() {
             maxRows={max}
             placeholder={placeholder}
             spellCheck='false'
-            disabled={!access}
+            disabled={disabled}
             ref={message}
+            onKeyDown={handleKeyPress}
           />
-          <div className='btn-right'>{access ? ButtonSend : ButtonLocked}</div>
+          <div className='btn-right'>
+            {disabled ? ButtonLocked : ButtonSend}
+          </div>
           <Corner color='primary' />
         </div>
         <p>
@@ -133,27 +243,40 @@ function GemAiPage() {
   }
 
   const List = () => {
-    const Item = ({ title }: PropsConversation) => {
+    const Item = ({ id, name }: UserChat) => {
+      const handleDelete = async () => {
+        await qDeleteUserChat.mutateAsync({ chatId: id })
+        qUserChats.refetch()
+      }
       const actions = [
-        <Button icon='carbon:pen' color='tertiary'>
-          Rename
-        </Button>,
-        <Button icon='carbon:trash-can' color='secondary' status='danger'>
+        // <Button icon='carbon:pen' color='tertiary'>
+        //   Rename
+        // </Button>,
+        <Button
+          icon='carbon:trash-can'
+          color='secondary'
+          status='danger'
+          onClick={handleDelete}
+        >
           Delete Chat
         </Button>
       ]
 
       return (
         <>
-          <div className='ai-list-item-title'>{title}</div>
+          <div className='ai-list-item-title'>{name}</div>
           <Menu sub={actions} />
         </>
       )
     }
 
-    const setConversation = (id: number) => {
+    const setConversation = ({ id, name }: { id: string; name: string }) => {
       setNewConversation(false)
-      setConversationActive(id)
+      setConversationInProgress(false)
+      setConversationActive({
+        name: name,
+        id: id
+      })
       soundClick()
       ScrollToBottom()
       setAsideResponsive(false)
@@ -162,6 +285,12 @@ function GemAiPage() {
     const handleNewConversation = () => {
       setNewConversation(true)
       setAsideResponsive(false)
+      setConversationActive(null)
+      setCurrentChat({
+        title: "Unnamed chat",
+        messages: []
+      })
+      setChatId(undefined)
     }
 
     return (
@@ -177,53 +306,143 @@ function GemAiPage() {
               onClick={handleNewConversation}
             />
           </li>
-          {conversations &&
-            conversations.map((conversation, id) => {
-              const active = id === conversationActive && !newConversation
-              return (
+
+          {usersLast30Days.length > 0 && (
+            <>
+              {usersLast30Days.map((conversation, id) => (
                 <li
                   key={id}
-                  className={classNames("ai-list-item", { active: active })}
+                  className={classNames("ai-list-item", {
+                    active:
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                  })}
                 >
-                  <Item key={id} {...conversation} />
+                  <Item {...conversation} />
                   <div
                     className='ai-list-item-clicker'
-                    onClick={() => setConversation(id)}
+                    onClick={() => setConversation(conversation)}
                     onMouseEnter={() => soundHover()}
                   />
-                  <Corner color={active ? "primary" : "tertiary"} />
+                  <Corner
+                    color={
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                        ? "primary"
+                        : "tertiary"
+                    }
+                  />
                 </li>
-              )
-            })}
+              ))}
+              <li className='ai-list-subheading'>Last 30 days</li>
+            </>
+          )}
+          {usersLast7Days.length > 0 && (
+            <>
+              {usersLast7Days.map((conversation, id) => (
+                <li
+                  key={id}
+                  className={classNames("ai-list-item", {
+                    active:
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                  })}
+                >
+                  <Item {...conversation} />
+                  <div
+                    className='ai-list-item-clicker'
+                    onClick={() => setConversation(conversation)}
+                    onMouseEnter={() => soundHover()}
+                  />
+                  <Corner
+                    color={
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                        ? "primary"
+                        : "tertiary"
+                    }
+                  />
+                </li>
+              ))}
+              <li className='ai-list-subheading'>Last 7 days</li>
+            </>
+          )}
+          {usersToday.length > 0 && (
+            <>
+              {usersToday.map((conversation, id) => (
+                <li
+                  key={id}
+                  className={classNames("ai-list-item", {
+                    active:
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                  })}
+                >
+                  <Item {...conversation} />
+                  <div
+                    className='ai-list-item-clicker'
+                    onClick={() => setConversation(conversation)}
+                    onMouseEnter={() => soundHover()}
+                  />
+                  <Corner
+                    color={
+                      conversationActive &&
+                      conversationActive.id === conversation.id
+                        ? "primary"
+                        : "tertiary"
+                    }
+                  />
+                </li>
+              ))}
+              <li className='ai-list-subheading'>Today</li>
+            </>
+          )}
+          {!qUserChats.data && (
+            <li className='ai-list-loader'>
+              <Loader />
+            </li>
+          )}
         </ul>
       </aside>
     )
   }
 
-  const Message = ({ role, content, date }: ChatMessage) => {
+  const Message = ({ role, content, date, embeds, contextResponse }: ChatMessage) => {
     const dateFormat = formatReadableDate(date)
 
-    const menuItems = [
-      <Button icon='carbon:bookmark' minus color='tertiary' title='Save' />,
-      <Button icon='carbon:copy' minus color='tertiary' title='Copy' />,
-      <Button icon='carbon:debug' minus color='tertiary' title='Report' />
-    ]
+    // const menuItems = [
+    //   <Button icon='carbon:bookmark' minus color='tertiary' title='Save' />,
+    //   <Button icon='carbon:copy' minus color='tertiary' title='Copy' />,
+    //   <Button icon='carbon:debug' minus color='tertiary' title='Report' />
+    // ]
 
     return (
       <li className={classNames("message", role)}>
         <div className='avatar'>
-          {role == "ai" ? <LogoImg /> : <Icon icon='carbon:user' />}
+          {role == "assistant" ? <LogoImg /> : <Icon icon='carbon:user' />}
         </div>
         <div className='top'>
           <div className='author'>
             <strong>{role === "user" ? "You" : CHAT_NAME}</strong>
             <time>{dateFormat}</time>
           </div>
-          <div className='right'>
+          {/* <div className='right'>
             <Menu items={menuItems} />
-          </div>
+          </div> */}
         </div>
-        <div className='p'>{content}</div>
+        <div className='content'>
+          {content === "" ? <Loader /> : <Markdown>{content}</Markdown>}
+        </div>
+        {embeds && (
+          <>
+                    <Grid className='embeds'>
+            {embeds.map((embed, i) => (
+              <ChatEmbed embed={embed} key={i} />
+            ))}
+          </Grid>
+          {contextResponse && (<p>{contextResponse}</p>)}
+          </>
+        )}
       </li>
     )
   }
@@ -236,9 +455,11 @@ function GemAiPage() {
           <h4>Welcome to {CHAT_NAME}</h4>
           <div className='intro'>
             <p>
-              Our AI have the knowledge of GPT, Grok, Mistral, Gemini AI and
-              also it's own thoughts: ask anything related to a project that
-              exist on our platform such as their note and more details.
+              The Nextgem LLM is comprised of knowledge garnered through the
+              analysis of multiple LLM models such as GPT, Grok, Mistral and
+              Gemini AI.
+              <br />
+              Ask any question related to any project(s) below.
             </p>
           </div>
           {!access && (
@@ -262,11 +483,14 @@ function GemAiPage() {
 
     return (
       <ul className='ai-chat-content'>
-        {currentChat.messages.length &&
+        {!newConversation &&
+          !qUserChatId.isFetching &&
+          currentChat.messages.length !== 0 &&
           currentChat.messages.map((message, id) => (
             <Message key={id} {...message} />
           ))}
-        {!currentChat.messages.length && <NewConversation />}
+        {newConversation && <NewConversation />}
+        {qUserChatId.isFetching && <Loader big={true} />}
       </ul>
     )
   }

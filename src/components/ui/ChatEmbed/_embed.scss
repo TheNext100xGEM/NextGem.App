@@ -1,0 +1,21 @@
+.embeds {
+    // display: flex;
+    // flex-wrap: wrap;
+    // gap: 16px;
+    margin-top: 16px;
+
+    --grid-item-min-width: calc(160px + 50 * (100vw - 320px) / 1080);
+
+    .embed {
+        // width: calc(100% / 3 - 16px * 2);
+        // min-width: 240px;
+        // height: 100%;
+    }
+
+    .gem {
+        --padding: var(--size-3);
+      }
+    .corner {
+        z-index: 0;
+    }
+}

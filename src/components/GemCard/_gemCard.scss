@@ -1,7 +1,7 @@
 @import "../../assets/css/mixins/styles";
 
 .gem {
-  --padding: var(--size-3);
+  --padding: var(--size-4);
   --gap: calc(var(--padding) / 2.5);
   display: flex;
   flex-direction: column;
@@ -149,14 +149,22 @@
   }
 
   &[data-project-status="1"] {
+    .gem-title {
+      background: linear-gradient(#03ff00 20%, #03ff0080 100%);
+      background-clip: text;
+    }
     .gem-section-light:before {
-      --stroke-color: #03ff0047;
+      --stroke-color: #03ff0054;
     }
   }
 
   &[data-project-status="2"] {
+    .gem-title {
+      background: linear-gradient(#f2ff00 20%, #f2ff0080 100%);
+      background-clip: text;
+    }
     .gem-section-light:before {
-      --stroke-color: #f2ff0047;
+      --stroke-color: #f2ff0054;
     }
   }
 }

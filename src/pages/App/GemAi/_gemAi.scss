@@ -91,6 +91,18 @@ $responsiveList: $l;
       }
     }
 
+    &-subheading {
+      @include text-gradient;
+      font-weight: bold;
+      font-family: var(--font-family-heading);
+      font-size: 1.1em;
+      margin: 24px 0 8px;
+
+      &:last-child {
+        margin-top: 0;
+      }
+    }
+
     & > ul {
       display: flex;
       flex-direction: column-reverse;
@@ -116,6 +128,18 @@ $responsiveList: $l;
         position: absolute;
         inset: 0;
         z-index: 5;
+
+        &::before {
+          transition: opacity var(--transition-link);
+          opacity: 0;
+          @include light-blur;
+        }
+      
+        &:hover {
+          &::before {
+            opacity: 0.2;
+          }
+        }
       }
 
       &-title {
@@ -148,6 +172,15 @@ $responsiveList: $l;
         &:not(:hover) .dropdown-opener:not(.active) {
           opacity: 0;
         }
+      }
+    }
+
+    &-loader {
+      text-align: center;
+      padding: var(--padding);
+
+      svg {
+        width: 40px;
       }
     }
   }
@@ -370,6 +403,11 @@ $responsiveList: $l;
 
         .p {
           font-size: 1.1em;
+          white-space: break-spaces;
+
+          svg {
+            width: 40px;
+          }
         }
 
         &:hover {

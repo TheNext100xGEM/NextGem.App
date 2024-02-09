@@ -1,16 +1,16 @@
 import "./_gemCard.scss"
 import { NoteCard } from "@components/Note"
+import { SocialList } from "@components/Socials"
 import { Button, Corner, Menu } from "@components/ui"
-import { useGemContext } from "@context/GemContext"
 import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
 import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
+import { NavLink } from "react-router-dom"
 
-const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
-  const { setId } = useGemContext()
+const MenuGemCard = ({ name, slug }: { name: string; slug: string }) => {
 
   const [saved, setSaved] = useState(false)
   const handleSave = () => {
@@ -31,25 +31,26 @@ const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
   ]
 
   const subMenuItems = [
-    <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
-      Ask Gem AI
-    </Button>,
-    <Button icon='carbon:search' color='tertiary' onClick={() => setId(id)}>
-      See details
-    </Button>,
-    <Button icon='carbon:share' color='tertiary'>
-      Share
-    </Button>,
-    <Button icon='carbon:debug' color='tertiary'>
-      Reported
-    </Button>
+    // <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
+    //   Ask Gem AI
+    // </Button>,
+    <NavLink to={`/gems/${slug}`}>
+      <Button icon='carbon:search' color='tertiary'>
+        See details
+      </Button>
+    </NavLink>,
+    // <Button icon='carbon:share' color='tertiary'>
+    //   Share
+    // </Button>,
+    // <Button icon='carbon:debug' color='tertiary'>
+    //   Reported
+    // </Button>
   ]
 
   return <Menu items={menuItems} sub={subMenuItems} />
 }
 
 function GemCard({
-  id,
   name,
   category,
   href,
@@ -58,7 +59,9 @@ function GemCard({
   launchpad,
   llmList,
   weightedScore,
-  status
+  status,
+  socials,
+  slug
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -136,7 +139,7 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} id={id} />
+          <MenuGemCard name={name} slug={slug} />
         </div>
         <div className='gem-title'>{name}</div>
         <a
@@ -154,9 +157,9 @@ function GemCard({
       <Section>
         <table>
           <tbody>
-            {/* <Row title='Socials'>
+            <Row title='Socials'>
               <SocialList items={socials} />
-            </Row> */}
+            </Row>
             <Row title='Chains'>
               <List>{chains.map((item) => item)}</List>
             </Row>
