@@ -1,6 +1,17 @@
+@import "../../assets/css/mixins/styles";
+@import "../../assets/css/mixins/medias";
+
 .socials {
   display: flex;
   gap: 0.5em;
+
+  .nav & {
+    display: none;
+
+    @include max($responsiveHeader) {
+      display: flex;
+    }
+  }
 
   a {
     transition:

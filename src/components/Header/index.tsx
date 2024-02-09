@@ -70,13 +70,14 @@ const navApp: NavItem[] = [
   { component: <NavLink to='/gems' title='Gems' /> },
   { component: <NavLink to='/staking' title='Staking' /> },
   { component: <NavLink to='/gem-ai' title={CHAT_NAME} /> },
+  { component: <SocialListNext /> },
   { component: <Panel /> },
   // {
   //   component: (
   //     <Button icon='carbon:settings' minus color='secondary' title='Settings' />
   //   )
   // },
-          { component: <BuyNextGemButton /> },
+  { component: <BuyNextGemButton /> },
   {
     component: (
       <Button
@@ -136,6 +137,7 @@ function Header() {
             className={classNames('header-right', { opened: navResponsive })}
             onClick={closeNavResponsive} >
             <Nav items={navApp} />
+
           </div>
           <Button 
             icon="carbon:menu" 

@@ -138,18 +138,18 @@
         flex-direction: column;
         flex: 1;
 
-        ul {
+        > ul {
           flex: 1;
           padding: var(--size-4);
           flex-direction: column;
           gap: var(--size-4);
 
-          li:last-child,
-          li:nth-last-child(2) {
+          > li:last-child,
+          > li:nth-last-child(2) {
             display: none;
           }
 
-          li:nth-last-child(3) {
+          > li:nth-last-child(4) {
             margin-top: auto;
           }
 
