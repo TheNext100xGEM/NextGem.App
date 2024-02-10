@@ -67,6 +67,7 @@ const navLanding: NavItem[] = [
 
 
 const navApp: NavItem[] = [
+  { component: <NavLink to='/infos' title='Home' /> },
   { component: <NavLink to='/gems' title='Gems' /> },
   { component: <NavLink to='/staking' title='Staking' /> },
   { component: <NavLink to='/gem-ai' title={CHAT_NAME} /> },
@@ -137,7 +138,6 @@ function Header() {
             className={classNames('header-right', { opened: navResponsive })}
             onClick={closeNavResponsive} >
             <Nav items={navApp} />
-
           </div>
           <Button 
             icon="carbon:menu" 

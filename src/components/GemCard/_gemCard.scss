@@ -1,6 +1,8 @@
 @import "../../assets/css/mixins/styles";
 
 .gem {
+  $el: &;
+
   --padding: var(--size-4);
   --gap: calc(var(--padding) / 2.5);
   display: flex;
@@ -54,13 +56,16 @@
     justify-content: space-between;
     width: 100%;
     z-index: 100;
+
+    #{$el}-sub {
+      @include clamp(2);
+    }
   }
 
   &-sub {
     font-size: 0.75em;
     letter-spacing: var(--text-spacing);
     text-transform: uppercase;
-    @include clamp(2);
   }
 
   &-title {

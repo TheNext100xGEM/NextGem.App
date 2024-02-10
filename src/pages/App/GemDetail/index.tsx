@@ -12,16 +12,15 @@ import classNames from "classnames"
 import { Corner } from "@components/ui"
 import Markdown from "@components/ui/Markdown"
 
-
 function GemDetailPage() {
   const { tokenId } = useParams()
   let token = "",
     id = ""
 
   if (tokenId) {
-    const split = tokenId.split("-")
-    token = split[0]
-    id = split[1]
+    const lastDashIndex = tokenId.lastIndexOf("-")
+    token = tokenId.substring(0, lastDashIndex)
+    id = tokenId.substring(lastDashIndex + 1)
   }
 
   const qGemSingle = useQuery({
@@ -69,9 +68,7 @@ function GemDetailPage() {
                       ></NoteCard>
                     </div>
                     <div className='gemDetail-block-content'>
-                      <Markdown>
-                        {qGemSingle.data.gemini_raw}
-                      </Markdown>
+                      <Markdown>{qGemSingle.data.gemini_raw}</Markdown>
                     </div>
                   </div>
                 </Card>
@@ -86,9 +83,7 @@ function GemDetailPage() {
                       ></NoteCard>
                     </div>
                     <div className='gemDetail-block-content'>
-                      <Markdown>
-                        {qGemSingle.data.mistral_raw}
-                      </Markdown>
+                      <Markdown>{qGemSingle.data.mistral_raw}</Markdown>
                     </div>
                   </div>
                 </Card>
