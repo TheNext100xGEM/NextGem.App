@@ -8,9 +8,9 @@ import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
-import { Link, NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 
-const MenuGemCard = ({ name, slug }: { name: string; slug: string }) => {
+const MenuGemCard = ({ name }: { name: string; slug?: string }) => {
 
   const [saved, setSaved] = useState(false)
   const handleSave = () => {
@@ -30,24 +30,25 @@ const MenuGemCard = ({ name, slug }: { name: string; slug: string }) => {
     />
   ]
 
-  const subMenuItems = [
+  // const subMenuItems = [
     // <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
     //   Ask Gem AI
     // </Button>,
-    <NavLink to={`/gems/${slug}`}>
-      <Button icon='carbon:search' color='tertiary'>
-        See details
-      </Button>
-    </NavLink>,
+    // <NavLink to={`/gems/${slug}`}>
+    //   <Button icon='carbon:search' color='tertiary'>
+    //     See details
+    //   </Button>
+    // </NavLink>,
     // <Button icon='carbon:share' color='tertiary'>
     //   Share
     // </Button>,
     // <Button icon='carbon:debug' color='tertiary'>
     //   Reported
     // </Button>
-  ]
+  // ]
 
-  return <Menu items={menuItems} sub={subMenuItems} />
+  // return <Menu items={menuItems} sub={subMenuItems} />
+  return <Menu items={menuItems} />
 }
 
 function GemCard({
@@ -128,7 +129,7 @@ function GemCard({
           <div className='gem-sub'>{category}</div>
           <MenuGemCard name={name} slug={slug} />
         </div>
-        <div className='gem-title'>{name}</div>
+        <Link to={`/gems/${slug}`} className='gem-title'>{name}</Link>
         <a
           className='gem-link'
           href={href}
