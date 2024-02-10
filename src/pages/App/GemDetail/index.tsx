@@ -110,6 +110,8 @@ function GemDetailPage() {
     <>
       <Helmet>
         <title>{`${SITE_NAME} — ${qGemSingle.data?.name ?? token}`}</title>
+        <meta name='description' content={qGemSingle.data?.description} />
+        <meta name='og:description' content={qGemSingle.data?.description} />
       </Helmet>
       <div className='gemDetail'>
         <div className='wrapper'>
@@ -174,7 +176,7 @@ function GemDetailPage() {
                   <Card>
                     <div className='gemDetail-block'>
                       <div className='gemDetail-block-header'>
-                        <h3>Gemini</h3>
+                        <h2>Gemini</h2>
                         <NoteCard
                           total={parseInt(qGemSingle.data.gemini_score)}
                         ></NoteCard>
@@ -190,7 +192,7 @@ function GemDetailPage() {
                     <Card>
                       <div className='gemDetail-block'>
                         <div className='gemDetail-block-header'>
-                          <h3>Mistral</h3>
+                          <h2>Mistral</h2>
                           <NoteCard
                             total={parseInt(qGemSingle.data.mistral_score)}
                           ></NoteCard>
@@ -205,7 +207,7 @@ function GemDetailPage() {
                   <Card>
                     <div className='gemDetail-block'>
                       <div className='gemDetail-block-header'>
-                        <h3>GPT</h3>
+                        <h2>GPT</h2>
                         <NoteCard
                           total={parseInt(qGemSingle.data.gpt_score)}
                         ></NoteCard>
