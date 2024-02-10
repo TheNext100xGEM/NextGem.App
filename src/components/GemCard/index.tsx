@@ -4,16 +4,31 @@ import { SocialList } from "@components/Socials"
 import { Button, Corner, Menu } from "@components/ui"
 import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
+import { useMutation } from "@tanstack/react-query"
 import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { Link } from "react-router-dom"
+import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
 
-const MenuGemCard = ({ name }: { name: string; slug?: string }) => {
+const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
+
+  const qPostUserFavorite = useMutation({
+    mutationFn: postUserFavorite
+  })
+  const qDeleteUserFavorite = useMutation({
+    mutationFn: deleteUserFavorite
+  })
 
   const [saved, setSaved] = useState(false)
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (saved) {
+      await qDeleteUserFavorite.mutateAsync({projectId: id});
+    } else {
+      await qPostUserFavorite.mutateAsync({projectId: id});
+    }
+
     setSaved(!saved)
     saved
       ? toast(`Token "${name}" unsaved`)
@@ -52,6 +67,7 @@ const MenuGemCard = ({ name }: { name: string; slug?: string }) => {
 }
 
 function GemCard({
+  id,
   name,
   category,
   href,
@@ -127,7 +143,7 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} slug={slug} />
+          <MenuGemCard name={name} id={id} />
         </div>
         <Link to={`/gems/${slug}`} className='gem-title'>{name}</Link>
         <a

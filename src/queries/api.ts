@@ -5,8 +5,9 @@ import { ApiCollection } from "@models/API"
 import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
 import { ApiGemFull } from "@models/GemFull"
 
-export type DeleteResponse = {
+export type PostResponse = {
   status: boolean
+  message?: string
 }
 
 export const getGemCollection = async ({
@@ -56,7 +57,7 @@ export const getUserChats = async () =>
 
   export const deleteUserChat = async (body: {
     chatId: string
-  }) => request<DeleteResponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
+  }) => request<PostResponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
 
 export const getUserChatId = async ({ id }: { id: string }) =>
   request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "getUserChatId", "GET")
@@ -66,7 +67,13 @@ export const postChatMessage = async (body: {
   chatId?: string
 }) => request<ApiChat>(`${APP_API_URL}/chat`, "postChatMessage", "POST", body)
 
+export const postUserFavorite = async (body: {
+  projectId: string
+}) => request<PostResponse>(`${APP_API_URL}/users/favorites`, "postUserFavorite", "POST", body)
 
+export const deleteUserFavorite = async (body: {
+  projectId: string
+}) => request<PostResponse>(`${APP_API_URL}/users/favorites/delete`, "deleteUserFavorite", "POST", body)
 
 // Functions
 async function request<T>(
