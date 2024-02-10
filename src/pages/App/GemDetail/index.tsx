@@ -109,7 +109,7 @@ function GemDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{`${SITE_NAME} — ${token}`}</title>
+        <title>{`${SITE_NAME} — ${qGemSingle.data?.name ?? token}`}</title>
       </Helmet>
       <div className='gemDetail'>
         <div className='wrapper'>
@@ -142,7 +142,7 @@ function GemDetailPage() {
                   </div>
                   <div className='gemDetail-header-content'>
                     <div className='gem-sub'>{qGemSingle.data.category}</div>
-                    <h1 className='gem-title'>{qGemSingle.data?.name ?? ""}</h1>
+                    <h1 className='gem-title'>{qGemSingle.data.name ?? ""}</h1>
                     <a
                       className='gem-link'
                       href={qGemSingle.data.href}

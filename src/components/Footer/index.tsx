@@ -17,8 +17,7 @@ function Footer() {
 
   const navFooter: NavItem[] = [
     { component: <a href={BUY_URL} rel="noopener noreferrer" target="_blank">Buy {TOKEN_NAME}</a> },
-    { component: <Link to="/default">CoinMarketCap</Link> },
-    { component: <Link to="https://t.me/NextGemAI_Group">Telegram</Link> },
+    { component: <a href="https://docs.thenextgem.ai/" rel="noopener noreferrer" target="_blank">Documentation</a> },
     { component: <Link to="https://t.me/NextGemAI_Group">Join presale</Link> },
   ]
 

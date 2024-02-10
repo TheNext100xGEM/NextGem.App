@@ -58,6 +58,7 @@ const NavLink = ({ to, title, isExternal }: PropsNavLink) => {
 }
 
 const navLanding: NavItem[] = [
+  { component: <NavLink to='https://docs.thenextgem.ai/' title='Documentation' isExternal /> },
   { component: <NavLink to='https://cdn.thenextgem.ai/pitchdeck.pdf' title='PitchDeck' isExternal /> },
   { component: <NavLink to='https://cdn.thenextgem.ai/whitepaper.pdf' title='Whitepaper' isExternal /> },
   { component: <NavLink to='mailto:info@thenextgem.ai' title='Contact' /> },
@@ -71,6 +72,7 @@ const navApp: NavItem[] = [
   { component: <NavLink to='/gems' title='Gems' /> },
   { component: <NavLink to='/staking' title='Staking' /> },
   { component: <NavLink to='/gem-ai' title={CHAT_NAME} /> },
+  { component: <NavLink to='https://docs.thenextgem.ai/' title='Documentation' isExternal /> },
   { component: <SocialListNext /> },
   { component: <Panel /> },
   // {
