@@ -9,9 +9,9 @@ import { Link } from 'react-router-dom'
 
 function Footer() {
 
-  const { isInApp } = useAppContext()
+  const { isInChat } = useAppContext()
 
-  if (isInApp) {
+  if (isInChat) {
     return
   }
 

@@ -14,6 +14,8 @@ import Web3Token from "web3-token"
 interface AppContextProps {
   isInApp: boolean
   setIsInApp: React.Dispatch<React.SetStateAction<boolean>>
+  isInChat: boolean
+  setIsInChat: React.Dispatch<React.SetStateAction<boolean>>
   web3Token: string | null
   setWeb3Token: React.Dispatch<React.SetStateAction<string | null>>
 }
@@ -22,6 +24,7 @@ const AppContext = createContext<AppContextProps | undefined>(undefined)
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [isInApp, setIsInApp] = useState<AppContextProps["isInApp"]>(false)
+  const [isInChat, setIsInChat] = useState<AppContextProps["isInChat"]>(false)
   const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
   const location = useLocation()
 
@@ -64,11 +67,13 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       location.pathname.startsWith(page)
     )
     setIsInApp(isInApp)
+    
+    setIsInChat(location.pathname === '/gem-ai')
   }, [location.pathname])
 
   return (
     <AppContext.Provider
-      value={{ isInApp, setIsInApp, web3Token, setWeb3Token }}
+      value={{ isInApp, setIsInApp, isInChat, setIsInChat, web3Token, setWeb3Token }}
     >
       {children}
     </AppContext.Provider>

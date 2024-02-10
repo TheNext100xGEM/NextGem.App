@@ -36,10 +36,18 @@
       align-items: center;
       text-align: center;
       gap: var(--gap);
+
+      @include max($l) {
+        order: 0;
+      }
     }
 
     &-socials, &-note {
       flex-shrink: 0;
+
+      @include max($l) {
+        order: 1;
+      }
     }
 
     &-socials {
