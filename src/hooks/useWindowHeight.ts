@@ -5,7 +5,9 @@ const useWindowHeight = () => {
   const handleResize = () => setHeight(window.innerHeight)
 
   useEffect(() => {
-    setHeight(window.innerHeight);
+    window.setTimeout(() => {
+      setHeight(window.innerHeight);
+    }, 100)
     window.addEventListener('resize', handleResize)
 
     return () => window.removeEventListener('resize', handleResize)

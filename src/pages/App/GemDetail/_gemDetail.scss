@@ -3,22 +3,93 @@
 
 .gemDetail {
   --padding: var(--size-4);
+  --gap: calc(var(--padding) / 2.5);
   display: flex;
   flex-direction: column;
   line-height: 1.4;
   gap: var(--padding);
 
+  &-back {
+    margin-top: var(--padding);
+    svg {
+      margin-left: 0;
+      margin-right: 0.5em;
+    }
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: var(--gap);
+
+    @include max($l) {
+      flex-direction: column;
+      align-items: unset;
+      gap: var(--padding);
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--gap);
+
+      @include max($l) {
+        order: 0;
+      }
+    }
+
+    &-socials, &-note {
+      flex-shrink: 0;
+
+      @include max($l) {
+        order: 1;
+      }
+    }
+
+    &-socials {
+      .card {
+        min-width: 240px;
+      }
+    }
+    
+
+    &-note {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+
+      .btn {
+      font-size: 11px;
+
+      }
+    }
+  }
+
+  .gem {
+    &-section {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    &-title {
+      font-size: 48px;
+      word-break: break-all;
+    }
+
+    &-link {
+      display: flex;
+    }
+  }
+
   .card {
-    --padding: var(--size-6);
     padding: var(--padding);
     display: flex;
     flex-direction: column;
     gap: calc(var(--padding) / 2);
-
-    @include max($mobile) {
-      --padding: calc(var(--size-6) / 1.5);
-      gap: calc(var(--padding) / 1.5);
-    }
   }
 
   &-content {
@@ -26,11 +97,22 @@
     flex-direction: column;
     gap: var(--padding);
     padding: var(--padding) 0;
+
+    --padding: var(--size-6);
+
+    @include max($l) {
+      --padding: calc(var(--size-6) / 1.5);
+    }
   }
 
   &-desc {
-    font-size: 18px;
-    line-height: 1.8;
+
+    margin: calc(var(--padding) / 2) 0;
+
+    .markdown {
+      font-size: 18px;
+      line-height: 1.8;
+    }
   }
 
   &-block {

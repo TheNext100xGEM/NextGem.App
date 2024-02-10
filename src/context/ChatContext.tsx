@@ -53,6 +53,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (json.type === "chat_stream_end") {
+        console.log(json.body.embeds)
         handleEmbeds(json.body.embeds, json.body.contextResponse)
         setResponseInProgress(false)
       }

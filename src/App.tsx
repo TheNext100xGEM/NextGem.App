@@ -4,6 +4,7 @@ import { TOAST_DURATION } from "@constants/index"
 import { AppContextProvider } from "@context/AppContext"
 import { ChatContextProvider } from "@context/ChatContext"
 import { GemsContextProvider } from "@context/GemsContext"
+import { SeoContextProvider } from "@context/SeoContext"
 import useWindowHeight from "@hooks/useWindowHeight"
 import { GemsPage, StakingPage, GemAiPage } from "@pages/App"
 import GemDetailPage from "@pages/App/GemDetail"
@@ -15,7 +16,7 @@ import {
   createBrowserRouter,
   Outlet,
   RouterProvider,
-  ScrollRestoration
+  ScrollRestoration,
 } from "react-router-dom"
 
 function App() {
@@ -26,49 +27,51 @@ function App() {
   const Container = (
     <HelmetProvider>
       <AppContextProvider>
-        <ChatContextProvider>
-          <QueryClientProvider client={queryClient}>
-            <Header />
-            <main className='main'>
-              <Outlet />
-            </main>
-            <Footer />
-            <div className='main-h' />
-            <div className='main-v' />
-            <Toaster
-              position='bottom-right'
-              gutter={8}
-              containerStyle={{
-                inset: "var(--main-padding)"
-              }}
-              containerClassName='toast-ct'
-              toastOptions={{
-                duration: TOAST_DURATION,
-                className: "toast",
-                style: {
-                  border: "var(--stroke-primary)",
-                  borderRadius: 0,
-                  backgroundColor: "rgba(var(--bg-body-rgb) / 0.7)"
-                },
-                success: {
-                  iconTheme: {
-                    primary:
-                      "hsl(var(--color-success-h), var(--color-status-s), var(--color-l-1))",
-                    secondary: "var(--bg-body)"
+        <SeoContextProvider>
+          <ChatContextProvider>
+            <QueryClientProvider client={queryClient}>
+              <Header />
+              <main className='main'>
+                <Outlet />
+              </main>
+              <Footer />
+              <div className='main-h' />
+              <div className='main-v' />
+              <Toaster
+                position='bottom-right'
+                gutter={8}
+                containerStyle={{
+                  inset: "var(--main-padding)"
+                }}
+                containerClassName='toast-ct'
+                toastOptions={{
+                  duration: TOAST_DURATION,
+                  className: "toast",
+                  style: {
+                    border: "var(--stroke-primary)",
+                    borderRadius: 0,
+                    backgroundColor: "rgba(var(--bg-body-rgb) / 0.7)"
+                  },
+                  success: {
+                    iconTheme: {
+                      primary:
+                        "hsl(var(--color-success-h), var(--color-status-s), var(--color-l-1))",
+                      secondary: "var(--bg-body)"
+                    }
+                  },
+                  error: {
+                    iconTheme: {
+                      primary:
+                        "hsl(var(--color-danger-h), var(--color-status-s), var(--color-l-1))",
+                      secondary: "var(--bg-body)"
+                    }
                   }
-                },
-                error: {
-                  iconTheme: {
-                    primary:
-                      "hsl(var(--color-danger-h), var(--color-status-s), var(--color-l-1))",
-                    secondary: "var(--bg-body)"
-                  }
-                }
-              }}
-            />
-            <ScrollRestoration />
-          </QueryClientProvider>
-        </ChatContextProvider>
+                }}
+              />
+              <ScrollRestoration />
+            </QueryClientProvider>
+          </ChatContextProvider>
+        </SeoContextProvider>
       </AppContextProvider>
     </HelmetProvider>
   )
@@ -91,11 +94,11 @@ function App() {
             <GemsContextProvider>
               <GemsPage />
             </GemsContextProvider>
-          ),
+          )
         },
         {
-          path: '/gems/:tokenId',
-          element: <GemDetailPage/>
+          path: "/gems/:tokenId",
+          element: <GemDetailPage />
         },
         {
           path: "/staking",

@@ -4,16 +4,31 @@ import { SocialList } from "@components/Socials"
 import { Button, Corner, Menu } from "@components/ui"
 import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
+import { useMutation } from "@tanstack/react-query"
 import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
-import { NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
+import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
 
-const MenuGemCard = ({ name, slug }: { name: string; slug: string }) => {
+const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
+
+  const qPostUserFavorite = useMutation({
+    mutationFn: postUserFavorite
+  })
+  const qDeleteUserFavorite = useMutation({
+    mutationFn: deleteUserFavorite
+  })
 
   const [saved, setSaved] = useState(false)
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (saved) {
+      await qDeleteUserFavorite.mutateAsync({projectId: id});
+    } else {
+      await qPostUserFavorite.mutateAsync({projectId: id});
+    }
+
     setSaved(!saved)
     saved
       ? toast(`Token "${name}" unsaved`)
@@ -30,27 +45,29 @@ const MenuGemCard = ({ name, slug }: { name: string; slug: string }) => {
     />
   ]
 
-  const subMenuItems = [
+  // const subMenuItems = [
     // <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
     //   Ask Gem AI
     // </Button>,
-    <NavLink to={`/gems/${slug}`}>
-      <Button icon='carbon:search' color='tertiary'>
-        See details
-      </Button>
-    </NavLink>,
+    // <NavLink to={`/gems/${slug}`}>
+    //   <Button icon='carbon:search' color='tertiary'>
+    //     See details
+    //   </Button>
+    // </NavLink>,
     // <Button icon='carbon:share' color='tertiary'>
     //   Share
     // </Button>,
     // <Button icon='carbon:debug' color='tertiary'>
     //   Reported
     // </Button>
-  ]
+  // ]
 
-  return <Menu items={menuItems} sub={subMenuItems} />
+  // return <Menu items={menuItems} sub={subMenuItems} />
+  return <Menu items={menuItems} />
 }
 
 function GemCard({
+  id,
   name,
   category,
   href,
@@ -101,19 +118,6 @@ function GemCard({
     const [visibleItems] = useState(1)
     const ulRef = useRef<HTMLUListElement>(null)
 
-    // useEffect(() => {
-    //   const handleResize = () => {
-    //     console.log("handleResize")
-    //     if (ulRef.current) {
-    //       const itemsPerRow = Math.floor(ulRef.current.offsetWidth / 100)
-    //       setVisibleItems(itemsPerRow)
-    //     }
-    //   }
-    //   window.addEventListener("resize", handleResize)
-    //   handleResize()
-    //   return () => window.removeEventListener("resize", handleResize)
-    // }, [])
-
     const renderListWithOverflow = () => {
       const visibleItemsList = childrenArray.slice(0, visibleItems)
       const hiddenItems = childrenArray.slice(visibleItems)
@@ -139,9 +143,9 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} slug={slug} />
+          <MenuGemCard name={name} id={id} />
         </div>
-        <div className='gem-title'>{name}</div>
+        <Link to={`/gems/${slug}`} className='gem-title'>{name}</Link>
         <a
           className='gem-link'
           href={href}
@@ -172,9 +176,9 @@ function GemCard({
           </tbody>
         </table>
       </Section>
-      <div className='gem-bottom'>
+      <Link to={`/gems/${slug}`} className='gem-bottom'>
         <NoteCard total={weightedScore ?? null} />
-      </div>
+      </Link>
       <Corner />
     </div>
   )
