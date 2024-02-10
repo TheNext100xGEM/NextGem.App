@@ -70,7 +70,7 @@ export interface ApiGemFull {
   category: string;
   updatedAt: string;
   area_project: string;
-  llm_summary: string;
+  llm_summary?: string;
   weighted_score: number;
 }
 
@@ -115,7 +115,7 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     name: data.tokenName,
     category: data.category ?? "",
     href: data.websiteLink ?? '',
-    description: data.submittedDescription,
+    description: data.llm_summary ?? data.submittedDescription,
     chains: data.chains,
     launchpad: data.launchpad,
     tokenSymbol: data.tokenSymbol,
