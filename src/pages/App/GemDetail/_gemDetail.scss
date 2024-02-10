@@ -9,13 +9,22 @@
   line-height: 1.4;
   gap: var(--padding);
 
+  &-back {
+    margin-top: var(--padding);
+    svg {
+      margin-left: 0;
+      margin-right: 0.5em;
+    }
+  }
+
   &-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    gap: var(--gap);
 
-    @include max($mobile) {
+    @include max($l) {
       flex-direction: column;
       align-items: unset;
       gap: var(--padding);
@@ -24,12 +33,21 @@
     &-content {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      text-align: center;
       gap: var(--gap);
     }
 
-    .card {
-      min-width: 240px;
+    &-socials, &-note {
+      flex-shrink: 0;
     }
+
+    &-socials {
+      .card {
+        min-width: 240px;
+      }
+    }
+    
 
     &-note {
       display: flex;
@@ -51,6 +69,11 @@
 
     &-title {
       font-size: 48px;
+      word-break: break-all;
+    }
+
+    &-link {
+      display: flex;
     }
   }
 
@@ -59,11 +82,6 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--padding) / 2);
-
-    @include max($mobile) {
-      // --padding: calc(var(--size-3) / 1.5);
-      // gap: calc(var(--padding) / 1.5);
-    }
   }
 
   &-content {
@@ -74,7 +92,7 @@
 
     --padding: var(--size-6);
 
-    @include max($mobile) {
+    @include max($l) {
       --padding: calc(var(--size-6) / 1.5);
     }
   }

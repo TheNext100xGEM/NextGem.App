@@ -8,7 +8,7 @@ import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
-import { NavLink } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 
 const MenuGemCard = ({ name, slug }: { name: string; slug: string }) => {
 
@@ -101,19 +101,6 @@ function GemCard({
     const [visibleItems] = useState(1)
     const ulRef = useRef<HTMLUListElement>(null)
 
-    // useEffect(() => {
-    //   const handleResize = () => {
-    //     console.log("handleResize")
-    //     if (ulRef.current) {
-    //       const itemsPerRow = Math.floor(ulRef.current.offsetWidth / 100)
-    //       setVisibleItems(itemsPerRow)
-    //     }
-    //   }
-    //   window.addEventListener("resize", handleResize)
-    //   handleResize()
-    //   return () => window.removeEventListener("resize", handleResize)
-    // }, [])
-
     const renderListWithOverflow = () => {
       const visibleItemsList = childrenArray.slice(0, visibleItems)
       const hiddenItems = childrenArray.slice(visibleItems)
@@ -172,9 +159,9 @@ function GemCard({
           </tbody>
         </table>
       </Section>
-      <div className='gem-bottom'>
+      <Link to={`/gems/${slug}`} className='gem-bottom'>
         <NoteCard total={weightedScore ?? null} />
-      </div>
+      </Link>
       <Corner />
     </div>
   )

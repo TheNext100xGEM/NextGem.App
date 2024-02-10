@@ -2,7 +2,7 @@ import "./_gemDetail.scss"
 import { useQuery } from "@tanstack/react-query"
 
 import { mapGemFull } from "@models/GemFull"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { NoteCard } from "@components/Note"
 import { SITE_NAME } from "@constants/index"
 import { Helmet } from "react-helmet-async"
@@ -113,10 +113,33 @@ function GemDetailPage() {
       </Helmet>
       <div className='gemDetail'>
         <div className='wrapper'>
+          <Link to='/gems' className='gemDetail-back gem-link'>
+            <Icon icon='material-symbols:arrow-back' />
+            Back to gems
+          </Link>
           {qGemSingle.data && (
             <div className='gem'>
               <Section>
                 <div className='gemDetail-header'>
+                  <div className='gemDetail-header-socials'>
+                    <Card>
+                      <table>
+                        <tbody>
+                          <Row title='Socials'>
+                            <SocialList items={qGemSingle.data.socials} />
+                          </Row>
+                          <Row title='Chains'>
+                            <List>
+                              {qGemSingle.data.chains.map((item) => item)}
+                            </List>
+                          </Row>
+                          <Row title='Launchpad'>
+                            <List>{qGemSingle.data.launchpad}</List>
+                          </Row>
+                        </tbody>
+                      </table>
+                    </Card>
+                  </div>
                   <div className='gemDetail-header-content'>
                     <div className='gem-sub'>{qGemSingle.data.category}</div>
                     <h1 className='gem-title'>{qGemSingle.data?.name ?? ""}</h1>
@@ -130,23 +153,7 @@ function GemDetailPage() {
                       <Icon icon='carbon:link' />
                     </a>
                   </div>
-                  <Card>
-                    <table>
-                      <tbody>
-                        <Row title='Socials'>
-                          <SocialList items={qGemSingle.data.socials} />
-                        </Row>
-                        <Row title='Chains'>
-                          <List>
-                            {qGemSingle.data.chains.map((item) => item)}
-                          </List>
-                        </Row>
-                        <Row title='Launchpad'>
-                          <List>{qGemSingle.data.launchpad}</List>
-                        </Row>
-                      </tbody>
-                    </table>
-                  </Card>
+
                   <div className='gemDetail-header-note'>
                     <NoteCard total={qGemSingle.data.note.total} />
                     <Button

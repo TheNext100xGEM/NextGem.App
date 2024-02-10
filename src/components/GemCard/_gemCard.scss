@@ -74,7 +74,6 @@
     font-size: 2em;
     @include ellipsis;
     @include text-gradient;
-    line-height: 1;
   }
 
   &-link {
