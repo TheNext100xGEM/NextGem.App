@@ -1,0 +1,73 @@
+@import "../../assets/css/mixins/styles";
+
+.gem-list {
+  $el: &;
+  --padding: var(--size-3);
+  --gap: calc(var(--padding) / 2.5);
+  margin: var(--padding);
+  width: calc(100% - 2 * var(--padding));
+
+  &-wrapper {
+    overflow: auto;
+  }
+
+  thead {
+    tr {
+      border-bottom: 1px solid var(--stroke-color);
+    }
+
+    th {
+      padding: var(--padding);
+      text-align: left;
+    }
+  }
+
+  &-item {
+    border-bottom: 1px solid var(--stroke-color);
+
+    td {
+      vertical-align: middle;
+      padding: var(--gap) var(--padding);
+      text-align: left;
+    }
+
+    &-note {
+      text-align: center !important;
+    }
+
+    &-favorite {
+      .btn {
+        --padding-v: .65em;
+        --padding-h: .85em;
+        height: 32px;
+      }
+
+      svg {
+        transform: scale(.85) !important;
+        padding: 0 !important;
+      }
+    }
+
+    .gem-title {
+      font-size: 1.2em;
+    }
+
+    .note {
+      display: inline-flex;
+      padding: var(--size-2) var(--size-3);
+
+      strong {
+        font-size: 1.4em;
+        white-space: nowrap;
+      }
+
+      .corner {
+        // display: none;
+      }
+
+      > span {
+        display: none;
+      }
+    }
+  }
+}
