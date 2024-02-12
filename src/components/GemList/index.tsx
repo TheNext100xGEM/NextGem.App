@@ -14,6 +14,7 @@ import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
 function GemList({
   id,
   name,
+  description,
   category,
   href,
   chains,
@@ -92,6 +93,12 @@ function GemList({
         <Link to={`/gems/${slug}`} className='gem-title'>
           {name}
         </Link>
+        <div className="gem-list-item-name-desc">
+          <Icon icon="fluent:text-description-16-regular"/>
+          <div className="gem-list-item-name-desc-tooltip">
+            <p>{cleanHTMLTags(description)}</p>
+          </div>
+        </div>
       </td>
       <td className='gem-list-item-note'>
         <Link to={`/gems/${slug}`}>
