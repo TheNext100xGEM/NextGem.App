@@ -1,4 +1,4 @@
-import "./_GemList.scss"
+import "./_gemList.scss"
 import { NoteCard } from "@components/Note"
 import { SocialList } from "@components/Socials"
 import { Button } from "@components/ui"
