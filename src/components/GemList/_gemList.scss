@@ -31,6 +31,9 @@
       padding: var(--gap) var(--padding);
       text-align: left;
     }
+    &-favorite {
+      width: 50px;
+    }
 
     &-name {
       &-desc {

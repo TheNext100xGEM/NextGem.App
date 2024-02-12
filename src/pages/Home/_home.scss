@@ -157,6 +157,10 @@
     }
 
     @include max($sm) {
+      .wrapper {
+          padding: 40px 0 20px;
+      }
+
       h1 {
         br {
           display: none;
@@ -165,6 +169,10 @@
 
       .content {
         gap: 2em;
+      }
+
+      .btn-group {
+        margin-top: var(--size-2);
       }
     }
   }

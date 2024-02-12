@@ -120,7 +120,7 @@ function Header() {
 
   return (
     <header className={headerClass}>
-      <Link to="/" className="header-logo" onClick={soundClick}>
+      <Link to="/infos" className="header-logo" onClick={soundClick}>
         <Logotype />
       </Link>
       <div className="header-wrapper">
