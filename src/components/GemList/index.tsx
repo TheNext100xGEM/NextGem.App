@@ -10,6 +10,7 @@ import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { Link } from "react-router-dom"
 import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
+import { cleanHTMLTags } from "@utils/string"
 
 function GemList({
   id,
