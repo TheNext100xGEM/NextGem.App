@@ -5,7 +5,7 @@ import { ApiCollection } from "@models/API"
 import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
 import { ApiGemFull } from "@models/GemFull"
 
-export type PostResponse = {
+export type ApiStatusReponse = {
   status: boolean
   message?: string
 }
@@ -53,11 +53,11 @@ export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
 
 export const getUserChats = async () =>
-  request<ApiUserChats>(`${APP_API_URL}/user/chats`, "getUserChats", "GET")
+  request<ApiUserChats | ApiStatusReponse>(`${APP_API_URL}/user/chats`, "getUserChats", "GET")
 
   export const deleteUserChat = async (body: {
     chatId: string
-  }) => request<PostResponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
+  }) => request<ApiStatusReponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
 
 export const getUserChatId = async ({ id }: { id: string }) =>
   request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "getUserChatId", "GET")
@@ -69,11 +69,11 @@ export const postChatMessage = async (body: {
 
 export const postUserFavorite = async (body: {
   projectId: string
-}) => request<PostResponse>(`${APP_API_URL}/users/favorites`, "postUserFavorite", "POST", body)
+}) => request<ApiStatusReponse>(`${APP_API_URL}/users/favorites`, "postUserFavorite", "POST", body)
 
 export const deleteUserFavorite = async (body: {
   projectId: string
-}) => request<PostResponse>(`${APP_API_URL}/users/favorites/delete`, "deleteUserFavorite", "POST", body)
+}) => request<ApiStatusReponse>(`${APP_API_URL}/users/favorites/delete`, "deleteUserFavorite", "POST", body)
 
 // Functions
 async function request<T>(

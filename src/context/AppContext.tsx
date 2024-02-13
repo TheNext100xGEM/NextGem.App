@@ -16,6 +16,8 @@ interface AppContextProps {
   setIsInApp: React.Dispatch<React.SetStateAction<boolean>>
   isInChat: boolean
   setIsInChat: React.Dispatch<React.SetStateAction<boolean>>
+  isPremium: boolean | null
+  setIsPremium: React.Dispatch<React.SetStateAction<boolean | null>>
   web3Token: string | null
   setWeb3Token: React.Dispatch<React.SetStateAction<string | null>>
 }
@@ -25,6 +27,7 @@ const AppContext = createContext<AppContextProps | undefined>(undefined)
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [isInApp, setIsInApp] = useState<AppContextProps["isInApp"]>(false)
   const [isInChat, setIsInChat] = useState<AppContextProps["isInChat"]>(false)
+  const [isPremium, setIsPremium] = useState<AppContextProps["isPremium"]>(null)
   const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
   const location = useLocation()
 
@@ -73,7 +76,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AppContext.Provider
-      value={{ isInApp, setIsInApp, isInChat, setIsInChat, web3Token, setWeb3Token }}
+      value={{ isInApp, setIsInApp, isInChat, setIsInChat, web3Token, setWeb3Token, isPremium, setIsPremium }}
     >
       {children}
     </AppContext.Provider>
