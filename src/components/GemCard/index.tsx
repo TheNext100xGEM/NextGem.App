@@ -12,7 +12,7 @@ import toast from "react-hot-toast"
 import { Link } from "react-router-dom"
 import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
 
-const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
+const MenuGemCard = ({ name, id, isFavorite }: { name: string; id: string, isFavorite: boolean }) => {
 
   const qPostUserFavorite = useMutation({
     mutationFn: postUserFavorite
@@ -21,7 +21,7 @@ const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
     mutationFn: deleteUserFavorite
   })
 
-  const [saved, setSaved] = useState(false)
+  const [saved, setSaved] = useState(isFavorite)
   const handleSave = async () => {
     if (saved) {
       await qDeleteUserFavorite.mutateAsync({projectId: id});
@@ -31,8 +31,8 @@ const MenuGemCard = ({ name, id }: { name: string; id: string }) => {
 
     setSaved(!saved)
     saved
-      ? toast(`Token "${name}" unsaved`)
-      : toast.success(`Token "${name}" saved`)
+      ? toast(`Gem "${name}" unsaved`)
+      : toast.success(`Gem "${name}" saved`)
   }
 
   const menuItems = [
@@ -76,9 +76,10 @@ function GemCard({
   launchpad,
   llmList,
   weightedScore,
-  status,
+  status = Math.round(Math.random() * 3 - 1),
   socials,
-  slug
+  slug,
+  isFavorite
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -143,7 +144,7 @@ function GemCard({
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
-          <MenuGemCard name={name} id={id} />
+          <MenuGemCard name={name} id={id} isFavorite={isFavorite} />
         </div>
         <Link to={`/gems/${slug}`} className='gem-title'>{name}</Link>
         <a
@@ -154,6 +155,25 @@ function GemCard({
         >
           {urlTransform} <Icon icon='carbon:link' />
         </a>
+        <div className="gem-status">
+          {status === -1 && (<>
+            <span>Launch status unavailable</span>
+            <Icon icon='mdi:gauge-empty' />
+          </>)}
+          {status === 0 && (<>
+            <span>Not launched</span>
+            <Icon icon='material-symbols:settings-outline' />
+          </>)}
+          {status === 1 && (<>
+            <span>Launch in progress</span>
+            <Icon icon='material-symbols:rocket-launch-outline' />
+          </>)}
+          {status === 2 && (<>
+            <span>Live project</span>
+            <Icon icon='tabler:sparkles' />
+          </>)}
+        </div>
+
         <div className='gem-desc'>
           <p>{cleanHTMLTags(description)}</p>
         </div>

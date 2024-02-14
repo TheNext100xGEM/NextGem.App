@@ -1,12 +1,16 @@
 import "./_gemDetail.scss"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 
 import { mapGemFull } from "@models/GemFull"
 import { Link, useParams } from "react-router-dom"
 import { NoteCard } from "@components/Note"
 import { SITE_NAME } from "@constants/index"
 import { Helmet } from "react-helmet-async"
-import { getGemSingle } from "../../../queries/api"
+import {
+  deleteUserFavorite,
+  getGemSingle,
+  postUserFavorite
+} from "../../../queries/api"
 import { Children, ReactNode, useRef, useState } from "react"
 import classNames from "classnames"
 import { Button, Corner } from "@components/ui"
@@ -14,6 +18,7 @@ import Markdown from "@components/ui/Markdown"
 import { removeUrlPrefix } from "@utils/url"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { SocialList } from "@components/Socials"
+import toast from "react-hot-toast"
 
 function GemDetailPage() {
   const { tokenId } = useParams()
@@ -32,6 +37,27 @@ function GemDetailPage() {
     select: mapGemFull,
     enabled: !!id
   })
+
+  const qPostUserFavorite = useMutation({
+    mutationFn: postUserFavorite
+  })
+  const qDeleteUserFavorite = useMutation({
+    mutationFn: deleteUserFavorite
+  })
+
+  const [saved, setSaved] = useState(qGemSingle.data?.isFavorite ?? false)
+  const handleSave = async () => {
+    if (saved) {
+      await qDeleteUserFavorite.mutateAsync({ projectId: id })
+    } else {
+      await qPostUserFavorite.mutateAsync({ projectId: id })
+    }
+
+    setSaved(!saved)
+    saved
+      ? toast(`Gem "${qGemSingle.data?.name ?? token}" unsaved`)
+      : toast.success(`Gem "${qGemSingle.data?.name ?? token}" saved`)
+  }
 
   type PropsCard = {
     children: ReactNode
@@ -145,15 +171,26 @@ function GemDetailPage() {
                   <div className='gemDetail-header-content'>
                     <div className='gem-sub'>{qGemSingle.data.category}</div>
                     <h1 className='gem-title'>{qGemSingle.data.name ?? ""}</h1>
-                    <a
-                      className='gem-link'
-                      href={qGemSingle.data.href}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      {removeUrlPrefix(qGemSingle.data.href)}{" "}
-                      <Icon icon='carbon:link' />
-                    </a>
+                    <div className='gem-infos'>
+                      <a
+                        className='gem-link'
+                        href={qGemSingle.data.href}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        {removeUrlPrefix(qGemSingle.data.href)}{" "}
+                        <Icon icon='carbon:link' />
+                      </a>
+                      <Button
+                        icon={
+                          saved ? "carbon:bookmark-filled" : "carbon:bookmark"
+                        }
+                        onClick={handleSave}
+                        color='tertiary'
+                        minus
+                        title='Save'
+                      />
+                    </div>
                   </div>
 
                   <div className='gemDetail-header-note'>

@@ -10,6 +10,7 @@ export interface GemFull {
   id: string
   name: string
   category: string
+  isFavorite: boolean
   href: string
   description: string
   chains: string[]
@@ -35,6 +36,7 @@ export interface ApiGemFull {
   baseSymbol: string;
   saleToken: string;
   audit: boolean;
+  isFavorite: boolean;
   auditLink: string;
   kyc: boolean;
   safu: boolean;
@@ -120,6 +122,7 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     launchpad: data.launchpad,
     tokenSymbol: data.tokenSymbol,
     note,
+    isFavorite: data.isFavorite,
     gemini_score: data.gemini_score,
     gemini_raw: data.gemini_raw,
     gpt_score: data.gpt_score,

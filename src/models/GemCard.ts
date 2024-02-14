@@ -18,6 +18,7 @@ export interface Gem {
   llmList: string[]
   weightedScore?: number
   status?: number
+  isFavorite: boolean
   socials: PropsSocialLink[]
 }
 
@@ -34,6 +35,7 @@ export interface ApiGem {
   llmList: string[]
   weightedScore: number | "none"
   status?: number
+  isFavorite: boolean
   socials: {
     telegram?: string
     twitter?: string
@@ -62,6 +64,7 @@ export const mapGem = (data: ApiGem): Gem => {
     name: data.name,
     slug: data.slug,
     category: data.category ?? "",
+    isFavorite: data.isFavorite,
     href: data.href,
     description: data.description,
     chains: data.chains,

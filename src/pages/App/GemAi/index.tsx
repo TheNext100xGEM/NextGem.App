@@ -469,8 +469,7 @@ function GemAiPage() {
           {!isPremium && (
             <>
               <Alert status='warning'>
-                You don't have access to <strong>{CHAT_NAME}</strong>, go burn{" "}
-                <strong>{TOKEN_NAME}</strong> to unlock access.
+                You don't have access to <strong>{CHAT_NAME} Beta</strong>.
               </Alert>
               <Button
                 href='/staking'
