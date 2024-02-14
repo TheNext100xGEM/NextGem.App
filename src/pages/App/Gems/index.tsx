@@ -198,16 +198,20 @@ const FilterSearchQuery = () => {
 
 const Filter = () => {
   const [open, setOpen] = useState(false)
-  const { viewMode, setViewMode } =
-  useGemsContext()
+  const { viewMode, setViewMode } = useGemsContext()
 
   return (
     <div className={classNames("filter", open && "open")}>
-        <Button
+      <Button
         minus
-          icon={viewMode === 'list' ? 'clarity:view-cards-line' : 'carbon:show-data-cards' }
-          onClick={() => setViewMode(viewMode === 'list' ? 'grid': 'list')}
-        />
+        color='tertiary'
+        icon={
+          viewMode === "list"
+            ? "clarity:view-cards-line"
+            : "carbon:show-data-cards"
+        }
+        onClick={() => setViewMode(viewMode === "list" ? "grid" : "list")}
+      />
       <FilterSearchQuery />
       <div className='filter-actions'>
         <FilterBySort />
@@ -235,8 +239,15 @@ const Filter = () => {
 }
 
 function GemsPage() {
-  const { noteMin, noteMax, categories, chains, searchQuery, sortBy, viewMode } =
-    useGemsContext()
+  const {
+    noteMin,
+    noteMax,
+    categories,
+    chains,
+    searchQuery,
+    sortBy,
+    viewMode
+  } = useGemsContext()
 
   const qGemCollection = useInfiniteQuery({
     queryKey: [
@@ -263,7 +274,8 @@ function GemsPage() {
     },
     getPreviousPageParam: (lastPage) => lastPage.prevPage,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 1
+    initialPageParam: 1,
+    refetchOnWindowFocus: false
   })
 
   // useGSAP(
@@ -320,6 +332,7 @@ function GemsPage() {
                   <th className='gem-list-item-name'>Name</th>
                   <th className='gem-list-item-note'>AI Note</th>
                   <th className='gem-list-item-link'>Link</th>
+                  <th className='gem-list-item-status'>Status</th>
                   <th className='gem-list-item-cateogry'>Category</th>
                   <th className='gem-list-item-socials'>Socials</th>
                   <th className='gem-list-item-chains'>Chains</th>

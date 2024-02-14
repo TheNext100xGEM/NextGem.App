@@ -5,11 +5,11 @@ import { PropsNote } from "@models/Note"
 
 export const NoteCard = ({ total }: PropsNote) => {
   let status
-  if (total && total > 0 && total < NOTE_MAX / 4) {
+  if (total && total < 4) {
     status = "danger"
-  } else if (total && total >= NOTE_MAX / 4 && NOTE_MAX / 2 >= total) {
+  } else if (total && total >= 4 && total < 6) {
     status = "warning"
-  } else if (total && total > NOTE_MAX / 2) {
+  } else if (total && total >= 6) {
     status = "success"
   }
 

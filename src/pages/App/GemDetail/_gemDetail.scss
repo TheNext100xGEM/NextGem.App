@@ -83,6 +83,21 @@
     &-link {
       display: flex;
     }
+
+    &-infos {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+
+      .btn {
+        --padding-h: 1.25em;
+        height: 36px;
+      }
+      svg {
+        transform: scale(0.85) !important;
+        padding: 0 !important;
+      }
+    }
   }
 
   .card {

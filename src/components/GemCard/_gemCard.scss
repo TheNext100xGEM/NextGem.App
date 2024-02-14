@@ -150,23 +150,37 @@
     padding: var(--size-3);
   }
 
-  &[data-project-status="1"] {
-    .gem-title {
-      background: linear-gradient(#03ff00 20%, #03ff0080 100%);
-      background-clip: text;
+  &-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: var(--size-1);
+  }
+
+  &[data-project-status="0"] {
+    .gem-status {
+      color: #f2ff00;
     }
-    .gem-section-light:before {
+    > .gem-section:first-child .gem-section-light {
+      --stroke-color: #f2ff0054;
+    }
+  }
+
+  &[data-project-status="1"] {
+    .gem-status {
+      color: #03ff00;
+    }
+    > .gem-section:first-child .gem-section-light {
       --stroke-color: #03ff0054;
     }
   }
 
   &[data-project-status="2"] {
-    .gem-title {
-      background: linear-gradient(#f2ff00 20%, #f2ff0080 100%);
-      background-clip: text;
+    .gem-status {
+      color: #25cbff;
     }
-    .gem-section-light:before {
-      --stroke-color: #f2ff0054;
+    > .gem-section:first-child .gem-section-light {
+      --stroke-color: #25cbff54;
     }
   }
 }

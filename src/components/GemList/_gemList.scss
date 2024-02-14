@@ -126,5 +126,39 @@
         display: none;
       }
     }
+
+    &-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      margin-top: var(--size-1);
+    }
+  
+    &[data-project-status="0"] {
+      .gem-status {
+        color: #f2ff00;
+      }
+      > .gem-section:first-child .gem-section-light {
+        --stroke-color: #f2ff0054;
+      }
+    }
+  
+    &[data-project-status="1"] {
+      .gem-status {
+        color: #03ff00;
+      }
+      > .gem-section:first-child .gem-section-light {
+        --stroke-color: #03ff0054;
+      }
+    }
+  
+    &[data-project-status="2"] {
+      .gem-status {
+        color: #25cbff;
+      }
+      > .gem-section:first-child .gem-section-light {
+        --stroke-color: #25cbff54;
+      }
+    }
   }
 }

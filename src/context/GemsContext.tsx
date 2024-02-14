@@ -32,7 +32,7 @@ export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
   const [searchQuery, setSearchQuery] =
     useState<GemsContextProps["searchQuery"]>(undefined)
   const [sortBy, setSortBy] = useState<GemsContextProps["chains"]>([])
-  const [viewMode, setViewMode] = useState<GemsContextProps["viewMode"]>('list')
+  const [viewMode, setViewMode] = useState<GemsContextProps["viewMode"]>('grid')
 
   return (
     <GemsContext.Provider

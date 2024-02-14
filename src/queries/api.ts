@@ -69,11 +69,11 @@ export const postChatMessage = async (body: {
 
 export const postUserFavorite = async (body: {
   projectId: string
-}) => request<ApiStatusReponse>(`${APP_API_URL}/users/favorites`, "postUserFavorite", "POST", body)
+}) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites`, "postUserFavorite", "POST", body)
 
 export const deleteUserFavorite = async (body: {
   projectId: string
-}) => request<ApiStatusReponse>(`${APP_API_URL}/users/favorites/delete`, "deleteUserFavorite", "POST", body)
+}) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites/delete`, "deleteUserFavorite", "POST", body)
 
 // Functions
 async function request<T>(
