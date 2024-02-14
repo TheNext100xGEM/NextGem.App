@@ -24,6 +24,7 @@ import { mapGem } from "@models/GemCard"
 import React from "react"
 import PanelGem from "@components/PanelGem"
 import { useGemsContext } from "@context/GemsContext"
+import GemList from "@components/GemList"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -51,25 +52,26 @@ const FilterDrop = ({ name, right, children, className }: PropsFilterDrop) => {
 const FilterBySort = () => {
   const options = [
     {
-    id: '',
-    label: "None"
-  },
-  {
-  id: 'note',
-  label: "AI Note"
-}, {
-    id: 'tokens',
-    label: "Tokens"
-  }
-]
-  const { sortBy, setSortBy } = useGemsContext();
+      id: "",
+      label: "None"
+    },
+    {
+      id: "note",
+      label: "AI Note"
+    },
+    {
+      id: "tokens",
+      label: "Tokens"
+    }
+  ]
+  const { sortBy, setSortBy } = useGemsContext()
 
   const handleCheckboxChange = (label: string) => {
-    setSortBy(label !== '' ? [label] : []);
+    setSortBy(label !== "" ? [label] : [])
   }
 
   return (
-    <FilterDrop name='Sort by' right={sortBy.join(',')}>
+    <FilterDrop name='Sort by' right={sortBy.join(",")}>
       <ul>
         {options.map((option, index) => (
           <li key={index}>
@@ -78,7 +80,9 @@ const FilterBySort = () => {
               type='radio'
               name='sort'
               onChange={() => handleCheckboxChange(option.id)}
-              checked={sortBy.length ? sortBy.includes(option.id) : option.id === ''}
+              checked={
+                sortBy.length ? sortBy.includes(option.id) : option.id === ""
+              }
             />
           </li>
         ))}
@@ -92,16 +96,12 @@ const FilterByCategories = () => {
 
   const handleCheckboxChange = (category: string) => {
     if (categories.includes(category)) {
-      setCategories((prevCategories) =>
-        prevCategories?.filter(
-          (prevCategory) => prevCategory !== category
-        )
+      setCategories(
+        (prevCategories) =>
+          prevCategories?.filter((prevCategory) => prevCategory !== category)
       )
     } else {
-      setCategories((prevCategories) => [
-        ...prevCategories,
-        category
-      ])
+      setCategories((prevCategories) => [...prevCategories, category])
     }
   }
 
@@ -131,11 +131,10 @@ const FilterByCategories = () => {
 const FilterByChains = () => {
   const { chains, setChains } = useGemsContext()
 
-
   const handleCheckboxChange = (chain: string) => {
     if (chains.includes(chain)) {
       setChains((prevChains) =>
-      prevChains.filter((prevChain) => prevChain !== chain)
+        prevChains.filter((prevChain) => prevChain !== chain)
       )
     } else {
       setChains((prevChains) => [...prevChains, chain])
@@ -199,9 +198,16 @@ const FilterSearchQuery = () => {
 
 const Filter = () => {
   const [open, setOpen] = useState(false)
+  const { viewMode, setViewMode } =
+  useGemsContext()
 
   return (
     <div className={classNames("filter", open && "open")}>
+        <Button
+        minus
+          icon={viewMode === 'list' ? 'clarity:view-cards-line' : 'carbon:show-data-cards' }
+          onClick={() => setViewMode(viewMode === 'list' ? 'grid': 'list')}
+        />
       <FilterSearchQuery />
       <div className='filter-actions'>
         <FilterBySort />
@@ -229,7 +235,8 @@ const Filter = () => {
 }
 
 function GemsPage() {
-  const { noteMin, noteMax, categories, chains, searchQuery, sortBy } = useGemsContext()
+  const { noteMin, noteMax, categories, chains, searchQuery, sortBy, viewMode } =
+    useGemsContext()
 
   const qGemCollection = useInfiniteQuery({
     queryKey: [
@@ -241,7 +248,7 @@ function GemsPage() {
       searchQuery,
       sortBy
     ],
-    queryFn: ({pageParam}) =>
+    queryFn: ({ pageParam }) =>
       getGemCollection({
         page: pageParam,
         noteMin,
@@ -290,10 +297,10 @@ function GemsPage() {
         qGemCollection.fetchNextPage()
       }
     })
-    
+
     observer.observe(bottom.current)
 
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   }, [])
 
   return (
@@ -304,28 +311,60 @@ function GemsPage() {
 
       <div className='gems'>
         <Filter />
-        <Grid>
-          {qGemCollection.data &&
-            qGemCollection.data.map((page, i) => (
-              <React.Fragment key={i}>
-                {page.map((item, id) => (
-                  <Item key={id}>
-                    <GemCard {...item} />
-                  </Item>
-                ))}
-              </React.Fragment>
-            ))}
-        </Grid>
+        <div className='gem-list-wrapper'>
+          {viewMode === "list" && (
+            <table className='gem-list'>
+              <thead>
+                <tr>
+                  <th className='gem-list-item-favorite'></th>
+                  <th className='gem-list-item-name'>Name</th>
+                  <th className='gem-list-item-note'>AI Note</th>
+                  <th className='gem-list-item-link'>Link</th>
+                  <th className='gem-list-item-cateogry'>Category</th>
+                  <th className='gem-list-item-socials'>Socials</th>
+                  <th className='gem-list-item-chains'>Chains</th>
+                  <th className='gem-list-item-launchpad'>Launchpad</th>
+                </tr>
+              </thead>
+              <tbody>
+                {qGemCollection.data &&
+                  qGemCollection.data.map((page, i) => (
+                    <React.Fragment key={i}>
+                      {page.map((item) => (
+                        <GemList {...item} />
+                      ))}
+                    </React.Fragment>
+                  ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+        {viewMode === "grid" && (
+          <Grid>
+            {qGemCollection.data &&
+              qGemCollection.data.map((page, i) => (
+                <React.Fragment key={i}>
+                  {page.map((item, id) => (
+                    <Item key={id}>
+                      <GemCard {...item} />
+                    </Item>
+                  ))}
+                </React.Fragment>
+              ))}
+          </Grid>
+        )}
         {qGemCollection.isFetching && (
           <div className='gems-loader'>
             <Loader />
           </div>
         )}
-        {qGemCollection.isFetched && qGemCollection.data && qGemCollection.data[0].length === 0 && (
-          <div className='gems-empty'>
-            No gems available with current filters.
-          </div>
-        )}
+        {qGemCollection.isFetched &&
+          qGemCollection.data &&
+          qGemCollection.data[0].length === 0 && (
+            <div className='gems-empty'>
+              No gems available with current filters.
+            </div>
+          )}
         <div style={{ height: "1px" }} ref={bottom} />
       </div>
 

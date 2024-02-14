@@ -1,0 +1,130 @@
+@import "../../assets/css/mixins/styles";
+
+.gem-list {
+  $el: &;
+  --padding: var(--size-3);
+  --gap: calc(var(--padding) / 2.5);
+  margin: var(--padding);
+  width: calc(100% - 2 * var(--padding));
+
+  &-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  thead {
+    tr {
+      border-bottom: 1px solid var(--stroke-color);
+    }
+
+    th {
+      padding: var(--padding);
+      text-align: left;
+    }
+  }
+
+  &-item {
+    border-bottom: 1px solid var(--stroke-color);
+
+    td {
+      vertical-align: middle;
+      padding: var(--gap) var(--padding);
+      text-align: left;
+    }
+    &-favorite {
+      width: 50px;
+    }
+
+    &-name {
+      &-desc {
+        $desc: &;
+
+        display: inline-block;
+        margin-left: calc(var(--gap) * 2);
+
+        &:before {
+          content: "";
+          position: absolute;
+          top: calc(var(--gap) * 2 * -1);
+          right: calc(var(--gap) * 2 * -1);
+          bottom: calc(var(--gap) * 2 * -1);
+          left: calc(var(--gap) * 2 * -1);
+          cursor: pointer;
+        }
+
+        &:hover {
+          #{$desc}-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease-out;
+          }
+        }
+
+        &-tooltip {
+          position: absolute;
+          z-index: 1;
+          left: calc(100% + var(--gap) * 2);
+          top: 50%;
+          width: 280px;
+          padding: calc(var(--gap) * 2);
+          background-color: var(--bg-body);
+          border: 1px solid var(--stroke-color);
+          transform: translateY(-50%);
+          opacity: 0;
+          visibility: hidden;
+          transition:
+            opacity 0.3s ease-out,
+            visibility 0s linear 0.3s;
+
+          p {
+            @include clamp(4);
+            line-height: 1.4;
+          }
+        }
+
+        svg {
+          pointer-events: none;
+        }
+      }
+    }
+
+    &-note {
+      text-align: center !important;
+    }
+
+    &-favorite {
+      .btn {
+        --padding-v: 0.65em;
+        --padding-h: 0.85em;
+        height: 32px;
+      }
+
+      svg {
+        transform: scale(0.85) !important;
+        padding: 0 !important;
+      }
+    }
+
+    .gem-title {
+      font-size: 1.2em;
+    }
+
+    .note {
+      display: inline-flex;
+      padding: var(--size-2) var(--size-3);
+
+      strong {
+        font-size: 1.4em;
+        white-space: nowrap;
+      }
+
+      .corner {
+        // display: none;
+      }
+
+      > span {
+        display: none;
+      }
+    }
+  }
+}

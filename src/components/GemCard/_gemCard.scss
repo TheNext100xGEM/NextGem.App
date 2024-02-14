@@ -7,9 +7,6 @@
   --gap: calc(var(--padding) / 2.5);
   display: flex;
   flex-direction: column;
-  // opacity: 0;
-  // transform: translateY(75px);
-  // will-change: opacity;
 
   &-section {
     padding: var(--padding);

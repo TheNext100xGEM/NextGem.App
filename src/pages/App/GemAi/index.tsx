@@ -16,6 +16,7 @@ import { useChatContext } from "@context/ChatContext"
 import { Behavior } from "@enums/Behavior"
 import { Icon } from "@iconify/react"
 import {
+  ApiUserChats,
   ChatMessage,
   UserChat,
   mapChatMessage,
@@ -51,7 +52,7 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 
 function GemAiPage() {
   const message = useRef<HTMLTextAreaElement>(null)
-  const { web3Token } = useAppContext()
+  const { web3Token, isPremium, setIsPremium } = useAppContext()
   const {
     chatId,
     setChatId,
@@ -62,7 +63,6 @@ function GemAiPage() {
     setResponseInProgress
   } = useChatContext()
 
-  const [access, setAccess] = useState(false)
   const [asideResponsive, setAsideResponsive] = useState(false)
   const [newConversation, setNewConversation] = useState(true)
   const [conversationInProgress, setConversationInProgress] = useState(true)
@@ -80,8 +80,6 @@ function GemAiPage() {
   const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
     volume: VOLUME_BUTTON_HOVER
   })
-
-  useEffect(() => setAccess(!!web3Token), [web3Token])
 
   useEffect(() => ScrollToBottom("instant"), [])
   useEffect(() => ScrollToBottom("instant"), [currentChat.messages])
@@ -148,7 +146,13 @@ function GemAiPage() {
   const qUserChats = useQuery({
     queryKey: ["userChats", web3Token],
     queryFn: getUserChats,
-    select: (data) => data.data.map(mapUserChat),
+    select: (data) => {
+      if ('chats' in data) {
+        return (data as ApiUserChats).data.map(mapUserChat);
+      } else {
+        setIsPremium(false)
+      }
+    },
     refetchOnWindowFocus: false
   })
 
@@ -216,7 +220,7 @@ function GemAiPage() {
       }
     }
 
-    const disabled = !access || responseInProgress
+    const disabled = !isPremium || responseInProgress
 
     return (
       <div className='ai-chat-form'>
@@ -397,7 +401,7 @@ function GemAiPage() {
               <li className='ai-list-subheading'>Today</li>
             </>
           )}
-          {!qUserChats.data && (
+          {!qUserChats.data && !qUserChats.isFetched && (
             <li className='ai-list-loader'>
               <Loader />
             </li>
@@ -462,7 +466,7 @@ function GemAiPage() {
               Ask any question related to any project(s) below.
             </p>
           </div>
-          {!access && (
+          {!isPremium && (
             <>
               <Alert status='warning'>
                 You don't have access to <strong>{CHAT_NAME}</strong>, go burn{" "}
@@ -514,12 +518,6 @@ function GemAiPage() {
           <div className='wrapper'>
             <div className='ai-chat'>
               <Conversation />
-
-              {/* <div style={{ padding: "40px" }}>
-                responseInProgress : {JSON.stringify(responseInProgress)}
-                <br />
-                currentResponse : {currentResponse}
-              </div> */}
               <FormAi />
             </div>
           </div>

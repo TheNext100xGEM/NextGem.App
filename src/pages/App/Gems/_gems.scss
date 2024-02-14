@@ -9,7 +9,7 @@ $responsiveAside: $xl;
     padding: var(--padding);
     border-bottom: var(--stroke-primary);
     display: flex;
-    align-items: stretch;
+    align-items: center;
     gap: var(--size-3);
 
     &-actions {
@@ -164,6 +164,10 @@ $responsiveAside: $xl;
         transform: translateX(0%);
       }
     }
+  }
+
+  .list {
+    width: 100%;
   }
 
   .grid {

@@ -15,20 +15,24 @@ interface GemsContextProps {
   setSearchQuery: React.Dispatch<React.SetStateAction<string | undefined>>
   sortBy: string[]
   setSortBy: React.Dispatch<React.SetStateAction<string[]>>
+  viewMode: "grid" | "list"
+  setViewMode: React.Dispatch<React.SetStateAction<"grid" | "list">>
 }
 
 const GemsContext = createContext<GemsContextProps | undefined>(undefined)
 
 export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
   const [id, setId] = useState<GemsContextProps["id"]>("")
-  const [categories, setCategories] =
-    useState<GemsContextProps["categories"]>([])
+  const [categories, setCategories] = useState<GemsContextProps["categories"]>(
+    []
+  )
   const [noteMin, setNoteMin] = useState<GemsContextProps["noteMin"]>(1)
   const [noteMax, setNoteMax] = useState<GemsContextProps["noteMax"]>(10)
   const [chains, setChains] = useState<GemsContextProps["chains"]>([])
   const [searchQuery, setSearchQuery] =
     useState<GemsContextProps["searchQuery"]>(undefined)
-    const [sortBy, setSortBy] = useState<GemsContextProps["chains"]>([])
+  const [sortBy, setSortBy] = useState<GemsContextProps["chains"]>([])
+  const [viewMode, setViewMode] = useState<GemsContextProps["viewMode"]>('list')
 
   return (
     <GemsContext.Provider
@@ -45,8 +49,10 @@ export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
         setChains,
         searchQuery,
         setSearchQuery,
-        sortBy, 
-        setSortBy
+        sortBy,
+        setSortBy,
+        viewMode,
+        setViewMode
       }}
     >
       {children}
