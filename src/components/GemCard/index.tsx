@@ -79,7 +79,8 @@ function GemCard({
   status = Math.round(Math.random() * 3 - 1),
   socials,
   slug,
-  isFavorite
+  isFavorite,
+  isTrending
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -140,13 +141,16 @@ function GemCard({
   }
 
   return (
-    <div className='gem' data-colors='tertiary' data-project-status={status}>
+    <div className='gem' data-colors='tertiary' data-project-status={status} data-project-trendy={isTrending}>
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
           <MenuGemCard name={name} id={id} isFavorite={isFavorite} />
         </div>
-        <Link to={`/gems/${slug}`} className='gem-title'>{name}</Link>
+        <Link to={`/gems/${slug}`} className='gem-title'>
+          <span>{name}</span>
+          {isTrending && <Icon icon="solar:flame-bold-duotone"/>}
+          </Link>
         <a
           className='gem-link'
           href={href}

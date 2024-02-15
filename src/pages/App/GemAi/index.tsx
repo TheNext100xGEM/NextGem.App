@@ -146,14 +146,16 @@ function GemAiPage() {
     queryKey: ["userChats", web3Token],
     queryFn: getUserChats,
     select: (data) => {
-      if ('chats' in data) {
+      if ('data' in data) {
         return (data as ApiUserChats).data.map(mapUserChat);
-      } else {
-        setIsPremium(false)
       }
     },
     refetchOnWindowFocus: false
   })
+
+  useEffect(() => {
+      setIsPremium(!!qUserChats.data);
+  }, [qUserChats.data, setIsPremium]);
 
   useEffect(() => {
     if (!qUserChats.data) return
@@ -475,7 +477,7 @@ function GemAiPage() {
                 icon='carbon:shopping-cart'
                 status='success'
               >
-                Buy access now
+                Get Beta Access
               </Button>
             </>
           )}

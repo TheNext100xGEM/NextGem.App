@@ -66,11 +66,33 @@
   }
 
   &-title {
-    font-family: var(--font-family-heading);
-    font-weight: 600;
-    font-size: 2em;
-    @include ellipsis;
-    @include text-gradient;
+    display: flex;
+    align-items: center;
+    gap: var(--gap);
+    width: 100%;
+
+    span {
+
+      font-family: var(--font-family-heading);
+      font-weight: 600;
+      font-size: 2em;
+      @include ellipsis;
+      @include text-gradient;
+
+      [data-project-trendy="true"] & {
+        --text-primary: #fb3838;
+        --text-secondary: #ffb123;
+      }
+    }
+
+    svg {
+      flex-shrink: 0;
+      width: 28px;
+
+      path {
+        fill: #FD872A
+      }
+    }
   }
 
   &-link {
