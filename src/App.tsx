@@ -7,6 +7,7 @@ import { GemsContextProvider } from "@context/GemsContext"
 import { SeoContextProvider } from "@context/SeoContext"
 import useWindowHeight from "@hooks/useWindowHeight"
 import { GemsPage, StakingPage, GemAiPage } from "@pages/App"
+import GemAiSinglePage from "@pages/App/GemAiSingle"
 import GemDetailPage from "@pages/App/GemDetail"
 import { HomePage, DefaultPage } from "@pages/index"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -103,6 +104,10 @@ function App() {
         {
           path: "/staking",
           element: <StakingPage />
+        },
+        {
+          path: "/gem-ai/:chatId",
+          element: <GemAiSinglePage />
         },
         {
           path: "/gem-ai",

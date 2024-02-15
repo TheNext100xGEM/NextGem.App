@@ -35,7 +35,6 @@ export const mapChatMessage = (data: ApiChatMessage): ChatMessage => {
 }
 
 export type CurrentChat = {
-  title: string
   messages: ChatMessage[]
 }
 

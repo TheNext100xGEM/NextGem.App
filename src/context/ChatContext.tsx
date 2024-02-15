@@ -7,6 +7,7 @@ import React, {
 } from "react"
 import { CurrentChat } from "@models/Chat"
 import { ApiEmbed, mapEmbed } from "@models/ChatEmbed"
+import { useNavigate } from "react-router-dom"
 
 interface ChatContextProps {
   chatId: string | undefined
@@ -24,6 +25,8 @@ interface ChatContextProps {
 const ChatContext = createContext<ChatContextProps | undefined>(undefined)
 
 export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate()
+
   const [chatId, setChatId] = useState<ChatContextProps["chatId"]>(undefined)
   const [wssUrl, setWssUrl] = useState<ChatContextProps["wssUrl"]>("")
   const [currentResponse, setCurrentResponse] =
@@ -33,7 +36,6 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
   const [currentChat, setCurrentChat] = useState<
     ChatContextProps["currentChat"]
   >({
-    title: "",
     messages: []
   })
 
@@ -42,40 +44,56 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       return
     }
 
+    let timeout: NodeJS.Timeout
 
     const ws = new WebSocket(wssUrl)
     ws.onmessage = (evt) => {
       setResponseInProgress(true)
 
       const json = JSON.parse(evt.data)
+
+      clearTimeout(timeout)
+      timeout = setTimeout(
+        () => {
+          handleEnd(json.body.embeds, json.body.contextResponse)
+          ws.close()
+        },
+        5000
+      )
+
       if (json.type === "chat_stream_packet" && json.body.content) {
-        handleNewMessagePart(json.body.content)
+        handleNewMessagePart(json.body.content, json.body.contextResponse)
       }
 
       if (json.type === "chat_stream_end") {
-        console.log(json.body.embeds)
-        handleEmbeds(json.body.embeds, json.body.contextResponse)
-        setResponseInProgress(false)
+        handleEnd(json.body.embeds, json.body.contextResponse)
+        clearTimeout(timeout)
       }
+
+
+
+      return () => clearTimeout(timeout)
     }
 
-    const handleNewMessagePart = (message: string) => {
+    const handleNewMessagePart = (content: string, contextResponse?: string) => {
       if (!currentChat.messages.length) {
         setCurrentChat({
           ...currentChat,
           messages: [
             {
               role: "ai",
-              content: message,
+              content: content,
               date: new Date().toString(),
-              embeds: []
+              embeds: [],
+              contextResponse
             }
           ]
         })
       } else {
         const messages = currentChat.messages.map((m, i) => {
           if (i === currentChat.messages.length - 1) {
-            m.content = message
+            m.content = content
+            m.contextResponse = contextResponse
           }
           return m
         })
@@ -86,9 +104,15 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         })
       }
 
-      setCurrentResponse((prevResponse) => prevResponse + message)
+      setCurrentResponse((prevResponse) => prevResponse + content)
     }
-  }, [wssUrl, currentChat])
+  }, [wssUrl])
+
+  const handleEnd = (embeds: ApiEmbed[], contextResponse?: string) => {
+    handleEmbeds(embeds, contextResponse)
+    setResponseInProgress(false)
+    navigate(`/gem-ai/${chatId}`)
+  }
 
   const handleEmbeds = (embeds: ApiEmbed[], contextResponse?: string) => {
     const messages = currentChat.messages.map((m, i) => {
