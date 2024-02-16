@@ -5,12 +5,17 @@ import List from "@components/GemAi/List"
 import { Alert, Button } from "@components/ui"
 import { CHAT_NAME, SITE_NAME } from "@constants/index"
 import { useAppContext } from "@context/AppContext"
+import { useChatContext } from "@context/ChatContext"
+import { useEffect } from "react"
 import { Helmet } from "react-helmet-async"
 
 const LogoImg = () => <img src={logo} alt={SITE_NAME} draggable='false' />
 
 function GemAiPage() {
   const { isPremium } = useAppContext()
+  const { reset } = useChatContext()
+
+  useEffect(() => reset(), [])
 
   return (
     <>

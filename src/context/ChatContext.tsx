@@ -12,14 +12,15 @@ import { useNavigate } from "react-router-dom"
 interface ChatContextProps {
   chatId: string | undefined
   setChatId: React.Dispatch<React.SetStateAction<string | undefined>>
-  wssUrl: string
-  setWssUrl: React.Dispatch<React.SetStateAction<string>>
-  currentResponse: string
-  setCurrentResponse: React.Dispatch<React.SetStateAction<string>>
+  wssUrl: string | undefined
+  setWssUrl: React.Dispatch<React.SetStateAction<string | undefined>>
+  currentResponse: string | undefined
+  setCurrentResponse: React.Dispatch<React.SetStateAction<string | undefined>>
   responseInProgress: boolean
   setResponseInProgress: React.Dispatch<React.SetStateAction<boolean>>
   currentChat: CurrentChat
   setCurrentChat: React.Dispatch<React.SetStateAction<CurrentChat>>
+  reset: () => void
 }
 
 const ChatContext = createContext<ChatContextProps | undefined>(undefined)
@@ -27,10 +28,11 @@ const ChatContext = createContext<ChatContextProps | undefined>(undefined)
 export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate()
 
+  const [ws, setWs] = useState<WebSocket | null>(null)
   const [chatId, setChatId] = useState<ChatContextProps["chatId"]>(undefined)
-  const [wssUrl, setWssUrl] = useState<ChatContextProps["wssUrl"]>("")
+  const [wssUrl, setWssUrl] = useState<ChatContextProps["wssUrl"]>(undefined)
   const [currentResponse, setCurrentResponse] =
-    useState<ChatContextProps["currentResponse"]>("")
+    useState<ChatContextProps["currentResponse"]>(undefined)
   const [responseInProgress, setResponseInProgress] =
     useState<ChatContextProps["responseInProgress"]>(false)
   const [currentChat, setCurrentChat] = useState<
@@ -39,27 +41,40 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     messages: []
   })
 
+  const reset = () => {
+    setChatId(undefined)
+    setWssUrl(undefined)
+    setCurrentResponse(undefined)
+    setResponseInProgress(false)
+    setCurrentChat({ messages: [] })
+
+    if (ws) {
+      ws.close()
+      console.log("là")
+    }
+    console.log("reset", ws)
+  }
+
   useEffect(() => {
-    if (wssUrl === "") {
+    if (!wssUrl) {
       return
     }
 
     let timeout: NodeJS.Timeout
 
-    const ws = new WebSocket(wssUrl)
-    ws.onmessage = (evt) => {
+    const newWs = new WebSocket(wssUrl)
+    setWs(newWs)
+
+    newWs.onmessage = (evt) => {
       setResponseInProgress(true)
 
       const json = JSON.parse(evt.data)
 
       clearTimeout(timeout)
-      timeout = setTimeout(
-        () => {
-          handleEnd(json.body.embeds, json.body.contextResponse)
-          ws.close()
-        },
-        5000
-      )
+      timeout = setTimeout(() => {
+        handleEnd(json.body.embeds, json.body.contextResponse)
+        newWs.close()
+      }, 60000)
 
       if (json.type === "chat_stream_packet" && json.body.content) {
         handleNewMessagePart(json.body.content, json.body.contextResponse)
@@ -68,14 +83,14 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       if (json.type === "chat_stream_end") {
         handleEnd(json.body.embeds, json.body.contextResponse)
         clearTimeout(timeout)
+        newWs.close()
       }
-
-
-
-      return () => clearTimeout(timeout)
     }
 
-    const handleNewMessagePart = (content: string, contextResponse?: string) => {
+    const handleNewMessagePart = (
+      content: string,
+      contextResponse?: string
+    ) => {
       if (!currentChat.messages.length) {
         setCurrentChat({
           ...currentChat,
@@ -105,6 +120,13 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setCurrentResponse((prevResponse) => prevResponse + content)
+
+      return () => {
+        if (newWs) {
+          newWs.close()
+        }
+        clearTimeout(timeout)
+      }
     }
   }, [wssUrl])
 
@@ -141,7 +163,8 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         responseInProgress,
         setResponseInProgress,
         currentChat,
-        setCurrentChat
+        setCurrentChat,
+        reset
       }}
     >
       {children}

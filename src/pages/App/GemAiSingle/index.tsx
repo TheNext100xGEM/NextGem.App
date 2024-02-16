@@ -36,7 +36,7 @@ const ScrollToBottom = (behavior: Behavior = "smooth") => {
 function GemAiSinglePage() {
   const { chatId } = useParams()
 
-  const { setChatId, setWssUrl, currentChat, setCurrentChat } = useChatContext()
+  const { setChatId, setWssUrl, currentChat, setCurrentChat, reset } = useChatContext()
 
   const [conversationActive, setConversationActive] = useState<{
     id: string
@@ -44,9 +44,7 @@ function GemAiSinglePage() {
   } | null>(null)
 
 useEffect(() => {
-  setCurrentChat({
-    messages: []
-  })
+  reset()
 }, [chatId])
 
   useEffect(() => {
