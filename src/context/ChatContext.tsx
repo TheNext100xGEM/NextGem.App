@@ -89,7 +89,6 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       content: string,
       contextResponse?: string
     ) => {
-      console.log(contextResponse)
       if (!currentChat.messages.length) {
         setCurrentChat({
           ...currentChat,
