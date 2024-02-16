@@ -101,7 +101,7 @@ function Form() {
         <div className='btn-right'>
           {disabled ? (
             <Button
-              icon='carbon:locked'
+              icon={responseInProgress ? "eos-icons:three-dots-loading" : 'carbon:locked'}
               minus
               color='tertiary'
               status='warning'

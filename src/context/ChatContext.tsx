@@ -50,9 +50,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
 
     if (ws) {
       ws.close()
-      console.log("là")
     }
-    console.log("reset", ws)
   }
 
   useEffect(() => {
@@ -91,6 +89,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
       content: string,
       contextResponse?: string
     ) => {
+      console.log(contextResponse)
       if (!currentChat.messages.length) {
         setCurrentChat({
           ...currentChat,
@@ -100,7 +99,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
               content: content,
               date: new Date().toString(),
               embeds: [],
-              contextResponse
+              contextResponse: contextResponse
             }
           ]
         })

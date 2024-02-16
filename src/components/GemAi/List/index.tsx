@@ -14,7 +14,7 @@ import web3Token from "web3-token"
 
 import { deleteUserChat, getUserChats } from "../../../queries/api"
 
-function GemAiList() {
+function GemAiList({opened}: {opened: boolean}) {
   const { chatId } = useParams()
 
   const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
@@ -92,7 +92,7 @@ function GemAiList() {
   }, [qUserChats.data])
 
   return (
-    <aside className="ai-list">
+    <aside className={classNames("ai-list", { opened: opened })}>
       <ul>
         <li className='ai-list-heading'>
           <span>Last conversations</span>
