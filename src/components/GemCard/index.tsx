@@ -76,7 +76,7 @@ function GemCard({
   launchpad,
   llmList,
   weightedScore,
-  status = Math.round(Math.random() * 3 - 1),
+  status,
   socials,
   slug,
   isFavorite,

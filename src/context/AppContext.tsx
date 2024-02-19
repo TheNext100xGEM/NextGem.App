@@ -71,7 +71,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     )
     setIsInApp(isInApp)
     
-    setIsInChat(location.pathname === '/gem-ai')
+    setIsInChat(location.pathname.includes('/gem-ai'))
   }, [location.pathname])
 
   return (
