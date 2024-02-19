@@ -347,6 +347,18 @@ $responsiveList: $l;
         gap: var(--size-2);
         padding-left: calc(var(--avatar) + var(--size-2));
 
+        .inProgress &:last-child .markdown :last-child:after {
+          content: '';
+          position: relative;
+          display: inline-block;
+          width: 2px;
+          height: 16px;
+          background: white;
+          opacity: .7;
+          margin-left: 4px;
+          margin-bottom: -2px;
+      }
+
         .avatar {
           position: absolute;
           width: var(--avatar);
