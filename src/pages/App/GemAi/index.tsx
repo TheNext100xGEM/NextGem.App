@@ -13,7 +13,7 @@ import { Helmet } from "react-helmet-async"
 
 function GemAiPage() {
   const { isPremium } = useAppContext()
-  const { currentChat, reset } = useChatContext()
+  const { responseInProgress, currentChat, reset } = useChatContext()
 
   const [asideResponsive, setAsideResponsive] = useState(false)
 
@@ -36,7 +36,7 @@ function GemAiPage() {
         />
         <div className='ai-module'>
           <div className='wrapper'>
-            <div className='ai-chat'>
+            <div className={classNames("ai-chat", { inProgress: responseInProgress })}>
               {currentChat.messages.length !== 0 && (
                 <ul className='ai-chat-content'>
                   {currentChat.messages.map((message, id) => (

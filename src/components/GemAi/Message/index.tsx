@@ -60,7 +60,7 @@ function Message({
           </Grid>
         </>
       )}
-      {contextResponse && <p>{contextResponse}</p>}
+      {contextResponse && <Markdown>{contextResponse}</Markdown>}
     </li>
   )
 }
