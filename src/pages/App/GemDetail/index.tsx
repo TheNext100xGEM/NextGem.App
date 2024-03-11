@@ -25,6 +25,8 @@ function GemDetailPage() {
   const { tokenId } = useParams()
   let token = "",
     id = ""
+  
+  
 
   if (tokenId) {
     const lastDashIndex = tokenId.lastIndexOf("-")
@@ -146,7 +148,7 @@ function GemDetailPage() {
   }
 
   //
-  
+  const chains = qGemSingle.data?.chains ?? []
 
   return (
     <>
@@ -174,7 +176,7 @@ function GemDetailPage() {
                           </Row>
                           <Row title='Chains'>
                             <List>
-                              {qGemSingle.data.chains.map((item) => item)}
+                              {chains.map((item) => item)}
                             </List>
                           </Row>
                           <Row title='Launchpad'>
