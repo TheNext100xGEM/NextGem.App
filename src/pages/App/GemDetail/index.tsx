@@ -136,9 +136,9 @@ function GemDetailPage() {
         const reloadResponse = await postReloadAnalysis({ projectId: id })
         
         if(reloadResponse.status) {
-            toast.success(reloadResponse.message)
+            toast.success(reloadResponse.message ?? 'Analysis reloaded')
         }else{
-            toast.error(reloadResponse.message)
+            toast.error(reloadResponse.message ?? 'Failed to reload analysis. Please try again later.')
         }
     }catch(error){
         toast.error('Failed to reload analysis. Please try again later.')
