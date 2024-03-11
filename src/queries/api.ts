@@ -71,6 +71,10 @@ export const postUserFavorite = async (body: {
   projectId: string
 }) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites`, "postUserFavorite", "POST", body)
 
+export const postReloadAnalysis = async (body: {
+    projectId: string
+  }) => request<ApiStatusReponse>(`${APP_API_URL}/projects/reload`, "postReloadAnalysis", "POST", body)
+
 export const deleteUserFavorite = async (body: {
   projectId: string
 }) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites/delete`, "deleteUserFavorite", "POST", body)

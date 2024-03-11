@@ -9,7 +9,8 @@ import { Helmet } from "react-helmet-async"
 import {
   deleteUserFavorite,
   getGemSingle,
-  postUserFavorite
+  postUserFavorite,
+  postReloadAnalysis
 } from "../../../queries/api"
 import { Children, ReactNode, useRef, useState } from "react"
 import classNames from "classnames"
@@ -130,7 +131,22 @@ function GemDetailPage() {
     return <ul ref={ulRef}>{renderListWithOverflow()}</ul>
   }
 
-  const handleAnalysis = () => {}
+  const handleAnalysis = async () => {
+    try{
+        const reloadResponse = await postReloadAnalysis({ projectId: id })
+        
+        if(reloadResponse.status) {
+            toast.success(reloadResponse.message ?? 'Analysis reloaded')
+        }else{
+            toast.error(reloadResponse.message ?? 'Failed to reload analysis. Please try again later.')
+        }
+    }catch(error){
+        toast.error('Failed to reload analysis. Please try again later.')
+    }
+  }
+
+  //
+  
 
   return (
     <>
