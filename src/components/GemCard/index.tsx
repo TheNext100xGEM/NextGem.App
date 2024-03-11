@@ -83,7 +83,9 @@ function GemCard({
   isTrending
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
-
+  
+  //hotfix for when chains is "No information found", which happens with python scorings api
+  chains = (typeof chains === 'object') ? chains : []
   type PropsSection = {
     children: ReactNode[] | ReactNode
   }
