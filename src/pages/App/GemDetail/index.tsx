@@ -243,7 +243,6 @@ function GemDetailPage() {
                             </Markdown>
                         </div>
 
-                        <ProgressBar total={50} hasMagic={true} />
 
                         {(parseInt(qGemSingle.data.gemini_score ?? '0') > 0) && qGemSingle.data.gemini_raw && (
                         <Card>
