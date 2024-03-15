@@ -69,6 +69,18 @@
     }
   }
 
+  .gemDetail-reanalyze-loading{
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: linear-gradient(var(--text-secondary) 20%, var(--text-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-family-heading);
+    font-weight: 700;
+  }
   .gem {
     &-section {
       padding-left: 0;

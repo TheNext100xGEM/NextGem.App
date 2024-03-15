@@ -20,7 +20,7 @@ import { removeUrlPrefix } from "@utils/url"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { SocialList } from "@components/Socials"
 import toast from "react-hot-toast"
-
+import { Loader } from "@components/ui"
 function GemDetailPage() {
   const { tokenId } = useParams()
   let token = "",
@@ -148,7 +148,8 @@ function GemDetailPage() {
   }
 
   //
-  const chains = qGemSingle.data?.chains ?? []
+  const chains = typeof qGemSingle.data?.chains === 'object' ? qGemSingle.data?.chains : []
+  const isBeingAnalyzed = !qGemSingle.data?.analyzed || !qGemSingle.data?.hasSummary
 
   return (
     <>
@@ -167,25 +168,30 @@ function GemDetailPage() {
             <div className='gem'>
               <Section>
                 <div className='gemDetail-header'>
-                  <div className='gemDetail-header-socials'>
-                    <Card>
-                      <table>
-                        <tbody>
-                          <Row title='Socials'>
-                            <SocialList items={qGemSingle.data.socials} />
-                          </Row>
-                          <Row title='Chains'>
-                            <List>
-                              {chains.map((item) => item)}
-                            </List>
-                          </Row>
-                          <Row title='Launchpad'>
-                            <List>{qGemSingle.data.launchpad}</List>
-                          </Row>
-                        </tbody>
-                      </table>
-                    </Card>
-                  </div>
+                {
+                    !isBeingAnalyzed ? 
+                        (<div className='gemDetail-header-socials'>
+                            <Card>
+                            <table>
+                                <tbody>
+                                <Row title='Socials'>
+                                    <SocialList items={qGemSingle.data.socials} />
+                                </Row>
+                                <Row title='Chains'>
+                                    <List>
+                                    {chains.map((item) => item)}
+                                    </List>
+                                </Row>
+                                <Row title='Launchpad'>
+                                    <List>{qGemSingle.data.launchpad}</List>
+                                </Row>
+                                </tbody>
+                            </table>
+                            </Card>
+                        </div>)
+                        :
+                        <div>&nbsp;</div>
+                }
                   <div className='gemDetail-header-content'>
                     <div className='gem-sub'>{qGemSingle.data.category}</div>
                     <h1 className='gem-title'>{qGemSingle.data.name ?? ""}</h1>
@@ -210,72 +216,93 @@ function GemDetailPage() {
                       />
                     </div>
                   </div>
-
-                  <div className='gemDetail-header-note'>
-                    <NoteCard total={qGemSingle.data.note.total} />
-                    <Button
-                      icon={"bx:analyse"}
-                      onClick={handleAnalysis}
-                      color='tertiary'
-                    >
-                      Reload analysis
-                    </Button>
-                  </div>
+                   {
+                    !isBeingAnalyzed ? 
+                        (
+                        <div className='gemDetail-header-note'>
+                            <NoteCard total={qGemSingle.data.note.total} />
+                            <Button
+                            icon={"bx:analyse"}
+                            onClick={handleAnalysis}
+                            color='tertiary'
+                            >
+                            Reload analysis
+                            </Button>
+                        </div>
+                        )
+                    : <div>&nbsp;</div>
+                    }
                 </div>
               </Section>
-              <div className='gemDetail-content'>
-                <div className='gemDetail-desc'>
-                  <Markdown>{qGemSingle.data.description}</Markdown>
-                </div>
-                {qGemSingle.data.gemini_score && qGemSingle.data.gemini_raw && (
-                  <Card>
-                    <div className='gemDetail-block'>
-                      <div className='gemDetail-block-header'>
-                        <h2>Gemini</h2>
-                        <NoteCard
-                          total={parseInt(qGemSingle.data.gemini_score)}
-                        ></NoteCard>
-                      </div>
-                      <div className='gemDetail-block-content'>
-                        <Markdown>{qGemSingle.data.gemini_raw}</Markdown>
-                      </div>
-                    </div>
-                  </Card>
-                )}
-                {qGemSingle.data.mistral_score &&
-                  qGemSingle.data.mistral_raw && (
-                    <Card>
-                      <div className='gemDetail-block'>
-                        <div className='gemDetail-block-header'>
-                          <h2>Mistral</h2>
-                          <NoteCard
-                            total={parseInt(qGemSingle.data.mistral_score)}
-                          ></NoteCard>
+                {!isBeingAnalyzed ? (
+                    <div className='gemDetail-content'>
+                        <div className='gemDetail-desc'>
+                            <Markdown>
+                                {qGemSingle.data.description}
+                            </Markdown>
                         </div>
-                        <div className='gemDetail-block-content'>
-                          <Markdown>{qGemSingle.data.mistral_raw}</Markdown>
-                        </div>
-                      </div>
-                    </Card>
-                  )}
-                {qGemSingle.data.gpt_score && qGemSingle.data.gpt_raw && (
-                  <Card>
-                    <div className='gemDetail-block'>
-                      <div className='gemDetail-block-header'>
-                        <h2>GPT</h2>
-                        <NoteCard
-                          total={parseInt(qGemSingle.data.gpt_score)}
-                        ></NoteCard>
-                      </div>
-                      <div className='gemDetail-block-content'>
-                        <Markdown>{qGemSingle.data.gpt_raw}</Markdown>
-                      </div>
+                        {(parseInt(qGemSingle.data.gemini_score ?? '0') > 0) && qGemSingle.data.gemini_raw && (
+                        <Card>
+                            <div className='gemDetail-block'>
+                            <div className='gemDetail-block-header'>
+                                <h2>Gemini</h2>
+                                <NoteCard
+                                total={parseInt(qGemSingle.data.gemini_score ?? '0')}
+                                ></NoteCard>
+                            </div>
+                            <div className='gemDetail-block-content'>
+                                <Markdown>{qGemSingle.data.gemini_raw}</Markdown>
+                            </div>
+                            </div>
+                        </Card>
+                        )}
+                        {(parseInt(qGemSingle.data.mistral_score ?? '0') > 0) &&
+                        qGemSingle.data.mistral_raw && (
+                            <Card>
+                            <div className='gemDetail-block'>
+                                <div className='gemDetail-block-header'>
+                                <h2>Mistral</h2>
+                                <NoteCard
+                                    total={parseInt(qGemSingle.data.mistral_score ?? '0')}
+                                ></NoteCard>
+                                </div>
+                                <div className='gemDetail-block-content'>
+                                <Markdown>{qGemSingle.data.mistral_raw}</Markdown>
+                                </div>
+                            </div>
+                            </Card>
+                        )}
+                        {(parseInt(qGemSingle.data.gpt_score ?? '0') > 0) && qGemSingle.data.gpt_raw && (
+                        <Card>
+                            <div className='gemDetail-block'>
+                            <div className='gemDetail-block-header'>
+                                <h2>GPT</h2>
+                                <NoteCard
+                                total={parseInt(qGemSingle.data.gpt_score ?? '0')}
+                                ></NoteCard>
+                            </div>
+                            <div className='gemDetail-block-content'>
+                                <Markdown>{qGemSingle.data.gpt_raw}</Markdown>
+                            </div>
+                            </div>
+                        </Card>
+                        )}
                     </div>
-                  </Card>
+                ) : (
+                    <div className='gemDetail-content'>
+                        
+
+                        <div className='gemDetail-block'>
+
+                            <div className='gemDetail-block-content'>
+                                <div className="gemDetail-reanalyze-loading"><Loader />&nbsp;&nbsp;This project is currently being re-analyzed. Please check back later :D</div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 )}
-              </div>
             </div>
-          )}
+          ) }
         </div>
       </div>
     </>
