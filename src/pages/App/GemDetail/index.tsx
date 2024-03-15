@@ -21,6 +21,7 @@ import { Icon } from "@iconify/react/dist/iconify.js"
 import { SocialList } from "@components/Socials"
 import toast from "react-hot-toast"
 import { Loader } from "@components/ui"
+import ProgressBar from "@components/ProgressBar"
 function GemDetailPage() {
   const { tokenId } = useParams()
   let token = "",
@@ -241,6 +242,9 @@ function GemDetailPage() {
                                 {qGemSingle.data.description}
                             </Markdown>
                         </div>
+
+                        <ProgressBar total={50} hasMagic={true} />
+
                         {(parseInt(qGemSingle.data.gemini_score ?? '0') > 0) && qGemSingle.data.gemini_raw && (
                         <Card>
                             <div className='gemDetail-block'>
