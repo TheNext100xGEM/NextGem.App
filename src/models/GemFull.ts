@@ -19,12 +19,15 @@ export interface GemFull {
   note: NoteInfo
   status?: number
   socials: PropsSocialLink[]
+  hasSummary : boolean
+
   gemini_raw?: string;
   gemini_score?: string;
   gpt_raw?: string;
   gpt_score?: string;
   mistral_raw?: string;
   mistral_score?: string;
+  analyzed?: boolean;
 }
 
 export interface ApiGemFull {
@@ -118,6 +121,7 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     category: data.category ?? "",
     href: data.websiteLink ?? '',
     description: data.llm_summary ?? data.submittedDescription,
+    hasSummary: !!data.llm_summary,
     chains: data.chains,
     launchpad: data.launchpad,
     tokenSymbol: data.tokenSymbol,
@@ -130,6 +134,7 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     mistral_score: data.mistral_score,
     mistral_raw: data.mistral_raw,
     status: data.status,
+    analyzed: data.analyzed,
     socials
   }
 }
