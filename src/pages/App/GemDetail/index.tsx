@@ -150,7 +150,7 @@ function GemDetailPage() {
 
   //
   const chains = typeof qGemSingle.data?.chains === 'object' ? qGemSingle.data?.chains : []
-  const isBeingAnalyzed = !qGemSingle.data?.analyzed || !qGemSingle.data?.hasSummary
+  const isBeingAnalyzed = qGemSingle.data?.analyzeProgress?.analyzeState !== 'analyzed'
 
   return (
     <>
@@ -243,7 +243,6 @@ function GemDetailPage() {
                             </Markdown>
                         </div>
 
-
                         {(parseInt(qGemSingle.data.gemini_score ?? '0') > 0) && qGemSingle.data.gemini_raw && (
                         <Card>
                             <div className='gemDetail-block'>
@@ -297,10 +296,32 @@ function GemDetailPage() {
 
                         <div className='gemDetail-block'>
 
-                            <div className='gemDetail-block-content'>
-                                <div className="gemDetail-reanalyze-loading"><Loader />&nbsp;&nbsp;This project is currently being re-analyzed. Please check back later :D</div>
+                            <div className="gemDetail-analysis-upper">
+                                <div className='gemDetail-block-content gemDetail-analysis-container'>
+
+
+                                    <div className="gemDetail-queue-details">
+                                        <div className="gemDetail-queue-position">Waiting for analysis.. Position in queue: {qGemSingle.data?.analyzeProgress?.positionInQueue}/{qGemSingle.data?.analyzeProgress?.totalInQueue} </div>
+                                        <div className="gemDetail-eta">Estimated time: {qGemSingle.data?.analyzeProgress?.eta} minutes</div>
+                                    </div>
+
+                                    <div className="gemDetail-queue-progress">
+                                        <ProgressBar
+                                            total={qGemSingle.data?.analyzeProgress?.progress}
+                                            hasMagic
+                                        />
+                                    </div>
+                                    
+                                    <div className="gemDetail-queue-faq">
+                                        <div className="gemDetail-queue-explainer">
+                                            The NextGEM AI engine processes hundreds of projects per day from degens, like yourself, all round the world. This requires us tu queue everyones requests.  
+                                        </div>
+                                        <div className="gemDetail-queue-explainer-footer">
+                                            The higher your active tier, the higher priority your requests will have in the queue.                              </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
                     </div>
                     
                 )}

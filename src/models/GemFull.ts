@@ -20,7 +20,7 @@ export interface GemFull {
   status?: number
   socials: PropsSocialLink[]
   hasSummary : boolean
-
+  analyzeProgress: analyzeProgress;
   gemini_raw?: string;
   gemini_score?: string;
   gpt_raw?: string;
@@ -28,6 +28,14 @@ export interface GemFull {
   mistral_raw?: string;
   mistral_score?: string;
   analyzed?: boolean;
+}
+
+export interface analyzeProgress { 
+    eta: number,
+    progress: number,
+    analyzeState: 'analyzed' | 'analyzing' | 'queue',
+    positionInQueue: number,
+    totalInQueue: number
 }
 
 export interface ApiGemFull {
@@ -77,6 +85,7 @@ export interface ApiGemFull {
   area_project: string;
   llm_summary?: string;
   weighted_score: number;
+  analyzeProgress: analyzeProgress;
 }
 
 export const mapGemFull = (data: ApiGemFull): GemFull => {
@@ -135,6 +144,7 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     mistral_raw: data.mistral_raw,
     status: data.status,
     analyzed: data.analyzed,
+    analyzeProgress: data.analyzeProgress,
     socials
   }
 }

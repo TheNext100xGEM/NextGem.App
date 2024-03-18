@@ -52,6 +52,7 @@ export const getGemCollection = async ({
 export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
 
+
 export const getUserChats = async () =>
   request<ApiUserChats | ApiStatusReponse>(`${APP_API_URL}/user/chats`, "getUserChats", "GET")
 

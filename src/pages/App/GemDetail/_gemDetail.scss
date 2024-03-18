@@ -69,6 +69,18 @@
     }
   }
 
+
+.gemDetail-analysis-upper{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: calc(100% - 20px);
+    
+}
+
+
   .gemDetail-reanalyze-loading{
     font-size: 20px;
     display: flex;
@@ -88,6 +100,7 @@
     }
 
     &-title {
+        width: auto;
       font-size: 48px;
       word-break: break-all;
     }
@@ -173,4 +186,50 @@
       opacity: 1;
     }
   }
+}
+
+
+
+.gemDetail-queue-progress{
+    width: 100%;
+}
+.gemDetail-analysis-container{
+    margin-top: 20px;
+    margin-bottom: 50px;
+    max-width: calc(100% - 20px);
+    display: flex !important;
+    flex-direction: column;
+    gap: 20px !important;
+    align-items: center;
+    position: relative;
+}
+
+.gemDetail-queue-details{
+    margin-bottom: 20px;
+    font-weight: 200;
+    color: var(--color-primary-base);
+    font-size: 1.2rem;
+    text-align: center;
+    width: 600px;
+    max-width: calc(100% - 20px);
+
+}
+
+.gemDetail-queue-faq{
+    max-width: calc(100% - 20px);
+
+    margin-top: 20px;
+    width: 600px;
+    text-align: center;
+
+}
+
+.gemDetail-eta{
+    font-weight: 400;
+    color: var(--color-secondary-base);
+}
+
+.gemDetail-queue-explainer-footer{
+    margin-top: 10px;
+    color: var(--color-primary-base);
 }
