@@ -1,0 +1,90 @@
+@import "../../assets/css/mixins/styles";
+
+
+.bar-outer_wrapper {
+    z-index: 90;
+    height: 50px;
+    width: 100%;
+    position: relative;
+    clip-path: polygon(18px 0, 80% 0%, 100% 0, 100% calc(50% + 7px), calc(100% - 18px) 100%, 0 100%, 0% 100%, 0 calc(50% - 7px));
+}
+
+.single-corner {
+    position: absolute;
+    width: 20px;
+    height: 50px;
+    overflow: hidden;
+    
+    background-color: var(--bg-body);
+    z-index: 5;
+
+    &.left{
+        transform: rotate(45deg) translate(-20px);
+        top: 0;
+        bottom: 0;
+    }
+
+    &.right{
+        transform: rotate(45deg) translate(-20px);
+        top: calc(100% - 10px);
+        left: 100%;
+    }
+}
+
+.bar-inner_wrapper{
+    transition: 0.3s;
+
+    height: 100%;
+    width: 0px;
+    background: rgb(43,168,239);
+    background: linear-gradient(90deg, rgba(43,168,239,1) 10%, rgba(255,255,255,1) 80%);
+    clip-path: polygon(0 0, 80% 0%, 100% 0, 100% 0, calc(100% - 45px) 100%, 0 100%, 0% 80%, 0 36%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: #222;
+    font-weight: 400;
+    font-size: 1.2rem;
+    gap: 10px;
+}
+
+
+.bar-blur{
+    transition: 0.3s;
+    top: 0px;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    filter: blur(20px);
+    opacity: 0.3;
+    border-radius: 100%;
+    z-index: -5;
+    clip-path: none;
+
+}
+
+.bar-percentage{
+    margin-right: 60px;
+    font-weight: 700;
+}
+
+.magic-container{
+    transition: 0.3s;
+    top: 0px;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border-radius: 100%;
+    z-index: -5;
+    clip-path: none;
+
+}
+
+.gemDetail-analysis-container{
+    display: flex !important;
+    flex-direction: column;
+    gap: 20px !important;
+    width: 800px;
+}
