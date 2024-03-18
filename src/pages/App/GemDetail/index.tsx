@@ -20,7 +20,6 @@ import { removeUrlPrefix } from "@utils/url"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { SocialList } from "@components/Socials"
 import toast from "react-hot-toast"
-import { Loader } from "@components/ui"
 import ProgressBar from "@components/ProgressBar"
 function GemDetailPage() {
   const { tokenId } = useParams()
