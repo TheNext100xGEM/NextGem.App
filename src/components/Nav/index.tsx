@@ -2,6 +2,7 @@ import './_nav.scss'
 import { PropsNav } from '@models/Nav'
 
 function Nav({ items }: PropsNav) {
+    console.log(items.map(item => item.component))
   return (
     <nav className="nav">
       <ul>

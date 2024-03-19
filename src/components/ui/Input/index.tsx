@@ -79,6 +79,7 @@ export function Input({
           </div>
         )}
         <input
+        autoComplete="off"
           value={value}
           onChange={(evt) => onChange?.(evt.target.value)}
           {...commonProps}
@@ -128,6 +129,7 @@ export function Checkbox({
   return (
     <div className={classNames("checkbox", className)}>
       <input
+        autoComplete="off"
         value={value}
         onChange={onChange}
         onClick={soundClick}

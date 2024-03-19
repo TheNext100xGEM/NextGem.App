@@ -9,6 +9,7 @@ import useWindowHeight from "@hooks/useWindowHeight"
 import { GemsPage, StakingPage, GemAiPage } from "@pages/App"
 import GemAiSinglePage from "@pages/App/GemAiSingle"
 import GemDetailPage from "@pages/App/GemDetail"
+import AiAnalysisPage from '@pages/AiAnalysis'
 import { HomePage, DefaultPage } from "@pages/index"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
@@ -104,6 +105,10 @@ function App() {
         {
           path: "/staking",
           element: <StakingPage />
+        },
+        {
+            path: "/analyze",
+            element: <AiAnalysisPage />
         },
         {
           path: "/gem-ai/:chatId",

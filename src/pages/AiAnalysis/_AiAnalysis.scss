@@ -1,0 +1,237 @@
+@import "../../assets/css/mixins/styles";
+@import "../../assets/css/mixins/medias";
+
+
+
+.analysis {
+    --padding: var(--size-4);
+    --gap: calc(var(--padding) / 2.5);
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+    gap: var(--padding);
+  
+    &-back {
+      margin-top: var(--padding);
+      svg {
+        margin-left: 0;
+        margin-right: 0.5em;
+      }
+    }
+  
+    &-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: var(--gap);
+  
+      @include max($l) {
+        flex-direction: column;
+        align-items: unset;
+        gap: var(--padding);
+      }
+  
+      &-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--gap);
+  
+        @include max($l) {
+          order: 0;
+        }
+      }
+  
+      &-socials, &-note {
+        flex-shrink: 0;
+  
+        @include max($l) {
+          order: 1;
+        }
+      }
+  
+      &-socials {
+        .card {
+          min-width: 240px;
+        }
+      }
+      
+  
+      &-note {
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap);
+  
+        .btn {
+        font-size: 11px;
+            
+        }
+      }
+    }
+  
+  
+  .analysis-analysis-upper{
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: calc(100% - 20px);
+      
+  }
+  
+  
+    .gem {
+      &-section {
+
+        padding-left: 0;
+        padding-right: 0;
+        align-items: center;
+        &-light {
+            --stroke-color: #25cbff54 !important;
+        }
+      }
+
+
+      &-title {
+        width: auto;
+        font-size: 48px;
+        word-break: break-all;
+      }
+  
+      &-link {
+        display: flex;
+      }
+  
+      &-infos {
+        display: flex;
+        align-items: center;
+        gap: var(--size-3);
+  
+        .btn {
+          height: 36px;
+        }
+        svg {
+          transform: scale(0.85) !important;
+          padding: 0 !important;
+        }
+      }
+    }
+
+.card {
+    padding: var(--padding);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) / 2);
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding);
+    padding: var(--padding) 0;
+
+    --padding: var(--size-6);
+
+    @include max($l) {
+      --padding: calc(var(--size-6) / 1.5);
+    }
+  }
+
+  &-desc {
+
+    margin: calc(var(--padding) / 2) 0;
+
+    .markdown {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+  }
+
+  &-block {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) / 2);
+
+    &-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &-content {
+
+    }
+  }
+
+  .corner {
+    --corner-size: var(--size-3);
+    z-index: 1;
+  }
+
+  .corner-hover {
+    transition: opacity var(--transition-link);
+    opacity: 0;
+  }
+
+  &:not([data-disabled]):hover {
+    .corner-hover {
+      opacity: 1;
+    }
+  }
+}
+.AiAnalysis-icon{
+    color: #25cbff;
+
+}
+
+.AiAnalysis-heading{
+    display: flex;
+    flex-direction: row;
+    font-size: large;
+    gap: 20px;
+    font-size: var(--h3);
+    background: linear-gradient(var(--text-secondary) 20%, var(--text-primary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-family-heading);
+    font-weight: 700;
+}
+
+.AiAnalysis-main{
+    align-items: center;
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    &-inner{
+        gap: 20px;
+        display: flex;
+        flex-direction: column;
+        width: 700px !important;
+        max-width: calc(100% - 20px);
+    }
+    &-headings {
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 200;
+        color: var(--color-primary-base);
+        font-size: 1.2rem;
+    }
+    
+    .btn {
+        font-size: 11px;
+            
+        }
+
+}
+
+.AiAnalysis-sub-headings {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
