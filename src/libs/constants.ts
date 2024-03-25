@@ -46,3 +46,5 @@ export const CHAIN_INFO: { [key: string]: ChainInfo } = {
 export const METAMASK_URL = "https://metamask.io/"
 export const APP_API_URL = import.meta.env.VITE_APP_API_URL
 export const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL
+export const WALLET_CONNECT_PROJECT_ID = import.meta.env
+  .WALLET_CONNECT_PROJECT_ID

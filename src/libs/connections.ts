@@ -5,7 +5,7 @@ import { buildCoinbaseWalletConnector } from "./coinbase"
 import { CHAIN_INFO } from "./constants"
 import { buildInjectedConnector } from "./injected"
 import { buildNetworkConnector } from "./network"
-import { buildWalletConnectConnector } from "./wallet-connect"
+import { buildWalletConnectConnector } from "./wallet-connect-v2"
 
 export interface Connection {
   connector: Connector
