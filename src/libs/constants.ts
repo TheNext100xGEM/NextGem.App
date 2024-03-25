@@ -12,8 +12,8 @@ export const INPUT_CHAIN_URL =
     : CurrentConfig.rpc.mainnet
 
 export const CHAIN_TO_URL_MAP = {
-  [POLYGON_CHAIN_ID]: CurrentConfig.rpc.polygon,
-  [MAINNET_CHAIN_ID]: CurrentConfig.rpc.mainnet
+  [MAINNET_CHAIN_ID]: CurrentConfig.rpc.mainnet,
+  [POLYGON_CHAIN_ID]: CurrentConfig.rpc.polygon
 }
 
 type ChainInfo = {

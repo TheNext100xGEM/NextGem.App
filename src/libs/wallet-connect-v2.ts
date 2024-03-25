@@ -7,6 +7,13 @@ import { CHAIN_TO_URL_MAP } from "./constants"
 const [mainnet, ...optionalChains] = Object.keys(CHAIN_TO_URL_MAP).map(Number)
 
 export function buildWalletConnectConnector() {
+  let walletConnectErrorHandler: (error: Error) => void | undefined
+
+  function walletConnectError(error: Error) {
+    onConnectionError(error)
+    walletConnectErrorHandler?.(error)
+  }
+
   const [webWalletConnectV2, web3WalletConnectHooks] =
     initializeConnector<WalletConnectV2>((actions) => {
       return new WalletConnectV2({
@@ -18,7 +25,7 @@ export function buildWalletConnectConnector() {
           optionalChains,
           showQrModal: true
         },
-        onError: onConnectionError
+        onError: walletConnectError
       })
     })
 
