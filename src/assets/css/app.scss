@@ -11,6 +11,10 @@
 
 /* General Styles */
 
+.modal-overlay {
+  z-index: 80 !important;
+}
+
 html {
   background: var(--bg-body);
   font-family: var(--font-family-main);
@@ -23,6 +27,7 @@ html {
   padding: var(--main-padding);
   padding-top: 0;
   padding-bottom: 0;
+
   @include no-scrollbar;
 
   @include min($xs) {
