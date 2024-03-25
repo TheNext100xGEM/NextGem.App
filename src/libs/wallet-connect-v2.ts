@@ -28,6 +28,5 @@ export function buildWalletConnectConnector() {
     type: ConnectionType.WALLET_CONNECT
   }
 
-  console.log("web3WalletConnect", walletConnectConnection)
   return walletConnectConnection
 }
