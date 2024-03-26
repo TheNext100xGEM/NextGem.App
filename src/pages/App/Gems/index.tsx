@@ -315,7 +315,7 @@ function GemsPage() {
     observer.observe(bottom.current)
 
     return () => observer.disconnect()
-  }, [])
+  }, [qGemCollection])
 
   return (
     <>
@@ -343,10 +343,10 @@ function GemsPage() {
               </thead>
               <tbody>
                 {qGemCollection.data &&
-                  qGemCollection.data.map((page, i) => (
-                    <React.Fragment key={i}>
-                      {page.map((item) => (
-                        <GemList {...item} />
+                  qGemCollection.data.map((page, pageIndex) => (
+                    <React.Fragment key={`gem-list-page-${pageIndex}`}>
+                      {page.map((item, gemIndex) => (
+                        <GemList {...item} key={`gem-${pageIndex}-${gemIndex}`} />
                       ))}
                     </React.Fragment>
                   ))}
@@ -357,10 +357,10 @@ function GemsPage() {
         {viewMode === "grid" && (
           <Grid>
             {qGemCollection.data &&
-              qGemCollection.data.map((page, i) => (
-                <React.Fragment key={i}>
-                  {page.map((item, id) => (
-                    <Item key={id}>
+              qGemCollection.data.map((page, pageIndex) => (
+                <React.Fragment key={`gem-grid-page-${pageIndex}`}>
+                  {page.map((item, gemIndex) => (
+                    <Item key={`gem-${pageIndex}-${gemIndex}`}>
                       <GemCard {...item} />
                     </Item>
                   ))}
