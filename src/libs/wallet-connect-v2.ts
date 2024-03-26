@@ -2,9 +2,9 @@ import { initializeConnector } from "@web3-react/core"
 import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
 
 import { Connection, ConnectionType, onConnectionError } from "./connections"
-import { CHAIN_TO_URL_MAP } from "./constants"
+// import { CHAIN_TO_URL_MAP } from "./constants"
 
-const [mainnet, ...optionalChains] = Object.keys(CHAIN_TO_URL_MAP).map(Number)
+// const [mainnet, ...optionalChains] = Object.keys(CHAIN_TO_URL_MAP).map(Number)
 
 export function buildWalletConnectConnector() {
   let walletConnectErrorHandler: (error: Error) => void | undefined
@@ -21,8 +21,10 @@ export function buildWalletConnectConnector() {
         options: {
           // projectId: WALLET_CONNECT_PROJECT_ID,
           projectId: "2b9b340fa18e8b5d57fb3ed8e9821bd3",
-          chains: [mainnet, ...optionalChains],
-          optionalChains: [mainnet, ...optionalChains],
+          // chains: [mainnet, ...optionalChains],
+          // optionalChains: [mainnet, ...optionalChains],
+          chains: [1],
+          optionalChains: [137, 56],
           showQrModal: true
         },
         onError: walletConnectError
