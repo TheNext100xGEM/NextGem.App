@@ -1,12 +1,10 @@
-import Star from './Star.jsx';
-import './_star.scss'
+import "./_star.scss"
+import Star from "./Star.jsx"
 
+import { StarType } from "./index.js"
 
-
-export default function StarsChunk({stars} : {stars: any}) {
-  return (
-    stars.map((x : any) => {
-        return <Star starObject={x} key={x.id}/>
-    })
-  )
+export default function StarsChunk({ stars }: { stars: StarType[] }) {
+  return stars.map((x: StarType) => {
+    return <Star starObject={x} key={x.id} />
+  })
 }
