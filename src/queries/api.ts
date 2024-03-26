@@ -41,7 +41,7 @@ export const getGemCollection = async ({
     searchQuery,
     sortBy: sortBy && sortBy.length ? JSON.stringify(sortBy) : undefined
   })
-    .filter(([_, value]) => value !== undefined)
+    .filter(([, value]) => value !== undefined)
     .map(([key, value]) => `${key}=${value}`)
     .join("&")
 
@@ -82,11 +82,11 @@ export const deleteUserFavorite = async (body: {
 }) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites/delete`, "deleteUserFavorite", "POST", body)
 
 // Functions
-async function request<T>(
+async function request<T, B = Record<string, unknown>>(
   url: string,
   name: string,
   method: "GET" | "POST" = "GET",
-  body?: any
+  body?: B
 ) {
   // Récupérer le token depuis les cookies
   const token = Cookies.get("web3TokenAuth")
