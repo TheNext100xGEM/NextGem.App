@@ -62,7 +62,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
           },
           {
             domain: "thenextgem.ai",
-            expires_in: "1 day"
+            expires_in: "1 day",
+            nonce: 11111111
           }
         )
         Cookies.set("web3TokenAuth", token, { expires: 1 })
