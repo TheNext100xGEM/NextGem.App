@@ -24,7 +24,7 @@ const Section = ({ children }: PropsSection): ReactNode => {
     )
   }
 
-function analysisPage() {
+function AnalysisPage() {
 
   const [websiteUrl, setWebsiteUrl] = useState<string>("")
 
@@ -87,4 +87,4 @@ function analysisPage() {
   )
 }
 
-export default analysisPage
+export default AnalysisPage
