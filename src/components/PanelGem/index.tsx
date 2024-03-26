@@ -1,11 +1,11 @@
 import "./_panel.scss"
 import { Modal } from "@components/ui"
 import { useGemsContext } from "@context/GemsContext"
-import { useQuery } from "@tanstack/react-query"
-
-import { useEffect, useState } from "react"
-import { getGemSingle } from "../../queries/api"
 import { mapGemFull } from "@models/GemFull"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+
+import { getGemSingle } from "../../queries/api"
 
 function PanelGem() {
   const { id, setId } = useGemsContext()

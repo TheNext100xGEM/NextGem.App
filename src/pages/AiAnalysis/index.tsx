@@ -1,16 +1,14 @@
 import "./_AiAnalysis.scss"
 
-
-import { Link } from "react-router-dom"
-
-import { SITE_NAME } from "@constants/index"
-import { Helmet } from "react-helmet-async"
-import { useState, ReactNode } from "react"
-import { Icon } from "@iconify/react/dist/iconify.js"
 import {
     Input,
     Button
 } from "@components/ui"
+import { SITE_NAME } from "@constants/index"
+import { Icon } from "@iconify/react/dist/iconify.js"
+import { useState, ReactNode } from "react"
+import { Helmet } from "react-helmet-async"
+import { Link } from "react-router-dom"
 
 
 type PropsSection = {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import StarsChunk from './StarsChunk.jsx';
 import './_star.scss'
 

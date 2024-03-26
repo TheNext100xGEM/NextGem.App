@@ -1,7 +1,7 @@
 import "./_progressbar.scss"
-import { PropsProgressBar } from '@models/ProgressBar'
-import { Corner } from '@components/ui'
 import Magic  from '@components/Magic'
+import { Corner } from '@components/ui'
+import { PropsProgressBar } from '@models/ProgressBar'
 
 const ProgressBar = (
     { 

@@ -1,5 +1,7 @@
 import "./_gems.scss"
 import GemCard from "@components/GemCard"
+import GemList from "@components/GemList"
+import PanelGem from "@components/PanelGem"
 import {
   Button,
   Checkbox,
@@ -11,20 +13,20 @@ import {
 } from "@components/ui"
 import { Grid } from "@components/ui"
 import { NOTE_MAX, NOTE_MIN, SITE_NAME } from "@constants/index"
+import { useGemsContext } from "@context/GemsContext"
 import CryptoBlockChains from "@data/cryptoBlockChains"
 import CryptoMarketAreas from "@data/cryptoMarketArea"
+import { mapGem } from "@models/GemCard"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
 import { ReactNode, useEffect, useRef, useState } from "react"
-import { Helmet } from "react-helmet-async"
-import { getGemCollection } from "../../../queries/api"
-import { mapGem } from "@models/GemCard"
 import React from "react"
-import PanelGem from "@components/PanelGem"
-import { useGemsContext } from "@context/GemsContext"
-import GemList from "@components/GemList"
+import { Helmet } from "react-helmet-async"
+
+import { getGemCollection } from "../../../queries/api"
+
 
 gsap.registerPlugin(ScrollTrigger)
 
