@@ -22,7 +22,7 @@ export function buildWalletConnectConnector() {
           // projectId: WALLET_CONNECT_PROJECT_ID,
           projectId: "2b9b340fa18e8b5d57fb3ed8e9821bd3",
           chains: [mainnet],
-          optionalChains,
+          optionalChains: [mainnet, ...optionalChains],
           showQrModal: true
         },
         onError: walletConnectError
