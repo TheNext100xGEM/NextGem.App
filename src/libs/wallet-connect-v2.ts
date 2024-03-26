@@ -29,6 +29,8 @@ export function buildWalletConnectConnector() {
       })
     })
 
+  console.log("webWalletConnectV2", webWalletConnectV2)
+
   const walletConnectConnection: Connection = {
     connector: webWalletConnectV2,
     hooks: web3WalletConnectHooks,
