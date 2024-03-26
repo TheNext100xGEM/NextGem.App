@@ -48,17 +48,28 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     }
 
     hasCalledGetToken.current = true
+    const signer = provider.getSigner()
 
     const getToken = async () => {
-      const token = await Web3Token.sign(
-        (msg: string) => provider.getSigner().signMessage(msg),
-        {
-          domain: "thenextgem.ai",
-          expires_in: "1 day"
-        }
-      )
-      Cookies.set("web3TokenAuth", token, { expires: 1 })
-      setWeb3Token(token)
+      try {
+        const token = await Web3Token.sign(
+          async (msg: string) => {
+            try {
+              return await signer.signMessage(msg)
+            } catch (err) {
+              console.log(err)
+            }
+          },
+          {
+            domain: "thenextgem.ai",
+            expires_in: "1 day"
+          }
+        )
+        Cookies.set("web3TokenAuth", token, { expires: 1 })
+        setWeb3Token(token)
+      } catch (err) {
+        console.log(err)
+      }
     }
 
     getToken().catch(console.error)
@@ -70,13 +81,22 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       location.pathname.startsWith(page)
     )
     setIsInApp(isInApp)
-    
-    setIsInChat(location.pathname.includes('/gem-ai'))
+
+    setIsInChat(location.pathname.includes("/gem-ai"))
   }, [location.pathname])
 
   return (
     <AppContext.Provider
-      value={{ isInApp, setIsInApp, isInChat, setIsInChat, web3Token, setWeb3Token, isPremium, setIsPremium }}
+      value={{
+        isInApp,
+        setIsInApp,
+        isInChat,
+        setIsInChat,
+        web3Token,
+        setWeb3Token,
+        isPremium,
+        setIsPremium
+      }}
     >
       {children}
     </AppContext.Provider>
