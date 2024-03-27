@@ -1,6 +1,6 @@
 import "./_portal.scss"
-import { Grid, Corner } from "@components/ui"
-import { SITE_NAME } from "@constants/index"
+import { Grid, Corner, Button } from "@components/ui"
+import { SITE_NAME, SOUND_OPEN_APP } from "@constants/index"
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 
@@ -51,6 +51,15 @@ const GemsPortal = () => {
       </Helmet>
 
       <div className='portal'>
+        <div className='section'>
+          <Button
+            href='/gems'
+            icon='carbon:text-mining-applier'
+            pathSoundClick={SOUND_OPEN_APP}
+          >
+            View all gems
+          </Button>
+        </div>
         <div className='section'>
           <h5>Trending Categories</h5>
           <Grid>
