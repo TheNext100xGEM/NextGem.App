@@ -1,8 +1,16 @@
 import "./_portal.scss"
 import { Grid, Corner, Button } from "@components/ui"
-import { SITE_NAME, SOUND_OPEN_APP } from "@constants/index"
+import {
+  SITE_NAME,
+  SOUND_OPEN_APP,
+  SOUND_BUTTON_HOVER,
+  VOLUME_BUTTON_HOVER
+} from "@constants/index"
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import useSound from "use-sound"
 
 const trendingCategories = [
   {
@@ -61,6 +69,8 @@ const trendingCategories = [
 ]
 
 const GemsPortal = () => {
+  const [soundHover] = useSound(SOUND_BUTTON_HOVER, { volume: VOLUME_BUTTON_HOVER })
+
   return (
     <>
       <Helmet>
@@ -82,6 +92,7 @@ const GemsPortal = () => {
                   } as React.CSSProperties
                 }
                 key={`trending-cat-${index}`}
+                onMouseEnter={soundHover}
               >
                 <div className='squares'>
                   <div className='square'></div>
