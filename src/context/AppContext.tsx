@@ -1,5 +1,4 @@
 import { useWeb3React } from "@web3-react/core"
-import { ethers } from "ethers"
 import Cookies from "js-cookie"
 import React, {
   createContext,
@@ -56,15 +55,23 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         const token = await Web3Token.sign(
           async (msg: string) => {
             try {
-              const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
-              return await signer.signMessage(hexMessage)
+              return signer.signMessage(msg)
+              // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+              // return await signer.signMessage(hexMessage)
             } catch (err) {
               console.log(err)
             }
           },
           {
             domain: "thenextgem.ai",
-            expires_in: "1 day"
+            expires_in: "1 day",
+            nonce: 12345678,
+            uri: "https://thenextgem.ai/",
+            web3_token_version: 2,
+            chain_id: 1,
+            issued_at: new Date(),
+            not_before: undefined,
+            request_id: 12345
           }
         )
         Cookies.set("web3TokenAuth", token, { expires: 1 })
