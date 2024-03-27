@@ -60,7 +60,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
           } catch (err) {
             console.log(err)
           }
-        }, "id")
+        }, "1d")
         Cookies.set("web3TokenAuth", token, { expires: 1 })
         setWeb3Token(token)
         console.log("token", token)
