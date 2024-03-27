@@ -32,7 +32,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
   const location = useLocation()
 
-  const { account } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const hasCalledGetToken = useRef(false)
 
   useEffect(() => {
@@ -44,32 +44,33 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   useEffect(() => {
-    if (hasCalledGetToken.current || web3Token || !account) {
+    if (!provider || hasCalledGetToken.current || web3Token || !account) {
       return
     }
 
     hasCalledGetToken.current = true
-    const provider = new ethers.BrowserProvider(window.ethereum)
+    const signer = provider.getSigner()
 
     const getToken = async () => {
       try {
-        const signer = await provider.getSigner()
         const token = await Web3Token.sign(async (msg: string) => {
           try {
-            return await signer.signMessage(msg)
+            const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+            return await signer.signMessage(hexMessage)
           } catch (err) {
             console.log(err)
           }
         }, "id")
         Cookies.set("web3TokenAuth", token, { expires: 1 })
         setWeb3Token(token)
+        console.log("token", token)
       } catch (err) {
         console.log(err)
       }
     }
 
     getToken().catch(console.error)
-  }, [account, web3Token])
+  }, [account, provider, web3Token])
 
   useEffect(() => {
     const allowedPages = ["/gems", "/gem-ai", "/staking", "/analyze"]
