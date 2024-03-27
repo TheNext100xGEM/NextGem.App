@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-// import { ethers } from "ethers"
+import { ethers } from "ethers"
 import Cookies from "js-cookie"
 import React, {
   createContext,
@@ -56,9 +56,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         const token = await Web3Token.sign(
           async (msg: string) => {
             try {
-              // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
-              // return await signer.signMessage(hexMessage)
-              return await signer.signMessage(msg)
+              const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+              return await signer.signMessage(hexMessage)
             } catch (err) {
               console.log(err)
             }
