@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
+import { ethers } from "ethers"
 import Cookies from "js-cookie"
 import React, {
   createContext,
@@ -31,7 +32,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
   const location = useLocation()
 
-  const { provider, account } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const hasCalledGetToken = useRef(false)
 
   useEffect(() => {
@@ -52,22 +53,30 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
     const getToken = async () => {
       try {
-        const token = await Web3Token.sign(async (msg: string) => {
-          try {
-            return await signer.signMessage(msg)
-          } catch (err) {
-            console.log(err)
+        const token = await Web3Token.sign(
+          async (msg: string) => {
+            try {
+              const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+              return await signer.signMessage(hexMessage)
+            } catch (err) {
+              console.log(err)
+            }
+          },
+          {
+            domain: "thenextgem.ai",
+            expires_in: "1 day"
           }
-        }, "id")
+        )
         Cookies.set("web3TokenAuth", token, { expires: 1 })
         setWeb3Token(token)
+        console.log("token", token)
       } catch (err) {
         console.log(err)
       }
     }
 
     getToken().catch(console.error)
-  }, [provider, account, web3Token])
+  }, [account, provider, web3Token])
 
   useEffect(() => {
     const allowedPages = ["/gems", "/gem-ai", "/staking", "/analyze"]
