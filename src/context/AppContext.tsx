@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
+import { ethers } from "ethers"
 import Cookies from "js-cookie"
 import React, {
   createContext,
@@ -31,7 +32,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
   const location = useLocation()
 
-  const { provider, account } = useWeb3React()
+  const { account } = useWeb3React()
   const hasCalledGetToken = useRef(false)
 
   useEffect(() => {
@@ -43,15 +44,16 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   useEffect(() => {
-    if (!provider || hasCalledGetToken.current || web3Token || !account) {
+    if (hasCalledGetToken.current || web3Token || !account) {
       return
     }
 
     hasCalledGetToken.current = true
-    const signer = provider.getSigner()
+    const provider = new ethers.BrowserProvider(window.ethereum)
 
     const getToken = async () => {
       try {
+        const signer = await provider.getSigner()
         const token = await Web3Token.sign(async (msg: string) => {
           try {
             return await signer.signMessage(msg)
@@ -67,7 +69,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     }
 
     getToken().catch(console.error)
-  }, [provider, account, web3Token])
+  }, [account, web3Token])
 
   useEffect(() => {
     const allowedPages = ["/gems", "/gem-ai", "/staking", "/analyze"]
