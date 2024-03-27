@@ -23,6 +23,7 @@ $responsiveAside: $xl;
   .category {
     $el: &;
     position: relative;
+    overflow: hidden;
 
     &::before {
       content: "";
@@ -37,6 +38,14 @@ $responsiveAside: $xl;
       background-repeat: no-repeat;
       opacity: 0.2;
       z-index: 1;
+      transition-duration: 600ms;
+      transform: translateX(3%);
+      scale: 95%;
+    }
+
+    &:hover::before {
+      scale: 105%;
+      transform: rotate(-3deg) translateX(-2%);
     }
 
     .content {
@@ -58,6 +67,7 @@ $responsiveAside: $xl;
 
       &::before {
         content: "";
+        transition-duration: 300ms;
         position: absolute;
         inset: 40% 10% -100%;
         opacity: 0.15;
@@ -82,10 +92,7 @@ $responsiveAside: $xl;
 
     .squares {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       display: flex;
       justify-content: space-around;
       overflow: hidden;
