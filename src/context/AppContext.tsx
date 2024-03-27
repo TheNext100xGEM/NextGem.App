@@ -55,7 +55,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         const token = await Web3Token.sign(
           async (msg: string) => {
             try {
-              return await signer.signMessage(msg)
+              return (await signer.signMessage(msg)) as string
               // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
               // return await signer.signMessage(hexMessage)
             } catch (err) {
