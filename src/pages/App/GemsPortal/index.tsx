@@ -83,6 +83,18 @@ const GemsPortal = () => {
                 }
                 key={`trending-cat-${index}`}
               >
+                <div className='squares'>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                  <div className='square'></div>
+                </div>
                 <div className='content'>
                   <h6>{category.name}</h6>
                   <div className='desc'>

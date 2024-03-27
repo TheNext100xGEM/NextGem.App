@@ -5,7 +5,7 @@ $responsiveAside: $xl;
 
 .portal {
   $el: &;
-  max-width: 762px;
+  max-width: 768px;
   margin: 4rem auto 6rem;
   @include max($responsiveAside) {
     padding: 0 2rem;
@@ -23,6 +23,7 @@ $responsiveAside: $xl;
   .category {
     $el: &;
     position: relative;
+
     &::before {
       content: "";
       position: absolute;
@@ -35,15 +36,16 @@ $responsiveAside: $xl;
       background-position: bottom right;
       background-repeat: no-repeat;
       opacity: 0.2;
-      z-index: 0;
+      z-index: 1;
     }
 
     .content {
       padding: 2rem 1rem;
       gap: 0.5rem;
-
+      z-index: 3;
       .desc p {
         color: white;
+        text-wrap: balance;
         opacity: 0.7;
       }
     }
@@ -53,16 +55,15 @@ $responsiveAside: $xl;
       inset: 0;
       overflow: hidden;
       pointer-events: 0;
-      z-index: 1;
 
       &::before {
         content: "";
         position: absolute;
         inset: 40% 10% -100%;
         opacity: 0.15;
+        z-index: 4;
         background: radial-gradient(var(--category-color) 0%, transparent 70%)
           no-repeat;
-        //background: radial-gradient(var(--stroke-color) 0%, transparent 70%) no-repeat;
       }
       &:hover {
         cursor: pointer;
@@ -71,6 +72,117 @@ $responsiveAside: $xl;
           inset: 0% 0% -100%;
           opacity: 0.25;
         }
+      }
+    }
+
+    &:hover .square {
+      animation-play-state: running;
+      opacity: 0.25;
+    }
+
+    .squares {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .square {
+      animation: squares 15s linear infinite;
+      animation-play-state: paused;
+
+      align-self: flex-end;
+      width: 0.25em;
+      height: 0.5em;
+      border-radius: 10em;
+      transform: translateY(100%);
+      background: var(--category-color);
+      opacity: 0.15;
+      -webkit-filter: blur(5px);
+      filter: blur(5px);
+      &:nth-child(2) {
+        height: 0.75em;
+        width: 1.5em;
+        animation-delay: 1s;
+        animation-duration: 16s;
+        -webkit-filter: blur(5px);
+        filter: blur(5px);
+      }
+      &:nth-child(3) {
+        height: 1em;
+        width: 0.5em;
+        animation-delay: 1.5s;
+        animation-duration: 7s;
+        -webkit-filter: blur(10px);
+        filter: blur(10px);
+      }
+      &:nth-child(4) {
+        height: 0.5em;
+        width: 0.75em;
+        animation-delay: 0.5s;
+        -webkit-filter: blur(4px);
+        filter: blur(4px);
+        animation-duration: 12s;
+      }
+      &:nth-child(5) {
+        height: 0.625em;
+        width: 1em;
+        animation-delay: 4s;
+        -webkit-filter: blur(2px);
+        filter: blur(2px);
+        animation-duration: 10s;
+      }
+      &:nth-child(6) {
+        height: 1.25em;
+        width: 1em;
+        animation-delay: 2s;
+        -webkit-filter: blur(4px);
+        filter: blur(4px);
+        animation-duration: 8s;
+      }
+      &:nth-child(7) {
+        height: 2em;
+        width: 1em;
+        -webkit-filter: blur(6px);
+        filter: blur(6px);
+        animation-duration: 11s;
+      }
+      &:nth-child(8) {
+        height: 0.5em;
+        width: 1.5em;
+        animation-delay: 5s;
+        -webkit-filter: blur(7px);
+        filter: blur(7px);
+        animation-duration: 17s;
+      }
+      &:nth-child(9) {
+        height: 0.75em;
+        width: 1em;
+        -webkit-filter: blur(5px);
+        filter: blur(5px);
+        animation-duration: 8s;
+      }
+      &:nth-child(10) {
+        height: 1.5em;
+        width: 1.2em;
+        animation-delay: 6s;
+        -webkit-filter: blur(7px);
+        filter: blur(7px);
+        animation-duration: 11s;
+      }
+    }
+
+    @keyframes squares {
+      from {
+        transform: translateY(100%) rotate(-50deg);
+      }
+      to {
+        transform: translateY(calc(-100vh + -100%)) rotate(25deg);
       }
     }
   }
