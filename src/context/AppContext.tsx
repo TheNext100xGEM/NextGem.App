@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import { ethers } from "ethers"
+import { JsonRpcSigner, ethers } from "ethers"
 import Cookies from "js-cookie"
 import React, {
   createContext,
@@ -51,35 +51,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     hasCalledGetToken.current = true
     const signer = provider.getSigner()
 
-    // const signMessageAsync = async (
-    //   signer: Signer | JsonRpcSigner,
-    //   address: string,
-    //   message: string
-    // ): Promise<string> => {
-    //   const messageBytes = ethers.toUtf8Bytes(message)
-    //   if (signer instanceof JsonRpcSigner) {
-    //     try {
-    //       const signature = await signer.provider.send("personal_sign", [
-    //         ethers.hexlify(messageBytes),
-    //         address.toLowerCase()
-    //       ])
-    //       return signature
-    //     } catch (e:
-    //       | Error
-    //       | unknown
-    //       | {
-    //           message: string
-    //         }) {
-    //       if (e?.message.includes("personal_sign")) {
-    //         return await signer.signMessage(messageBytes)
-    //       }
-    //       throw e
-    //     }
-    //   } else {
-    //     return await signer.signMessage(messageBytes)
-    //   }
-    // }
-
     const getToken = async () => {
       try {
         const token = await Web3Token.sign(
@@ -87,10 +58,27 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
             try {
               const messageBytes = ethers.toUtf8Bytes(msg)
 
-              return await signer.provider.send("personal_sign", [
-                ethers.hexlify(messageBytes),
-                account.toLowerCase()
-              ])
+              if (signer instanceof JsonRpcSigner) {
+                try {
+                  const signature = await signer.provider.send(
+                    "personal_sign",
+                    [ethers.hexlify(messageBytes), account.toLowerCase()]
+                  )
+                  return signature
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                } catch (e: any | unknown) {
+                  if (e?.message.includes("personal_sign")) {
+                    return await signer.signMessage(messageBytes)
+                  }
+                  throw e
+                }
+              } else {
+                return await signer.signMessage(messageBytes)
+              }
+              // return await signer.provider.send("personal_sign", [
+              //   ethers.hexlify(messageBytes),
+              //   account.toLowerCase()
+              // ])
               // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
               // return await signMessageAsync(signer as JsonRpcSigner, account, msg)
               // return await signer.signMessage(hexMessage)
