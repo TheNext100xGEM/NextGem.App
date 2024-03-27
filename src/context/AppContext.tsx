@@ -66,7 +66,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
             domain: "thenextgem.ai",
             expires_in: "1 day",
             nonce: 12345678,
-            uri: "thenextgem.ai",
+            uri: "https://thenextgem.ai/",
             web3_token_version: 2,
             chain_id: 1,
             issued_at: new Date(),
