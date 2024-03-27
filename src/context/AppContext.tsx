@@ -51,13 +51,49 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     hasCalledGetToken.current = true
     const signer = provider.getSigner()
 
+    // const signMessageAsync = async (
+    //   signer: Signer | JsonRpcSigner,
+    //   address: string,
+    //   message: string
+    // ): Promise<string> => {
+    //   const messageBytes = ethers.toUtf8Bytes(message)
+    //   if (signer instanceof JsonRpcSigner) {
+    //     try {
+    //       const signature = await signer.provider.send("personal_sign", [
+    //         ethers.hexlify(messageBytes),
+    //         address.toLowerCase()
+    //       ])
+    //       return signature
+    //     } catch (e:
+    //       | Error
+    //       | unknown
+    //       | {
+    //           message: string
+    //         }) {
+    //       if (e?.message.includes("personal_sign")) {
+    //         return await signer.signMessage(messageBytes)
+    //       }
+    //       throw e
+    //     }
+    //   } else {
+    //     return await signer.signMessage(messageBytes)
+    //   }
+    // }
+
     const getToken = async () => {
       try {
         const token = await Web3Token.sign(
           async (msg: string) => {
             try {
-              const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
-              return await signer.signMessage(hexMessage)
+              const messageBytes = ethers.toUtf8Bytes(msg)
+
+              return await signer.provider.send("personal_sign", [
+                ethers.hexlify(messageBytes),
+                account.toLowerCase()
+              ])
+              // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+              // return await signMessageAsync(signer as JsonRpcSigner, account, msg)
+              // return await signer.signMessage(hexMessage)
             } catch (err) {
               console.log(err)
             }
