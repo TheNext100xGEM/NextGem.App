@@ -1,3 +1,5 @@
+import { CurrentChat } from "@models/Chat"
+import { ApiEmbed, mapEmbed } from "@models/ChatEmbed"
 import React, {
   createContext,
   useContext,
@@ -5,8 +7,6 @@ import React, {
   ReactNode,
   useEffect
 } from "react"
-import { CurrentChat } from "@models/Chat"
-import { ApiEmbed, mapEmbed } from "@models/ChatEmbed"
 import { useNavigate } from "react-router-dom"
 
 interface ChatContextProps {

@@ -1,9 +1,10 @@
-import Cookies from "js-cookie"
-import { ApiGem } from "@models/GemCard"
-import { APP_API_URL } from "../libs/constants"
 import { ApiCollection } from "@models/API"
 import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
+import { ApiGem } from "@models/GemCard"
 import { ApiGemFull } from "@models/GemFull"
+import Cookies from "js-cookie"
+
+import { APP_API_URL } from "../libs/constants"
 
 export type ApiStatusReponse = {
   status: boolean
@@ -40,7 +41,7 @@ export const getGemCollection = async ({
     searchQuery,
     sortBy: sortBy && sortBy.length ? JSON.stringify(sortBy) : undefined
   })
-    .filter(([_, value]) => value !== undefined)
+    .filter(([, value]) => value !== undefined)
     .map(([key, value]) => `${key}=${value}`)
     .join("&")
 
@@ -81,11 +82,11 @@ export const deleteUserFavorite = async (body: {
 }) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites/delete`, "deleteUserFavorite", "POST", body)
 
 // Functions
-async function request<T>(
+async function request<T, B = Record<string, unknown>>(
   url: string,
   name: string,
   method: "GET" | "POST" = "GET",
-  body?: any
+  body?: B
 ) {
   // Récupérer le token depuis les cookies
   const token = Cookies.get("web3TokenAuth")

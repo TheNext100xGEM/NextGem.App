@@ -1,5 +1,7 @@
 import "./_gems.scss"
 import GemCard from "@components/GemCard"
+import GemList from "@components/GemList"
+import PanelGem from "@components/PanelGem"
 import {
   Button,
   Checkbox,
@@ -11,20 +13,20 @@ import {
 } from "@components/ui"
 import { Grid } from "@components/ui"
 import { NOTE_MAX, NOTE_MIN, SITE_NAME } from "@constants/index"
+import { useGemsContext } from "@context/GemsContext"
 import CryptoBlockChains from "@data/cryptoBlockChains"
 import CryptoMarketAreas from "@data/cryptoMarketArea"
+import { mapGem } from "@models/GemCard"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
 import { ReactNode, useEffect, useRef, useState } from "react"
-import { Helmet } from "react-helmet-async"
-import { getGemCollection } from "../../../queries/api"
-import { mapGem } from "@models/GemCard"
 import React from "react"
-import PanelGem from "@components/PanelGem"
-import { useGemsContext } from "@context/GemsContext"
-import GemList from "@components/GemList"
+import { Helmet } from "react-helmet-async"
+
+import { getGemCollection } from "../../../queries/api"
+
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -313,7 +315,7 @@ function GemsPage() {
     observer.observe(bottom.current)
 
     return () => observer.disconnect()
-  }, [])
+  }, [qGemCollection])
 
   return (
     <>
@@ -341,10 +343,10 @@ function GemsPage() {
               </thead>
               <tbody>
                 {qGemCollection.data &&
-                  qGemCollection.data.map((page, i) => (
-                    <React.Fragment key={i}>
-                      {page.map((item) => (
-                        <GemList {...item} />
+                  qGemCollection.data.map((page, pageIndex) => (
+                    <React.Fragment key={`gem-list-page-${pageIndex}`}>
+                      {page.map((item, gemIndex) => (
+                        <GemList {...item} key={`gem-${pageIndex}-${gemIndex}`} />
                       ))}
                     </React.Fragment>
                   ))}
@@ -355,10 +357,10 @@ function GemsPage() {
         {viewMode === "grid" && (
           <Grid>
             {qGemCollection.data &&
-              qGemCollection.data.map((page, i) => (
-                <React.Fragment key={i}>
-                  {page.map((item, id) => (
-                    <Item key={id}>
+              qGemCollection.data.map((page, pageIndex) => (
+                <React.Fragment key={`gem-grid-page-${pageIndex}`}>
+                  {page.map((item, gemIndex) => (
+                    <Item key={`gem-${pageIndex}-${gemIndex}`}>
                       <GemCard {...item} />
                     </Item>
                   ))}

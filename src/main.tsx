@@ -1,4 +1,5 @@
 import "@assets/css/app.scss"
+import { Web3ContextProvider } from "@components/Web3ContextProvider.tsx"
 import gsap from "gsap"
 import ScrollTrigger from "gsap/ScrollTrigger"
 import React, { ReactNode } from "react"
@@ -6,7 +7,7 @@ import ReactDOM from "react-dom/client"
 import Modal from "react-modal"
 
 import App from "./App.tsx"
-import { Web3ContextProvider } from "@components/Web3ContextProvider.tsx"
+
 
 // Initialize libraries
 gsap.registerPlugin(ScrollTrigger)

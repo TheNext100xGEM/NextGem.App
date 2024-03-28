@@ -4,9 +4,11 @@ import { useAppContext } from "@context/AppContext"
 import { useChatContext } from "@context/ChatContext"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useRef } from "react"
-import TextareaAutosize from "react-textarea-autosize"
-import { postChatMessage } from "../../../queries/api"
 import { useParams } from "react-router-dom"
+import TextareaAutosize from "react-textarea-autosize"
+
+import { postChatMessage } from "../../../queries/api"
+
 
 const min = 1
 const max = 7

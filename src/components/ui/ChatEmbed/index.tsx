@@ -1,6 +1,6 @@
-import { Embed } from "@models/ChatEmbed"
 import "./_embed.scss"
 import GemCard from "@components/GemCard"
+import { Embed } from "@models/ChatEmbed"
 import { Gem } from "@models/GemCard"
 
 import { Item } from ".."

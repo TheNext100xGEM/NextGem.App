@@ -31,13 +31,15 @@
     }
 }
 
+/* linear-gradient(90deg, rgba(43,168,239,1) 10%, rgba(255,255,255,1) 80%); */
+
 .bar-inner_wrapper{
     transition: 0.3s;
 
     height: 100%;
     width: 0px;
     background: rgb(43,168,239);
-    background: linear-gradient(90deg, rgba(43,168,239,1) 10%, rgba(255,255,255,1) 80%);
+    background: #eee;
     clip-path: polygon(0 0, 80% 0%, 100% 0, 100% 0, calc(100% - 45px) 100%, 0 100%, 0% 80%, 0 36%);
     display: flex;
     align-items: center;

@@ -1,13 +1,13 @@
+import logo from "@assets/img/logo-next-gem.webp"
+import { Grid, Loader } from "@components/ui"
+import ChatEmbed from "@components/ui/ChatEmbed"
+import Markdown from "@components/ui/Markdown"
+import { CHAT_NAME, SITE_NAME } from "@constants/index"
+import { useChatContext } from "@context/ChatContext"
+import { Icon } from "@iconify/react/dist/iconify.js"
 import { ChatMessage } from "@models/Chat"
 import { formatReadableDate } from "@utils/date"
 import classNames from "classnames"
-import logo from "@assets/img/logo-next-gem.webp"
-import { CHAT_NAME, SITE_NAME } from "@constants/index"
-import { Icon } from "@iconify/react/dist/iconify.js"
-import { Grid, Loader } from "@components/ui"
-import Markdown from "@components/ui/Markdown"
-import ChatEmbed from "@components/ui/ChatEmbed"
-import { useChatContext } from "@context/ChatContext"
 
 function Message({
   last,

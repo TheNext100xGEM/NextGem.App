@@ -1,4 +1,7 @@
 import "../GemAi/_gemAi.scss"
+import Form from "@components/GemAi/Form"
+import List from "@components/GemAi/List"
+import Message from "@components/GemAi/Message"
 import { Button, Loader } from "@components/ui"
 import { CHAT_NAME, SITE_NAME } from "@constants/index"
 import { useChatContext } from "@context/ChatContext"
@@ -8,11 +11,10 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import { useEffect, useState } from "react"
 import { Helmet } from "react-helmet-async"
-import { getUserChatId, postChatMessage } from "../../../queries/api"
-import List from "@components/GemAi/List"
-import Form from "@components/GemAi/Form"
 import { useParams } from "react-router-dom"
-import Message from "@components/GemAi/Message"
+
+import { getUserChatId, postChatMessage } from "../../../queries/api"
+
 
 const ScrollToBottom = (behavior: Behavior = "smooth") => {
   window.scrollTo({

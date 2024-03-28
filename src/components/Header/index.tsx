@@ -72,6 +72,7 @@ const navApp: NavItem[] = [
   { component: <NavLink to='/gems' title='Gems' /> },
   { component: <NavLink to='/staking' title='Staking' /> },
   { component: <NavLink to='/gem-ai' title={CHAT_NAME} /> },
+  { component: <NavLink to='/analyze' title='Ai Analysis' /> },
   { component: <NavLink to='https://docs.thenextgem.ai/' title='Documentation' isExternal /> },
   { component: <SocialListNext /> },
   { component: <Panel /> },

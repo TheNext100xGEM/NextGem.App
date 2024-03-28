@@ -1,26 +1,27 @@
 import "./_gemDetail.scss"
-import { useMutation, useQuery } from "@tanstack/react-query"
-
-import { mapGemFull } from "@models/GemFull"
-import { Link, useParams } from "react-router-dom"
 import { NoteCard } from "@components/Note"
+import ProgressBar from "@components/ProgressBar"
+import { SocialList } from "@components/Socials"
+import { Button, Corner } from "@components/ui"
+import Markdown from "@components/ui/Markdown"
 import { SITE_NAME } from "@constants/index"
+import { Icon } from "@iconify/react/dist/iconify.js"
+import { mapGemFull } from "@models/GemFull"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { removeUrlPrefix } from "@utils/url"
+import classNames from "classnames"
+import { Children, ReactNode, useRef, useState } from "react"
 import { Helmet } from "react-helmet-async"
+import toast from "react-hot-toast"
+import { Link, useParams } from "react-router-dom"
+
 import {
   deleteUserFavorite,
   getGemSingle,
   postUserFavorite,
   postReloadAnalysis
 } from "../../../queries/api"
-import { Children, ReactNode, useRef, useState } from "react"
-import classNames from "classnames"
-import { Button, Corner } from "@components/ui"
-import Markdown from "@components/ui/Markdown"
-import { removeUrlPrefix } from "@utils/url"
-import { Icon } from "@iconify/react/dist/iconify.js"
-import { SocialList } from "@components/Socials"
-import toast from "react-hot-toast"
-import ProgressBar from "@components/ProgressBar"
+
 function GemDetailPage() {
   const { tokenId } = useParams()
   let token = "",

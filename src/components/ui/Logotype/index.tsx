@@ -14,7 +14,7 @@ function Logotype({ horizontal }: PropsLogotype) {
       <img src={logo} alt={SITE_NAME} loading="lazy" width="265" height="198" draggable="false" />
       <Sprite 
         id={horizontal ? "logotype-horizontal" : "logotype"} 
-        viewBox={horizontal ? "0 0 546 50" : "0 0 208 191"}
+        viewBox={horizontal ? "0 0 388 50" : "0 0 215 112"}
         />
     </div>
   )

@@ -5,12 +5,14 @@ import { Button } from "@components/ui"
 import { Icon } from "@iconify/react"
 import { Gem } from "@models/GemCard"
 import { useMutation } from "@tanstack/react-query"
+import { cleanHTMLTags } from "@utils/string"
 import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { Link } from "react-router-dom"
+
 import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
-import { cleanHTMLTags } from "@utils/string"
+
 
 function GemList({
   id,
@@ -21,7 +23,7 @@ function GemList({
   chains,
   launchpad,
   weightedScore,
-  status = Math.round(Math.random() * 3 - 1),
+  status = -1,
   socials,
   slug,
   isFavorite

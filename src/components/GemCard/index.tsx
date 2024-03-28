@@ -10,6 +10,7 @@ import { removeUrlPrefix } from "@utils/url"
 import { Children, ReactNode, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { Link } from "react-router-dom"
+
 import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
 
 const MenuGemCard = ({ name, id, isFavorite }: { name: string; id: string, isFavorite: boolean }) => {
