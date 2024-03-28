@@ -52,7 +52,7 @@ const trendingCategories = [
     name: "To Be Launched",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
-    link: "/gems?",
+    link: "/gems?launchStatus=0%2C1&noteMin=1&noteMax=10&viewMode=grid",
     color: "#f97316",
     backgroundImageUrl:
       "https://em-content.zobj.net/source/apple/391/rocket_1f680.png"
@@ -69,7 +69,9 @@ const trendingCategories = [
 ]
 
 const GemsPortal = () => {
-  const [soundHover] = useSound(SOUND_BUTTON_HOVER, { volume: VOLUME_BUTTON_HOVER })
+  const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
+    volume: VOLUME_BUTTON_HOVER
+  })
 
   return (
     <>
