@@ -25,7 +25,7 @@ $responsiveAside: $xl;
     position: relative;
     overflow: hidden;
 
-    &::before {
+    &-before {
       content: "";
       position: absolute;
       bottom: 0;
@@ -34,17 +34,23 @@ $responsiveAside: $xl;
       height: 85%;
       background-size: contain;
       background-image: var(--category-bg-image);
+
+      mask-repeat: no-repeat;
       background-position: bottom right;
       background-repeat: no-repeat;
-      opacity: 0.2;
+      //opacity: 1;
       z-index: 1;
+      opacity: 0.2;
+      //backdrop-filter: opacity(1);
+      //filter: opacity(0.25);
       transition-duration: 600ms;
       transform: translateX(3%);
       scale: 95%;
     }
 
-    &:hover::before {
+    &:hover .category-before {
       scale: 105%;
+      opacity: 0.25;
       transform: rotate(-3deg) translateX(-2%);
     }
 
@@ -64,25 +70,55 @@ $responsiveAside: $xl;
       inset: 0;
       overflow: hidden;
       pointer-events: 0;
-
+    }
+    &-light::before {
+      content: "";
+      transition-duration: 300ms;
+      position: absolute;
+      inset: 40% 10% -100%;
+      opacity: 0.15;
+      z-index: 4;
+      background: radial-gradient(var(--category-color) 0%, transparent 70%)
+        no-repeat;
+    }
+    &:hover .category-light {
+      cursor: pointer;
       &::before {
-        content: "";
-        transition-duration: 300ms;
-        position: absolute;
-        inset: 40% 10% -100%;
-        opacity: 0.15;
-        z-index: 4;
-        background: radial-gradient(var(--category-color) 0%, transparent 70%)
-          no-repeat;
+        inset: 0% 0% -100%;
+        opacity: 0.25;
       }
-      &:hover {
-        cursor: pointer;
-        &::before {
-          //@include light-blur;
-          inset: 0% 0% -100%;
-          opacity: 0.25;
-        }
-      }
+    }
+
+    $size: 1.5px;
+    &-bg {
+      filter: blur(1px);
+      position: absolute;
+      border-top-left-radius: 36px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      color: var(--category-color);
+      opacity: 0.25;
+      transition-duration: 300ms;
+      background-image: radial-gradient(
+          currentColor #{$size},
+          transparent #{$size}
+        ),
+        radial-gradient(currentColor #{$size}, transparent #{$size});
+      background-size: calc(5 * #{$size}) calc(5 * #{$size});
+      background-position:
+        0 0,
+        calc(2.5 * #{$size}) calc(2.5 * #{$size});
+      -webkit-mask-image: linear-gradient(to left, transparent 20%, white 70%);
+      mask-image: linear-gradient(to left, transparent 20%, white 70%);
+    }
+
+    &:hover .category-bg {
+      opacity: 0.2;
+      transform: translateX(1%);
+      -webkit-mask-image: linear-gradient(to left, transparent 30%, white 70%);
+      mask-image: linear-gradient(to left, transparent 30%, white 70%);
     }
 
     &:hover .square {

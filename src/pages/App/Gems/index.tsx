@@ -294,6 +294,7 @@ const Filter = () => {
 
 function GemsPage() {
   const {
+    launchStatus,
     noteMin,
     noteMax,
     categories,
@@ -306,6 +307,7 @@ function GemsPage() {
   const qGemCollection = useInfiniteQuery({
     queryKey: [
       "gemCollection",
+      launchStatus,
       noteMin,
       noteMax,
       categories,
@@ -316,6 +318,7 @@ function GemsPage() {
     queryFn: ({ pageParam }) =>
       getGemCollection({
         page: pageParam,
+        launchStatus,
         noteMin,
         noteMax,
         categories,

@@ -26,7 +26,7 @@ const trendingCategories = [
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
     link: "/gems?categories=5&noteMin=1&noteMax=10&chains=ethereum&viewMode=grid",
-    color: "blueviolet",
+    color: "#a855f7",
     backgroundImageUrl:
       "https://ethereum.org/_ipx/w_256,q_75/%2F_next%2Fstatic%2Fmedia%2Fimpact_transparent.7420c423.png?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fimpact_transparent.7420c423.png&w=256"
   },
@@ -52,7 +52,7 @@ const trendingCategories = [
     name: "To Be Launched",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
-    link: "/gems?",
+    link: "/gems?launchStatus=0%2C1&noteMin=1&noteMax=10&viewMode=grid",
     color: "#f97316",
     backgroundImageUrl:
       "https://em-content.zobj.net/source/apple/391/rocket_1f680.png"
@@ -69,7 +69,9 @@ const trendingCategories = [
 ]
 
 const GemsPortal = () => {
-  const [soundHover] = useSound(SOUND_BUTTON_HOVER, { volume: VOLUME_BUTTON_HOVER })
+  const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
+    volume: VOLUME_BUTTON_HOVER
+  })
 
   return (
     <>
@@ -113,6 +115,8 @@ const GemsPortal = () => {
                   </div>
                 </div>
                 <div className='category-light' />
+                <div className='category-before' />
+                <div className='category-bg' />
                 <Corner color='secondary' />
               </Link>
             ))}

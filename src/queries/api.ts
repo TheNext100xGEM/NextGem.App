@@ -14,6 +14,7 @@ export type ApiStatusReponse = {
 export const getGemCollection = async ({
   page = 0,
   limit = 20,
+  launchStatus,
   categories,
   noteMin,
   noteMax,
@@ -23,6 +24,7 @@ export const getGemCollection = async ({
 }: {
   page?: number
   limit?: number
+  launchStatus?: number[]
   categories?: string[]
   noteMin?: number
   noteMax?: number
@@ -33,6 +35,7 @@ export const getGemCollection = async ({
   const queryString = Object.entries({
     page,
     limit,
+    launchStatus: launchStatus && launchStatus.length ? JSON.stringify(launchStatus) : undefined,
     categories:
       categories && categories.length ? JSON.stringify(categories) : undefined,
     noteMin,
@@ -44,6 +47,9 @@ export const getGemCollection = async ({
     .filter(([, value]) => value !== undefined)
     .map(([key, value]) => `${key}=${value}`)
     .join("&")
+
+    console.log(launchStatus)
+    console.log(queryString)
 
   const url = `${APP_API_URL}/projects?${queryString}`
 
