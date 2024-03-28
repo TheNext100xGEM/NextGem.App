@@ -1,6 +1,6 @@
 export const SITE_NAME: string = "The Next 100x Gem"
 export const CHAT_NAME: string = "NextGem AI"
-export const TOKEN_NAME: string = "$NextGem"
+export const TOKEN_NAME: string = "GEMAI"
 
 export const BUY_URL: string = "https://uniswap.org/"
 
@@ -23,4 +23,3 @@ export const SOUND_BUTTON_HOVER: string = PATH_SOUND + "hover-button.mp3"
 export const VOLUME_BUTTON_HOVER: number = 0.25
 export const SOUND_OPEN_APP: string = PATH_SOUND + "open-app.mp3"
 export const SOUND_SEND_MESSAGE: string = PATH_SOUND + "send-message.mp3"
-

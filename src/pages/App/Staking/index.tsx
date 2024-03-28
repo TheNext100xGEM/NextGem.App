@@ -339,9 +339,8 @@ function StakingPage() {
                     significant advantages. You can choose from three
                     subscription periods: 1 month, 6 months, or one year, with
                     discounts applied based on duration. This is facilitated by
-                    burning a specific amount of $NextGem through a transaction
-                    on the Ethereum chain, recorded on our deployed smart
-                    contract.
+                    burning a specific amount of GEMAI through a transaction on
+                    the Ethereum chain, recorded on our deployed smart contract.
                   </p>
                   <p>
                     Here are some key features of our Premium service:
