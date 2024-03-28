@@ -11,6 +11,10 @@ export type ApiStatusReponse = {
   message?: string
 }
 
+export interface ApiAnalyzeReponse extends ApiStatusReponse {
+  statusUrl?: string
+}
+
 export const getGemCollection = async ({
   page = 0,
   limit = 20,
@@ -35,7 +39,10 @@ export const getGemCollection = async ({
   const queryString = Object.entries({
     page,
     limit,
-    launchStatus: launchStatus && launchStatus.length ? JSON.stringify(launchStatus) : undefined,
+    launchStatus:
+      launchStatus && launchStatus.length
+        ? JSON.stringify(launchStatus)
+        : undefined,
     categories:
       categories && categories.length ? JSON.stringify(categories) : undefined,
     noteMin,
@@ -48,8 +55,8 @@ export const getGemCollection = async ({
     .map(([key, value]) => `${key}=${value}`)
     .join("&")
 
-    console.log(launchStatus)
-    console.log(queryString)
+  console.log(launchStatus)
+  console.log(queryString)
 
   const url = `${APP_API_URL}/projects?${queryString}`
 
@@ -59,33 +66,64 @@ export const getGemCollection = async ({
 export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
 
-
 export const getUserChats = async () =>
-  request<ApiUserChats | ApiStatusReponse>(`${APP_API_URL}/user/chats`, "getUserChats", "GET")
+  request<ApiUserChats | ApiStatusReponse>(
+    `${APP_API_URL}/user/chats`,
+    "getUserChats",
+    "GET"
+  )
 
-  export const deleteUserChat = async (body: {
-    chatId: string
-  }) => request<ApiStatusReponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
+export const deleteUserChat = async (body: { chatId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/user/chats/delete`,
+    "deleteUserChat",
+    "POST",
+    body
+  )
 
 export const getUserChatId = async ({ id }: { id: string }) =>
-  request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "getUserChatId", "GET")
+  request<ApiChatMessage[]>(
+    `${APP_API_URL}/chat/history/${id}`,
+    "getUserChatId",
+    "GET"
+  )
 
 export const postChatMessage = async (body: {
   message: string
   chatId?: string
 }) => request<ApiChat>(`${APP_API_URL}/chat`, "postChatMessage", "POST", body)
 
-export const postUserFavorite = async (body: {
-  projectId: string
-}) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites`, "postUserFavorite", "POST", body)
+export const postUserFavorite = async (body: { projectId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/user/favorites`,
+    "postUserFavorite",
+    "POST",
+    body
+  )
 
-export const postReloadAnalysis = async (body: {
-    projectId: string
-  }) => request<ApiStatusReponse>(`${APP_API_URL}/projects/reload`, "postReloadAnalysis", "POST", body)
+export const postReloadAnalysis = async (body: { projectId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/projects/reload`,
+    "postReloadAnalysis",
+    "POST",
+    body
+  )
 
-export const deleteUserFavorite = async (body: {
-  projectId: string
-}) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites/delete`, "deleteUserFavorite", "POST", body)
+export const postAnalysis = async (body: { websiteUrl: string }) =>
+  request<ApiAnalyzeReponse>(
+    `${APP_API_URL}/analyze`,
+    "postAnalysis",
+    "POST",
+    body
+  )
+
+export const deleteUserFavorite = async (body: { projectId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/user/favorites/delete`,
+    "deleteUserFavorite",
+    "POST",
+    body
+  )
 
 // Functions
 async function request<T, B = Record<string, unknown>>(
