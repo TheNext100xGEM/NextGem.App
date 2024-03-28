@@ -12,6 +12,7 @@ import { useSearchParams } from "react-router-dom"
 // Defining the structure of the state used to filter gems
 interface GemFilterState {
   id: string
+  launchStatus: number[]
   categories: string[]
   noteMin: number
   noteMax: number
@@ -24,6 +25,7 @@ interface GemFilterState {
 // Extending GemFilterState with setter functions for each state property
 interface GemsContextProps extends GemFilterState {
   setId: Dispatch<SetStateAction<string>>
+  setLaunchStatus: Dispatch<SetStateAction<number[]>>
   setCategories: Dispatch<SetStateAction<string[]>>
   setNoteMin: Dispatch<SetStateAction<number>>
   setNoteMax: Dispatch<SetStateAction<number>>
@@ -40,8 +42,11 @@ const serialize = (state: GemFilterState) => {
   if (state.id !== "") {
     params.set("id", state.id)
   }
+  if (state.launchStatus.length > 0) {
+    params.set("launchStatus", state.launchStatus.join(","))
+  }
   if (state.categories.length > 0) {
-    params.set("categories", state.categories.join(",")) // Comma-separated list
+    params.set("categories", state.categories.join(","))
   }
   // Ensuring noteMin and noteMax are within an acceptable range before setting
   params.set(
@@ -69,6 +74,7 @@ const serialize = (state: GemFilterState) => {
 const parse = (params: URLSearchParams) => {
   return {
     id: params.get("id") || "",
+    launchStatus: params.get("launchStatus")?.split(",").map(Number) || [0, 1, 2],
     categories: params.get("categories")?.split(",") || [],
     noteMin: Number(params.get("noteMin")) || 1,
     noteMax: Number(params.get("noteMax")) || 10,
@@ -87,6 +93,7 @@ export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
 
   // State hooks for each filter criterion
   const [id, setId] = useState(initialState.id)
+  const [launchStatus, setLaunchStatus] = useState(initialState.launchStatus)
   const [categories, setCategories] = useState(initialState.categories)
   const [noteMin, setNoteMin] = useState(initialState.noteMin)
   const [noteMax, setNoteMax] = useState(initialState.noteMax)
@@ -99,6 +106,7 @@ export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const newState = {
       id,
+      launchStatus,
       categories,
       noteMin,
       noteMax,
@@ -111,6 +119,7 @@ export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
     setSearchParams(params, { replace: true })
   }, [
     id,
+    launchStatus,
     categories,
     noteMin,
     noteMax,
@@ -125,6 +134,8 @@ export const GemsContextProvider = ({ children }: { children: ReactNode }) => {
     <GemsContext.Provider
       value={{
         id,
+        launchStatus,
+        setLaunchStatus,
         setId,
         categories,
         setCategories,

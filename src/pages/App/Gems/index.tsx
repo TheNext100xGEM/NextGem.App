@@ -166,6 +166,57 @@ const FilterByChains = () => {
   )
 }
 
+const FilterByLaunchStatus = () => {
+  const { launchStatus, setLaunchStatus } = useGemsContext()
+
+  const handleCheckboxChange = (status: number) => {
+    if (launchStatus.includes(status)) {
+      setLaunchStatus((prevLaunchStatus) =>
+        prevLaunchStatus.filter((prevStatus) => prevStatus !== status)
+      )
+    } else {
+      setLaunchStatus((prevLaunchStatus) => [...prevLaunchStatus, status])
+    }
+  }
+
+  const options = [
+    {
+      name: "Not Launched",
+      id: 0,
+    },
+    {
+      name: "Launch in progress",
+      id: 1,
+    },
+    {
+      name: "Live project",
+      id: 2,
+    }
+  ]
+
+  return (
+    <FilterDrop
+      name='Launch Status'
+      right={options.length}
+      className='listing'
+    >
+      <ul>
+        {options.map((status, index) => (
+          <li key={index} className='item'>
+            <Checkbox
+              label={status.name}
+              name='launchStatus[]'
+              value={status.id}
+              onChange={() => handleCheckboxChange(status.id)}
+              checked={launchStatus.includes(status.id)}
+            />
+          </li>
+        ))}
+      </ul>
+    </FilterDrop>
+  )
+}
+
 const FilterAiNote = () => {
   const { noteMin, setNoteMin, noteMax, setNoteMax } = useGemsContext()
 
@@ -216,6 +267,7 @@ const Filter = () => {
       />
       <FilterSearchQuery />
       <div className='filter-actions'>
+        <FilterByLaunchStatus />
         <FilterBySort />
         <FilterAiNote />
         <FilterByCategories />
