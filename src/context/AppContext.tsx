@@ -86,7 +86,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [account, provider, web3Token])
 
   useEffect(() => {
-    const allowedPages = ["/gems", "/gem-ai", "/staking", "/analyze"]
+    const allowedPages = ["/portal", "/gems", "/gem-ai", "/staking", "/analyze"]
     const isInApp = allowedPages.some((page) =>
       location.pathname.startsWith(page)
     )
