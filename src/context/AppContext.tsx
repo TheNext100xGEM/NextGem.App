@@ -86,6 +86,24 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [account, provider, web3Token])
 
   useEffect(() => {
+    if (!provider) {
+      return
+    }
+
+    provider.addListener("accountsChanged", async (accounts) => {
+      console.log(accounts)
+
+      if (accounts.length !== 0) {
+        return
+      }
+
+      setWeb3Token(null)
+      console.log("disconnected")
+      Cookies.remove("web3TokenAuth")
+    })
+  }, [provider])
+
+  useEffect(() => {
     const allowedPages = ["/gems", "/gem-ai", "/staking", "/analyze"]
     const isInApp = allowedPages.some((page) =>
       location.pathname.startsWith(page)
