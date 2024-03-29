@@ -55,9 +55,6 @@ export const getGemCollection = async ({
     .map(([key, value]) => `${key}=${value}`)
     .join("&")
 
-  console.log(launchStatus)
-  console.log(queryString)
-
   const url = `${APP_API_URL}/projects?${queryString}`
 
   return request<ApiCollection<ApiGem>>(url, "getGemCollection", "GET")
