@@ -70,7 +70,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
             web3_token_version: 1,
             chain_id: 1,
             issued_at: new Date(),
-            not_before: undefined,
             request_id: 12345,
             address: account
           }
