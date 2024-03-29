@@ -35,8 +35,11 @@ function GemAiPage() {
           onClick={() => setAsideResponsive(!asideResponsive)}
         />
         <div className='ai-module'>
-          {/* <div className='bg-animation-head'></div> */}
-          <div className='bg-animation-body'></div>
+          <div className='bg-animation'>
+            <div id='stars'></div>
+            <div id='stars2'></div>
+            <div id='stars3'></div>
+          </div>
 
           <div className='wrapper'>
             <div
