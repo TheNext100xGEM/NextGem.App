@@ -91,7 +91,7 @@ function GemAiPage() {
             </div>
           </div>
         </div>
-        <div className='ai-bg'></div>
+        {/* <div className='ai-bg'></div> */}
       </div>
     </>
   )
