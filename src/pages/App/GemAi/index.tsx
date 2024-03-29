@@ -4,6 +4,7 @@ import Form from "@components/GemAi/Form"
 import List from "@components/GemAi/List"
 import Message from "@components/GemAi/Message"
 import { Alert, Button } from "@components/ui"
+import StarAnimation from "@components/ui/StarAnimation"
 import { CHAT_NAME, SITE_NAME } from "@constants/index"
 import { useAppContext } from "@context/AppContext"
 import { useChatContext } from "@context/ChatContext"
@@ -35,12 +36,7 @@ function GemAiPage() {
           onClick={() => setAsideResponsive(!asideResponsive)}
         />
         <div className='ai-module'>
-          <div className='bg-animation'>
-            <div id='stars'></div>
-            <div id='stars2'></div>
-            <div id='stars3'></div>
-          </div>
-
+          <StarAnimation />
           <div className='wrapper'>
             <div
               className={classNames("ai-chat", {
