@@ -23,7 +23,7 @@ $responsiveList: $l;
     z-index: 100;
     overflow-y: scroll;
     @include no-scrollbar;
-    transition: transform .4s;
+    transition: transform 0.4s;
 
     &-opener {
       --corner-bg: var(--bg-body);
@@ -38,8 +38,7 @@ $responsiveList: $l;
       padding: 0;
       font-size: 12px;
       z-index: 100;
-      transition: left .4s;
-
+      transition: left 0.4s;
 
       &.opened {
         left: calc(var(--list-width) + var(--pos));
@@ -137,7 +136,7 @@ $responsiveList: $l;
           opacity: 0;
           @include light-blur;
         }
-      
+
         &:hover {
           &::before {
             opacity: 0.2;
@@ -347,17 +346,17 @@ $responsiveList: $l;
         gap: var(--size-2);
         padding-left: calc(var(--avatar) + var(--size-2));
 
-      //   .inProgress &:last-child .markdown :last-child:after {
-      //     content: '';
-      //     position: relative;
-      //     display: inline-block;
-      //     width: 2px;
-      //     height: 16px;
-      //     background: white;
-      //     opacity: .7;
-      //     margin-left: 4px;
-      //     margin-bottom: -2px;
-      // }
+        //   .inProgress &:last-child .markdown :last-child:after {
+        //     content: '';
+        //     position: relative;
+        //     display: inline-block;
+        //     width: 2px;
+        //     height: 16px;
+        //     background: white;
+        //     opacity: .7;
+        //     margin-left: 4px;
+        //     margin-bottom: -2px;
+        // }
 
         .avatar {
           position: absolute;
@@ -454,5 +453,181 @@ $responsiveList: $l;
     .btn {
       font-size: 0.9em;
     }
+  }
+}
+
+.bg-animation-head,
+.bg-animation-body {
+  font: 5vmin/1.3 Serif;
+  overflow: hidden;
+  position: absolute;
+  inset: 0;
+}
+
+.bg-animation-body,
+.bg-animation-head {
+  display: block;
+  font-size: 52px;
+  color: transparent;
+}
+
+.bg-animation-head::before,
+.bg-animation-head::after,
+.bg-animation-body::before,
+.bg-animation-body::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3em;
+  height: 3em;
+  content: ".";
+  mix-blend-mode: screen;
+  animation: 44s -27s move infinite ease-in-out alternate;
+}
+
+.bg-animation-body::before {
+  text-shadow:
+    0.2543945169em 1.3244046688em 7px rgba(136, 135, 137, 0.5),
+    0.912439342em 0.2318600448em 7px rgba(240, 240, 240, 0.5),
+    2.1533881748em -0.1590822202em 7px rgba(136, 135, 137, 0.5),
+    1.8900828454em 0.1050838793em 7px rgba(136, 135, 137, 0.5),
+    0.2042540667em 0.6732126383em 7px rgba(240, 240, 240, 0.5),
+    0.9155292119em 2.4468482984em 7px rgba(136, 135, 137, 0.5),
+    1.5702105279em 1.4796661333em 7px rgba(136, 135, 137, 0.5),
+    -0.158825528em -0.1778569458em 7px rgba(240, 240, 240, 0.5),
+    1.8546062932em -0.3658532648em 7px rgba(136, 135, 137, 0.5),
+    1.1540115203em 0.6164073538em 7px rgba(136, 135, 137, 0.5),
+    0.8130302656em 1.625716561em 7px rgba(136, 135, 137, 0.5),
+    1.7435733691em 1.5574151751em 7px rgba(136, 135, 137, 0.5),
+    1.4495845279em -0.0890791525em 7px rgba(240, 240, 240, 0.5),
+    1.0451228009em 0.0362205904em 7px rgba(136, 135, 137, 0.5),
+    0.1086996734em 1.317256em 7px rgba(136, 135, 137, 0.5),
+    1.8456397752em -0.452100152em 7px rgba(136, 135, 137, 0.5),
+    0.5529649057em 1.1901224221em 7px rgba(136, 135, 137, 0.5),
+    0.4082588402em 0.1694812974em 7px rgba(25, 109, 9, 0.5),
+    1.6144188169em -0.0445456776em 7px rgba(136, 135, 137, 0.5);
+  animation-duration: 44s;
+  animation-delay: -27s;
+}
+
+.bg-animation-body::after {
+  text-shadow:
+    -0.2998925747em 1.9414453337em 7px rgba(136, 135, 137, 0.5),
+    0.5551520959em 1.5444084619em 7px rgba(136, 135, 137, 0.5),
+    0.2844044873em 1.1068484059em 7px rgba(136, 135, 137, 0.5),
+    -0.1861555694em 1.3212044317em 7px rgba(136, 135, 137, 0.5),
+    -0.1673621915em 2.1730068104em 7px rgba(136, 135, 137, 0.5),
+    -0.4488573935em 0.7400980955em 7px rgba(136, 135, 137, 0.5),
+    1.5018947382em 0.0785697391em 7px rgba(136, 135, 137, 0.5),
+    1.0964898335em 2.4603838017em 7px rgba(136, 135, 137, 0.5),
+    0.2596412921em 2.1180588487em 7px rgba(136, 135, 137, 0.5),
+    -0.4078436321em -0.45337132em 7px rgba(212, 98, 17, 0.5),
+    2.2091432771em -0.2803189587em 7px rgba(136, 135, 137, 0.5),
+    1.659748771em 2.0186570308em 7px rgba(136, 135, 137, 0.5),
+    0.1371296522em 2.3383949472em 7px rgba(136, 135, 137, 0.5),
+    1.4221355258em 1.7387330103em 7px rgba(136, 135, 137, 0.5),
+    0.0837873368em 0.6627130784em 7px rgba(136, 135, 137, 0.5),
+    1.349943867em -0.3873588164em 7px rgba(136, 135, 137, 0.5),
+    0.6518327398em 2.3545506857em 7px rgba(136, 135, 137, 0.5),
+    0.0134805046em -0.072766179em 7px rgba(136, 135, 137, 0.5),
+    1.7484168814em 0.1995348972em 7px rgba(136, 135, 137, 0.5),
+    0.1533949229em 0.631508105em 7px rgba(136, 135, 137, 0.5),
+    -0.4280778999em -0.3951014963em 7px rgba(136, 135, 137, 0.5),
+    2.4846790392em -0.2692683698em 7px rgba(136, 135, 137, 0.5),
+    0.9631927807em 1.6399504548em 7px rgba(136, 135, 137, 0.5),
+    -0.270575344em -0.1916487904em 7px rgba(136, 135, 137, 0.5),
+    2.4692202204em 0.0332060871em 7px rgba(136, 135, 137, 0.5),
+    0.9871801465em -0.255235846em 7px rgba(136, 135, 137, 0.5),
+    0.8359249482em 0.6900731576em 7px rgba(136, 135, 137, 0.5),
+    0.9075549798em 2.4457211674em 7px rgba(136, 135, 137, 0.5),
+    0.2866646036em -0.1897326885em 7px rgba(136, 135, 137, 0.5),
+    0.0404560514em 0.6091402352em 7px rgba(136, 135, 137, 0.5);
+  animation-duration: 43s;
+  animation-delay: -32s;
+}
+
+.bg-animation-head::before {
+  text-shadow:
+    1.3583406652em -0.0962581343em 7px rgba(0, 47, 255, 0.9),
+    1.7643491946em 1.6889396363em 7px rgba(255, 81, 0, 0.9),
+    0.7452777135em 2.2547347129em 7px rgba(125, 255, 0, 0.9),
+    1.481861714em 1.7934332493em 7px rgba(25, 255, 0, 0.9),
+    1.5532225039em 2.4488445597em 7px rgba(255, 88, 0, 0.9),
+    1.0510214957em 0.5773488825em 7px rgba(0, 187, 255, 0.9),
+    0.4037719782em 0.6952669521em 7px rgba(70, 255, 0, 0.9),
+    1.3108461074em 1.8669718879em 7px rgba(0, 255, 204, 0.9),
+    1.36752634em -0.0482961802em 7px rgba(255, 106, 0, 0.9),
+    1.0102359241em 1.684996546em 7px rgba(0, 255, 4, 0.9),
+    2.1633091151em -0.1980141335em 7px rgba(62, 0, 255, 0.9),
+    2.259263258em 0.4522664759em 7px rgba(255, 0, 167, 0.9),
+    2.4493317514em 2.2582646455em 7px rgba(0, 255, 125, 0.9),
+    0.2688443971em 2.1789083991em 7px rgba(224, 0, 255, 0.9),
+    1.0456532417em 0.1465208748em 7px rgba(255, 0, 73, 0.9),
+    1.7004529822em 1.3728570378em 7px rgba(0, 255, 115, 0.9),
+    1.1554298914em -0.236418622em 7px rgba(255, 139, 0, 0.9),
+    0.5519825265em -0.0776302512em 7px rgba(255, 0, 53, 0.9),
+    2.2459351627em 0.3957513512em 7px rgba(42, 0, 255, 0.9),
+    2.4834661529em 1.2441507068em 7px rgba(0, 255, 113, 0.9),
+    0.347492113em 0.2098877829em 7px rgba(255, 171, 0, 0.9),
+    1.2106173139em 2.075110676em 7px rgba(253, 255, 0, 0.9),
+    0.0417042517em 2.275939312em 7px rgba(0, 39, 255, 0.9),
+    1.3808858063em -0.4184801545em 7px rgba(0, 154, 255, 0.9),
+    0.2639864112em 1.0692386612em 7px rgba(255, 53, 0, 0.9),
+    0.3643106587em 2.2387462826em 7px rgba(255, 45, 0, 0.9),
+    1.4786696222em -0.2231457044em 7px rgba(255, 170, 0, 0.9),
+    2.1629786167em 0.1258240187em 7px rgba(152, 0, 255, 0.9),
+    0.038630436em 1.9928759002em 7px rgba(255, 0, 10, 0.9),
+    0.9727163342em 0.2278788359em 7px rgba(0, 21, 255, 0.9),
+    0.1955646368em 0.7023023296em 7px rgba(19, 0, 255, 0.9),
+    -0.4102530001em 2.1391510823em 7px rgba(255, 221, 0, 0.9),
+    1.4419995701em 0.1121611745em 7px rgba(0, 255, 112, 0.9);
+  animation-duration: 42s;
+  animation-delay: -23s;
+}
+
+.bg-animation-head::after {
+  text-shadow:
+    0.2437580511em 0.6857234295em 7px rgba(255, 76, 0, 0.9),
+    -0.1795602626em 2.4672019184em 7px rgba(255, 0, 189, 0.9),
+    -0.4973098821em 0.6827653116em 7px rgba(0, 32, 255, 0.9),
+    2.3856607262em 0.9193192119em 7px rgba(194, 0, 255, 0.9),
+    0.1745671793em 0.0222922091em 7px rgba(0, 203, 255, 0.9),
+    0.6278562906em 0.9217801937em 7px rgba(157, 255, 0, 0.9),
+    -0.0666146036em 2.2870926664em 7px rgba(215, 0, 255, 0.9),
+    1.9083794115em 2.4036128365em 7px rgba(255, 0, 174, 0.9),
+    1.1082130466em 2.011987355em 7px rgba(6, 0, 255, 0.9),
+    2.1481541193em 0.2731930295em 7px rgba(27, 0, 255, 0.9),
+    1.8633823945em 2.3130763488em 7px rgba(0, 152, 255, 0.9),
+    0.7316446418em 1.5372408637em 7px rgba(0, 255, 128, 0.9),
+    2.3385479em 0.631646861em 7px rgba(25, 255, 0, 0.9),
+    0.3957667916em 0.9739941516em 7px rgba(0, 255, 68, 0.9),
+    0.7219359129em 1.9500705659em 7px rgba(255, 0, 84, 0.9),
+    2.1660380709em 1.28506644em 7px rgba(0, 255, 173, 0.9),
+    -0.4534787248em -0.3980680205em 7px rgba(110, 255, 0, 0.9),
+    1.4669790012em 2.244699857em 7px rgba(30, 255, 0, 0.9),
+    0.4864030829em 1.9393456565em 7px rgba(0, 53, 255, 0.9),
+    1.446232263em 1.881130624em 7px rgba(255, 170, 0, 0.9),
+    0.4058991439em 1.6799850173em 7px rgba(250, 255, 0, 0.9),
+    2.1961148262em -0.3032339098em 7px rgba(255, 0, 62, 0.9),
+    -0.1880916358em 0.2680690345em 7px rgba(0, 210, 255, 0.9),
+    0.2124322581em 0.728722391em 7px rgba(255, 0, 116, 0.9),
+    2.1648173581em 2.1090837066em 7px rgba(0, 38, 255, 0.9),
+    0.4603767996em 2.409714003em 7px rgba(236, 0, 255, 0.9),
+    2.2737809814em 2.3227470419em 7px rgba(255, 86, 0, 0.9),
+    -0.2434975197em 0.6416413117em 7px rgba(0, 255, 16, 0.9),
+    0.1730216965em -0.0141234586em 7px rgba(0, 194, 255, 0.9),
+    0.5271333301em 1.989180102em 7px rgba(255, 0, 41, 0.9),
+    1.0613656011em 0.0304831212em 7px rgba(224, 0, 255, 0.9),
+    1.4593409593em 0.8689047151em 7px rgba(44, 0, 255, 0.9);
+  animation-duration: 41s;
+  animation-delay: -19s;
+}
+
+@keyframes move {
+  from {
+    transform: rotate(0deg) scale(12) translateX(-20px);
+  }
+  to {
+    transform: rotate(360deg) scale(18) translateX(20px);
   }
 }

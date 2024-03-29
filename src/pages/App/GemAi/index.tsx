@@ -35,8 +35,15 @@ function GemAiPage() {
           onClick={() => setAsideResponsive(!asideResponsive)}
         />
         <div className='ai-module'>
+          {/* <div className='bg-animation-head'></div> */}
+          <div className='bg-animation-body'></div>
+
           <div className='wrapper'>
-            <div className={classNames("ai-chat", { inProgress: responseInProgress })}>
+            <div
+              className={classNames("ai-chat", {
+                inProgress: responseInProgress
+              })}
+            >
               {currentChat.messages.length !== 0 && (
                 <ul className='ai-chat-content'>
                   {currentChat.messages.map((message, id) => (
