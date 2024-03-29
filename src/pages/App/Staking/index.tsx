@@ -163,7 +163,7 @@ function StakingPage() {
           <div className='offer-img'>
             <LogoToken />
           </div>
-          <div className='offer-token'>{formatter(token)} NextGEM</div>
+          <div className='offer-token'>{formatter(token)} GEMAI</div>
           <div className='sub'>~ {price} $</div>
         </div>
         <div className='hovered'>
@@ -183,7 +183,7 @@ function StakingPage() {
         <>
           <div className='p'>
             <p>
-              Select the subscription period for Next Gem services. Please note
+              Select the subscription period for GEMAI services. Please note
               that the required token amount may vary, and costs could increase
               accordingly.
             </p>
@@ -322,10 +322,10 @@ function StakingPage() {
           <div className='staking-bottom-overflow'>
             <div className='wrapper'>
               <div className='staking-bottom-content'>
-                <h3>Understanding the NextGem Service and Premium Benefits</h3>
+                <h3>Understanding the GEMAI Service and Premium Benefits</h3>
                 <div className='intro'>
                   <p>
-                    The NextGem service incorporates a burn mechanism to reduce
+                    The GEMAI service incorporates a burn mechanism to reduce
                     the total supply of GEMAI tokens, achieved by permanently
                     removing a portion of tokens from circulation. This scarcity
                     can potentially increase the value of remaining tokens. Our
@@ -335,19 +335,19 @@ function StakingPage() {
                 </div>
                 <div className='p'>
                   <p>
-                    Subscribing to the Premium NextGem service offers
-                    significant advantages. You can choose from three
-                    subscription periods: 1 month, 6 months, or one year, with
-                    discounts applied based on duration. This is facilitated by
-                    burning a specific amount of GEMAI through a transaction on
-                    the Ethereum chain, recorded on our deployed smart contract.
+                    Subscribing to the Premium GEMAI service offers significant
+                    advantages. You can choose from three subscription periods:
+                    1 month, 6 months, or one year, with discounts applied based
+                    on duration. This is facilitated by burning a specific
+                    amount of GEMAI through a transaction on the Ethereum chain,
+                    recorded on our deployed smart contract.
                   </p>
                   <p>
                     Here are some key features of our Premium service:
                     <ul>
                       <li>
-                        Access to Next Gem AI for querying specific data from
-                        our database dataset.
+                        Access to GEMAI for querying specific data from our
+                        database dataset.
                       </li>
                       <li>
                         Sentiment Analysis based on community member engagement
