@@ -326,7 +326,7 @@ function StakingPage() {
                 <div className='intro'>
                   <p>
                     The NextGem service incorporates a burn mechanism to reduce
-                    the total supply of NextGEM tokens, achieved by permanently
+                    the total supply of GEMAI tokens, achieved by permanently
                     removing a portion of tokens from circulation. This scarcity
                     can potentially increase the value of remaining tokens. Our
                     automated process ensures regular, consistent impact on the
