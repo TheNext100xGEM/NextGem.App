@@ -1,8 +1,15 @@
+@import "../../../assets/css/mixins/styles";
+@import "../../../assets/css/mixins/medias";
+
 .star-animation {
   overflow: hidden;
   position: fixed;
-  inset: 0;
+  inset: var(--main-padding);
+  bottom: 0;
   opacity: 0.3;
+  @include min($mobile) {
+    left: var(--list-width);
+  }
 }
 
 #stars {
