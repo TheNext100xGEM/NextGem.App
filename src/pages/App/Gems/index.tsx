@@ -2,6 +2,7 @@ import "./_gems.scss"
 import GemCard from "@components/GemCard"
 import GemList from "@components/GemList"
 import PanelGem from "@components/PanelGem"
+import { TrendingGems } from "@components/TrendingGems"
 import {
   Button,
   Checkbox,
@@ -372,6 +373,49 @@ function GemsPage() {
     return () => observer.disconnect()
   }, [qGemCollection])
 
+  const trendingGems = [
+    {
+      name: "GEMAI",
+      projectId: "1234"
+    },
+    {
+      name: "PANDORA",
+      projectId: "1234"
+    },
+    {
+      name: "basedAI",
+      projectId: "1234"
+    },
+    {
+      name: "GPU",
+      projectId: "1234"
+    },
+    {
+      name: "Mog",
+      projectId: "1234"
+    },
+    {
+      name: "pepecoin",
+      projectId: "1234"
+    },
+    {
+      name: "SLERF",
+      projectId: "1234"
+    },
+    {
+      name: "FLOKI",
+      projectId: "1234"
+    },
+    {
+      name: "HarryPotterObamaSonic10Inu",
+      projectId: "1234"
+    },
+    {
+      name: "BOBO",
+      projectId: "1234"
+    },
+  ]
+
   return (
     <>
       <Helmet>
@@ -380,6 +424,7 @@ function GemsPage() {
 
       <div className='gems'>
         <Filter />
+        <TrendingGems items={trendingGems} />
         <div className='gem-list-wrapper'>
           {viewMode === "list" && (
             <table className='gem-list'>
