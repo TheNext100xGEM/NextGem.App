@@ -1,9 +1,18 @@
+import classNames from "classnames"
 import { FC } from "react"
 import "./_animation.scss"
 
-const StarAnimation: FC = () => {
+interface PropsStarAnimation {
+  isChatPage?: boolean
+}
+
+const StarAnimation: FC = ({ isChatPage = false }: PropsStarAnimation) => {
   return (
-    <div className='star-animation'>
+    <div
+      className={classNames("star-animation", {
+        ischat: isChatPage
+      })}
+    >
       <div id='stars'></div>
       <div id='stars2'></div>
       <div id='stars3'></div>
