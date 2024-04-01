@@ -6,7 +6,7 @@ interface PropsStarAnimation {
   isChatPage?: boolean
 }
 
-const StarAnimation: FC = ({ isChatPage = false }: PropsStarAnimation) => {
+const StarAnimation: FC<PropsStarAnimation> = ({ isChatPage = false }) => {
   return (
     <div
       className={classNames("star-animation", {

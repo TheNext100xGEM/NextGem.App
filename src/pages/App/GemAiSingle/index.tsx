@@ -100,7 +100,7 @@ function GemAiSinglePage() {
           onClick={() => setAsideResponsive(!asideResponsive)}
         />
         <div className='ai-module'>
-          <StarAnimation />
+          <StarAnimation isChatPage />
           <div className='wrapper'>
             <div className='ai-chat'>
               <ul className='ai-chat-content'>

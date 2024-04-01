@@ -1,5 +1,6 @@
 import "./_portal.scss"
 import { Grid, Corner, Button } from "@components/ui"
+import StarAnimation from "@components/ui/StarAnimation"
 import {
   SITE_NAME,
   SOUND_OPEN_APP,
@@ -81,6 +82,7 @@ const GemsPortal = () => {
 
       <div className='portal'>
         <div className='section'>
+          <StarAnimation />
           <h5 className='portal-heading'>Trending Categories</h5>
           <Grid>
             {trendingCategories.map((category, index) => (
