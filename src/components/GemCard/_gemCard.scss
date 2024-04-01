@@ -7,6 +7,12 @@
   --gap: calc(var(--padding) / 2.5);
   display: flex;
   flex-direction: column;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  .grid-item &:hover {
+    scale: 102%;
+  }
 
   &-section {
     padding: var(--padding);

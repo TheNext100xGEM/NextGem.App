@@ -42,7 +42,8 @@
       }
     }
 
-    &-socials, &-note {
+    &-socials,
+    &-note {
       flex-shrink: 0;
 
       @include max($l) {
@@ -55,7 +56,6 @@
         min-width: 240px;
       }
     }
-    
 
     &-note {
       display: flex;
@@ -63,31 +63,30 @@
       gap: var(--gap);
 
       .btn {
-      font-size: 11px;
-
+        font-size: 11px;
       }
     }
   }
 
-
-.gemDetail-analysis-upper{
+  .gemDetail-analysis-upper {
     align-items: center;
     display: flex;
     flex-direction: column;
     gap: 20px;
     width: 100%;
     max-width: calc(100% - 20px);
-    
-}
+  }
 
-
-  .gemDetail-reanalyze-loading{
+  .gemDetail-reanalyze-loading {
     font-size: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    background: linear-gradient(var(--text-secondary) 20%, var(--text-primary) 100%);
+    background: linear-gradient(
+      var(--text-secondary) 20%,
+      var(--text-primary) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: var(--font-family-heading);
@@ -100,7 +99,7 @@
     }
 
     &-title {
-        width: auto;
+      width: auto;
       font-size: 48px;
       word-break: break-all;
     }
@@ -130,6 +129,12 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--padding) / 2);
+    transition-duration: 300ms;
+  }
+
+  .card:hover {
+    scale: 102%;
+    color: #eeeeee;
   }
 
   &-content {
@@ -146,7 +151,6 @@
   }
 
   &-desc {
-
     margin: calc(var(--padding) / 2) 0;
 
     .markdown {
@@ -167,7 +171,6 @@
     }
 
     &-content {
-
     }
   }
 
@@ -188,48 +191,44 @@
   }
 }
 
-
-
-.gemDetail-queue-progress{
-    width: 100%;
+.gemDetail-queue-progress {
+  width: 100%;
 }
-.gemDetail-analysis-container{
-    margin-top: 20px;
-    margin-bottom: 50px;
-    max-width: calc(100% - 20px);
-    display: flex !important;
-    flex-direction: column;
-    gap: 20px !important;
-    align-items: center;
-    position: relative;
+.gemDetail-analysis-container {
+  margin-top: 20px;
+  margin-bottom: 50px;
+  max-width: calc(100% - 20px);
+  display: flex !important;
+  flex-direction: column;
+  gap: 20px !important;
+  align-items: center;
+  position: relative;
 }
 
-.gemDetail-queue-details{
-    margin-bottom: 20px;
-    font-weight: 200;
-    color: var(--color-primary-base);
-    font-size: 1.2rem;
-    text-align: center;
-    width: 600px;
-    max-width: calc(100% - 20px);
-
+.gemDetail-queue-details {
+  margin-bottom: 20px;
+  font-weight: 200;
+  color: var(--color-primary-base);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 600px;
+  max-width: calc(100% - 20px);
 }
 
-.gemDetail-queue-faq{
-    max-width: calc(100% - 20px);
+.gemDetail-queue-faq {
+  max-width: calc(100% - 20px);
 
-    margin-top: 20px;
-    width: 600px;
-    text-align: center;
-
+  margin-top: 20px;
+  width: 600px;
+  text-align: center;
 }
 
-.gemDetail-eta{
-    font-weight: 400;
-    color: var(--color-secondary-base);
+.gemDetail-eta {
+  font-weight: 400;
+  color: var(--color-secondary-base);
 }
 
-.gemDetail-queue-explainer-footer{
-    margin-top: 10px;
-    color: var(--color-primary-base);
+.gemDetail-queue-explainer-footer {
+  margin-top: 10px;
+  color: var(--color-primary-base);
 }
