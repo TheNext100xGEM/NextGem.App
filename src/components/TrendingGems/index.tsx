@@ -15,7 +15,7 @@ type TrendingGems = {
 export const TrendingGems: React.FC<TrendingGemsProps> = ({ items }) => {
 
   return (
-    <Marquee speed={60} gradient={true} gradientColor="#000000" className="scroller" pauseOnHover={true}>
+    <Marquee speed={60} gradient={false} className="scroller" pauseOnHover={true}>
       {items.map((gem, i) => (
           <Link to={`/gems/${gem.projectId}`} className='card' key={`trending-gem-${i}`}>
             <span className="number">#{i + 1}</span>

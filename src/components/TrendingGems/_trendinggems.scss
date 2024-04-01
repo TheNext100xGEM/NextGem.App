@@ -2,6 +2,13 @@
   position: relative;
   z-index: 20;
   overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 20%,
+    white 80%,
+    transparent
+  );
   padding-top: 10px;
   padding-bottom: 5px;
 }
