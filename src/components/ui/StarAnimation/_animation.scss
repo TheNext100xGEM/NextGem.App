@@ -4,9 +4,13 @@
 .star-animation {
   overflow: hidden;
   position: fixed;
-  inset: var(--main-padding);
   bottom: 0;
   opacity: 0.3;
+  inset: var(--main-padding);
+}
+
+.star-animation.isChat {
+  inset: var(--main-padding);
   @include min($mobile) {
     left: var(--list-width);
   }
