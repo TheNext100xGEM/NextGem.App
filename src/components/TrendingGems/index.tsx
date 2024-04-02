@@ -1,23 +1,19 @@
+import { ApiGem } from "@models/GemCard"
 import "./_trendinggems.scss"
 import React from "react"
 import Marquee from "react-fast-marquee"
 import { Link } from "react-router-dom"
 
 interface TrendingGemsProps {
-  items: TrendingGems
+  gems: ApiGem[]
 }
 
-type TrendingGems = {
-  name: string
-  projectId: string
-}[]
-
-export const TrendingGems: React.FC<TrendingGemsProps> = ({ items }) => {
+export const TrendingGems: React.FC<TrendingGemsProps> = ({ gems }) => {
 
   return (
     <Marquee speed={60} gradient={false} className="scroller" pauseOnHover={true}>
-      {items.map((gem, i) => (
-          <Link to={`/gems/${gem.projectId}`} className='card' key={`trending-gem-${i}`}>
+      {gems.map((gem, i) => (
+          <Link to={`/gems/${gem.id}`} className='card' key={`trending-gem-${gem.id}`}>
             <span className="number">#{i + 1}</span>
             <span>{gem.name}</span>
           </Link>

@@ -18,7 +18,7 @@ import { useGemsContext } from "@context/GemsContext"
 import CryptoBlockChains from "@data/cryptoBlockChains"
 import CryptoMarketAreas from "@data/cryptoMarketArea"
 import { mapGem } from "@models/GemCard"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
@@ -26,8 +26,7 @@ import { ReactNode, useEffect, useRef, useState } from "react"
 import React from "react"
 import { Helmet } from "react-helmet-async"
 
-import { getGemCollection } from "../../../queries/api"
-
+import { getGemCollection, getTrendingGems } from "../../../queries/api"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -183,24 +182,20 @@ const FilterByLaunchStatus = () => {
   const options = [
     {
       name: "Not Launched",
-      id: 0,
+      id: 0
     },
     {
       name: "Launch in progress",
-      id: 1,
+      id: 1
     },
     {
       name: "Live project",
-      id: 2,
+      id: 2
     }
   ]
 
   return (
-    <FilterDrop
-      name='Launch Status'
-      right={options.length}
-      className='listing'
-    >
+    <FilterDrop name='Launch Status' right={options.length} className='listing'>
       <ul>
         {options.map((status, index) => (
           <li key={index} className='item'>
@@ -373,48 +368,10 @@ function GemsPage() {
     return () => observer.disconnect()
   }, [qGemCollection])
 
-  const trendingGems = [
-    {
-      name: "GEMAI",
-      projectId: "1234"
-    },
-    {
-      name: "PANDORA",
-      projectId: "1234"
-    },
-    {
-      name: "basedAI",
-      projectId: "1234"
-    },
-    {
-      name: "GPU",
-      projectId: "1234"
-    },
-    {
-      name: "Mog",
-      projectId: "1234"
-    },
-    {
-      name: "pepecoin",
-      projectId: "1234"
-    },
-    {
-      name: "SLERF",
-      projectId: "1234"
-    },
-    {
-      name: "FLOKI",
-      projectId: "1234"
-    },
-    {
-      name: "HarryPotterObamaSonic10Inu",
-      projectId: "1234"
-    },
-    {
-      name: "BOBO",
-      projectId: "1234"
-    },
-  ]
+  const { data: trendingGems } = useQuery({
+    queryKey: ["getTrendingGems"],
+    queryFn: () => getTrendingGems(),
+  })
 
   return (
     <>
@@ -424,7 +381,7 @@ function GemsPage() {
 
       <div className='gems'>
         <Filter />
-        <TrendingGems items={trendingGems} />
+        {trendingGems ? <TrendingGems gems={trendingGems} /> : null}
         <div className='gem-list-wrapper'>
           {viewMode === "list" && (
             <table className='gem-list'>
@@ -446,7 +403,10 @@ function GemsPage() {
                   qGemCollection.data.map((page, pageIndex) => (
                     <React.Fragment key={`gem-list-page-${pageIndex}`}>
                       {page.map((item, gemIndex) => (
-                        <GemList {...item} key={`gem-${pageIndex}-${gemIndex}`} />
+                        <GemList
+                          {...item}
+                          key={`gem-${pageIndex}-${gemIndex}`}
+                        />
                       ))}
                     </React.Fragment>
                   ))}

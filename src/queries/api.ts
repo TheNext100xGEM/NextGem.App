@@ -64,6 +64,13 @@ export const getGemCollection = async ({
 export const getPresales = async () =>
   request<Presales>(`${APP_API_URL}/presales`, "getPresales", "GET")
 
+export const getTrendingGems = async () =>
+  request<ApiGem[]>(
+    `${APP_API_URL}/projects/trending`,
+    "getTrendingGems",
+    "GET"
+  )
+
 export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
 
