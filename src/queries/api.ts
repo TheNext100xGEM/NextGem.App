@@ -2,6 +2,7 @@ import { ApiCollection } from "@models/API"
 import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
 import { ApiGem } from "@models/GemCard"
 import { ApiGemFull } from "@models/GemFull"
+import { Presales } from "@models/Presales"
 import Cookies from "js-cookie"
 
 import { APP_API_URL } from "../libs/constants"
@@ -59,6 +60,9 @@ export const getGemCollection = async ({
 
   return request<ApiCollection<ApiGem>>(url, "getGemCollection", "GET")
 }
+
+export const getPresales = async () =>
+  request<Presales>(`${APP_API_URL}/presales`, "getPresales", "GET")
 
 export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
