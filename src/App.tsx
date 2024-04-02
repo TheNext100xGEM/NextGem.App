@@ -18,6 +18,7 @@ import { HelmetProvider } from "react-helmet-async"
 import { Toaster } from "react-hot-toast"
 import {
   createBrowserRouter,
+  Link,
   Outlet,
   RouterProvider,
   ScrollRestoration,
@@ -34,6 +35,9 @@ function App() {
         <SeoContextProvider>
           <ChatContextProvider>
             <QueryClientProvider client={queryClient}>
+              <Link to={"/presale"} className="presale-banner">
+                Join the $GEMAI Presale Here
+              </Link>
               <Header />
               <main className='main'>
                 <Outlet />
