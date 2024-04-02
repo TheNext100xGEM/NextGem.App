@@ -228,7 +228,7 @@ hr {
 /* Pre-sale banner */
 
 .presale-banner {
-  background-color: rgba($color: white, $alpha: 0.2);
+  background-color: #3A3A3B;
   color: #eeeeee;
   letter-spacing: 0.025em;
   text-align: center;
@@ -243,4 +243,5 @@ hr {
     white 80%,
     transparent
   );
+  z-index: 1000;
 }
