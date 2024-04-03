@@ -24,10 +24,8 @@ import {
 
 function GemDetailPage() {
   const { tokenId } = useParams()
-  let token = "",
-    id = ""
-  
-  
+  let token = ""
+  let id = ""
 
   if (tokenId) {
     const lastDashIndex = tokenId.lastIndexOf("-")
@@ -135,22 +133,27 @@ function GemDetailPage() {
   }
 
   const handleAnalysis = async () => {
-    try{
-        const reloadResponse = await postReloadAnalysis({ projectId: id })
-        
-        if(reloadResponse.status) {
-            toast.success(reloadResponse.message ?? 'Analysis reloaded')
-        }else{
-            toast.error(reloadResponse.message ?? 'Failed to reload analysis. Please try again later.')
-        }
-    }catch(error){
-        toast.error('Failed to reload analysis. Please try again later.')
+    try {
+      const reloadResponse = await postReloadAnalysis({ projectId: id })
+
+      if (reloadResponse.status) {
+        toast.success(reloadResponse.message ?? "Analysis reloaded")
+      } else {
+        toast.error(
+          reloadResponse.message ??
+            "Failed to reload analysis. Please try again later."
+        )
+      }
+    } catch (error) {
+      toast.error("Failed to reload analysis. Please try again later.")
     }
   }
 
   //
-  const chains = typeof qGemSingle.data?.chains === 'object' ? qGemSingle.data?.chains : []
-  const isBeingAnalyzed = qGemSingle.data?.analyzeProgress?.analyzeState !== 'analyzed'
+  const chains =
+    typeof qGemSingle.data?.chains === "object" ? qGemSingle.data?.chains : []
+  const isBeingAnalyzed =
+    qGemSingle.data?.analyzeProgress?.analyzeState !== "analyzed"
 
   return (
     <>
@@ -169,33 +172,32 @@ function GemDetailPage() {
             <div className='gem'>
               <Section>
                 <div className='gemDetail-header'>
-                {
-                    !isBeingAnalyzed ? 
-                        (<div className='gemDetail-header-socials'>
-                            <Card>
-                            <table>
-                                <tbody>
-                                <Row title='Socials'>
-                                    <SocialList items={qGemSingle.data.socials} />
-                                </Row>
-                                <Row title='Chains'>
-                                    <List>
-                                    {chains.map((item) => item)}
-                                    </List>
-                                </Row>
-                                <Row title='Launchpad'>
-                                    <List>{qGemSingle.data.launchpad}</List>
-                                </Row>
-                                </tbody>
-                            </table>
-                            </Card>
-                        </div>)
-                        :
-                        <div>&nbsp;</div>
-                }
+                  {!isBeingAnalyzed ? (
+                    <div className='gemDetail-header-socials'>
+                      <Card>
+                        <table>
+                          <tbody>
+                            <Row title='Socials'>
+                              <SocialList items={qGemSingle.data.socials} />
+                            </Row>
+                            <Row title='Chains'>
+                              <List>{chains.map((item) => item)}</List>
+                            </Row>
+                            <Row title='Launchpad'>
+                              <List>{qGemSingle.data.launchpad}</List>
+                            </Row>
+                          </tbody>
+                        </table>
+                      </Card>
+                    </div>
+                  ) : (
+                    <div>&nbsp;</div>
+                  )}
                   <div className='gemDetail-header-content'>
                     <div className='gem-sub'>{qGemSingle.data.category}</div>
-                    <h1 className='gem-title'>{qGemSingle.data.name ?? ""}</h1>
+                    <h1 className='gem-title'>
+                      {qGemSingle.data.name ?? "Analyzing..."}
+                    </h1>
                     <div className='gem-infos'>
                       <a
                         className='gem-link'
@@ -217,116 +219,123 @@ function GemDetailPage() {
                       />
                     </div>
                   </div>
-                   {
-                    !isBeingAnalyzed ? 
-                        (
-                        <div className='gemDetail-header-note'>
-                            <NoteCard total={qGemSingle.data.note.total} />
-                            <Button
-                            icon={"bx:analyse"}
-                            onClick={handleAnalysis}
-                            color='tertiary'
-                            >
-                            Reload analysis
-                            </Button>
-                        </div>
-                        )
-                    : <div>&nbsp;</div>
-                    }
+                  {!isBeingAnalyzed ? (
+                    <div className='gemDetail-header-note'>
+                      <NoteCard total={qGemSingle.data.note.total} />
+                      <Button
+                        icon={"bx:analyse"}
+                        onClick={handleAnalysis}
+                        color='tertiary'
+                      >
+                        Reload analysis
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>&nbsp;</div>
+                  )}
                 </div>
               </Section>
-                {!isBeingAnalyzed ? (
-                    <div className='gemDetail-content'>
-                        <div className='gemDetail-desc'>
-                            <Markdown>
-                                {qGemSingle.data.description}
-                            </Markdown>
+              {!isBeingAnalyzed ? (
+                <div className='gemDetail-content'>
+                  <div className='gemDetail-desc'>
+                    <Markdown>{qGemSingle.data.description}</Markdown>
+                  </div>
+
+                  {parseInt(qGemSingle.data.gemini_score ?? "0") > 0 &&
+                    qGemSingle.data.gemini_raw && (
+                      <Card>
+                        <div className='gemDetail-block'>
+                          <div className='gemDetail-block-header'>
+                            <h2>Gemini</h2>
+                            <NoteCard
+                              total={parseInt(
+                                qGemSingle.data.gemini_score ?? "0"
+                              )}
+                            ></NoteCard>
+                          </div>
+                          <div className='gemDetail-block-content'>
+                            <Markdown>{qGemSingle.data.gemini_raw}</Markdown>
+                          </div>
+                        </div>
+                      </Card>
+                    )}
+                  {parseInt(qGemSingle.data.mistral_score ?? "0") > 0 &&
+                    qGemSingle.data.mistral_raw && (
+                      <Card>
+                        <div className='gemDetail-block'>
+                          <div className='gemDetail-block-header'>
+                            <h2>Mistral</h2>
+                            <NoteCard
+                              total={parseInt(
+                                qGemSingle.data.mistral_score ?? "0"
+                              )}
+                            ></NoteCard>
+                          </div>
+                          <div className='gemDetail-block-content'>
+                            <Markdown>{qGemSingle.data.mistral_raw}</Markdown>
+                          </div>
+                        </div>
+                      </Card>
+                    )}
+                  {parseInt(qGemSingle.data.gpt_score ?? "0") > 0 &&
+                    qGemSingle.data.gpt_raw && (
+                      <Card>
+                        <div className='gemDetail-block'>
+                          <div className='gemDetail-block-header'>
+                            <h2>GPT</h2>
+                            <NoteCard
+                              total={parseInt(qGemSingle.data.gpt_score ?? "0")}
+                            ></NoteCard>
+                          </div>
+                          <div className='gemDetail-block-content'>
+                            <Markdown>{qGemSingle.data.gpt_raw}</Markdown>
+                          </div>
+                        </div>
+                      </Card>
+                    )}
+                </div>
+              ) : (
+                <div className='gemDetail-content'>
+                  <div className='gemDetail-block'>
+                    <div className='gemDetail-analysis-upper'>
+                      <div className='gemDetail-block-content gemDetail-analysis-container'>
+                        <div className='gemDetail-queue-details'>
+                          <div className='gemDetail-queue-position'>
+                            Waiting for analysis.. Position in queue:{" "}
+                            {qGemSingle.data?.analyzeProgress?.positionInQueue}/
+                            {qGemSingle.data?.analyzeProgress?.totalInQueue}{" "}
+                          </div>
+                          <div className='gemDetail-eta'>
+                            Estimated time:{" "}
+                            {qGemSingle.data?.analyzeProgress?.eta} minutes
+                          </div>
                         </div>
 
-                        {(parseInt(qGemSingle.data.gemini_score ?? '0') > 0) && qGemSingle.data.gemini_raw && (
-                        <Card>
-                            <div className='gemDetail-block'>
-                            <div className='gemDetail-block-header'>
-                                <h2>Gemini</h2>
-                                <NoteCard
-                                total={parseInt(qGemSingle.data.gemini_score ?? '0')}
-                                ></NoteCard>
-                            </div>
-                            <div className='gemDetail-block-content'>
-                                <Markdown>{qGemSingle.data.gemini_raw}</Markdown>
-                            </div>
-                            </div>
-                        </Card>
-                        )}
-                        {(parseInt(qGemSingle.data.mistral_score ?? '0') > 0) &&
-                        qGemSingle.data.mistral_raw && (
-                            <Card>
-                            <div className='gemDetail-block'>
-                                <div className='gemDetail-block-header'>
-                                <h2>Mistral</h2>
-                                <NoteCard
-                                    total={parseInt(qGemSingle.data.mistral_score ?? '0')}
-                                ></NoteCard>
-                                </div>
-                                <div className='gemDetail-block-content'>
-                                <Markdown>{qGemSingle.data.mistral_raw}</Markdown>
-                                </div>
-                            </div>
-                            </Card>
-                        )}
-                        {(parseInt(qGemSingle.data.gpt_score ?? '0') > 0) && qGemSingle.data.gpt_raw && (
-                        <Card>
-                            <div className='gemDetail-block'>
-                            <div className='gemDetail-block-header'>
-                                <h2>GPT</h2>
-                                <NoteCard
-                                total={parseInt(qGemSingle.data.gpt_score ?? '0')}
-                                ></NoteCard>
-                            </div>
-                            <div className='gemDetail-block-content'>
-                                <Markdown>{qGemSingle.data.gpt_raw}</Markdown>
-                            </div>
-                            </div>
-                        </Card>
-                        )}
+                        <div className='gemDetail-queue-progress'>
+                          <ProgressBar
+                            total={qGemSingle.data?.analyzeProgress?.progress}
+                            hasMagic
+                          />
+                        </div>
+
+                        <div className='gemDetail-queue-faq'>
+                          <div className='gemDetail-queue-explainer'>
+                            The NextGEM AI engine processes hundreds of projects
+                            per day from degens, like yourself, all round the
+                            world. This requires us tu queue everyones requests.
+                          </div>
+                          <div className='gemDetail-queue-explainer-footer'>
+                            The higher your active tier, the higher priority
+                            your requests will have in the queue.{" "}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                ) : (
-                    <div className='gemDetail-content'>
-                        
-
-                        <div className='gemDetail-block'>
-
-                            <div className="gemDetail-analysis-upper">
-                                <div className='gemDetail-block-content gemDetail-analysis-container'>
-
-
-                                    <div className="gemDetail-queue-details">
-                                        <div className="gemDetail-queue-position">Waiting for analysis.. Position in queue: {qGemSingle.data?.analyzeProgress?.positionInQueue}/{qGemSingle.data?.analyzeProgress?.totalInQueue} </div>
-                                        <div className="gemDetail-eta">Estimated time: {qGemSingle.data?.analyzeProgress?.eta} minutes</div>
-                                    </div>
-
-                                    <div className="gemDetail-queue-progress">
-                                        <ProgressBar
-                                            total={qGemSingle.data?.analyzeProgress?.progress}
-                                            hasMagic
-                                        />
-                                    </div>
-                                    
-                                    <div className="gemDetail-queue-faq">
-                                        <div className="gemDetail-queue-explainer">
-                                            The NextGEM AI engine processes hundreds of projects per day from degens, like yourself, all round the world. This requires us tu queue everyones requests.  
-                                        </div>
-                                        <div className="gemDetail-queue-explainer-footer">
-                                            The higher your active tier, the higher priority your requests will have in the queue.                              </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    </div>
-                    
-                )}
+                  </div>
+                </div>
+              )}
             </div>
-          ) }
+          )}
         </div>
       </div>
     </>

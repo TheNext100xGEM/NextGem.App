@@ -1,18 +1,20 @@
 import Footer from "@components/Footer"
 import Header from "@components/Header"
+import PdfReport from "@components/PdfReport"
 import { TOAST_DURATION } from "@constants/index"
 import { AppContextProvider } from "@context/AppContext"
 import { ChatContextProvider } from "@context/ChatContext"
 import { GemsContextProvider } from "@context/GemsContext"
 import { SeoContextProvider } from "@context/SeoContext"
 import useWindowHeight from "@hooks/useWindowHeight"
-import AiAnalysisPage from '@pages/AiAnalysis'
+import AiAnalysisPage from "@pages/AiAnalysis"
 import { GemsPage, StakingPage, GemAiPage } from "@pages/App"
 import GemAiSinglePage from "@pages/App/GemAiSingle"
 import GemDetailPage from "@pages/App/GemDetail"
 import GemsPortal from "@pages/App/GemsPortal"
 import { PresalePortal } from "@pages/App/PresalePortal"
 import { HomePage, DefaultPage } from "@pages/index"
+import { PDFViewer } from "@react-pdf/renderer"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
 import { Toaster } from "react-hot-toast"
@@ -21,7 +23,7 @@ import {
   Link,
   Outlet,
   RouterProvider,
-  ScrollRestoration,
+  ScrollRestoration
 } from "react-router-dom"
 
 function App() {
@@ -35,7 +37,7 @@ function App() {
         <SeoContextProvider>
           <ChatContextProvider>
             <QueryClientProvider client={queryClient}>
-              <Link to={"/presale"} className="presale-banner">
+              <Link to={"/presale"} className='presale-banner'>
                 Join the $GEMAI Presale Here
               </Link>
               <Header />
@@ -105,6 +107,25 @@ function App() {
           element: <GemsPortal />
         },
         {
+          path: "/test/pdf",
+          element: (
+            <div
+              style={{
+                height: "100vh",
+                width: "100vw",
+                position: "fixed",
+                top: "0",
+                left: "0",
+                zIndex: 2000
+              }}
+            >
+              <PDFViewer style={{ width: "100%", height: "100%" }}>
+                <PdfReport />
+              </PDFViewer>
+            </div>
+          )
+        },
+        {
           path: "/gems",
           element: (
             <GemsContextProvider>
@@ -121,8 +142,8 @@ function App() {
           element: <StakingPage />
         },
         {
-            path: "/analyze",
-            element: <AiAnalysisPage />
+          path: "/analyze",
+          element: <AiAnalysisPage />
         },
         {
           path: "/gem-ai/:chatId",
