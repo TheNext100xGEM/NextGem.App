@@ -17,7 +17,7 @@ const trendingCategories = [
   {
     name: "Solana Memes",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
+      "Where cryptocurrency meets comedy club. Invest in chuckles and watch your portfolio do stand-up on the blockchain.",
     link: "/gems?categories=11&noteMin=1&noteMax=10&chains=solana&viewMode=grid",
     color: "#84cc16",
     backgroundImageUrl: "https://cdn.frankerfacez.com/emoticon/439694/4"
@@ -25,7 +25,7 @@ const trendingCategories = [
   {
     name: "Ethereum DeFi",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
+      "A playground for financial enthusiasts where banks are as necessary as a landline. Your wallet, your rules.",
     link: "/gems?categories=5&noteMin=1&noteMax=10&chains=ethereum&viewMode=grid",
     color: "#a855f7",
     backgroundImageUrl:
@@ -34,7 +34,7 @@ const trendingCategories = [
   {
     name: "AI",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
+      "Where silicon brains meet digital gold. The future where AI does more than just answer your emails—it grows your portfolio.",
     link: "/gems?categories=22&noteMin=1&noteMax=10&viewMode=grid",
     color: "#22d3ee",
     backgroundImageUrl:
@@ -43,7 +43,7 @@ const trendingCategories = [
   {
     name: "Zero-Knowledge (ZK)",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
+      "Dive into the shadow realm of blockchain, where transactions whisper secrets without ever raising their voice. Privacy meets progress, no compromises.",
     link: "/gems?categories=14&noteMin=1&noteMax=10&viewMode=grid",
     color: "#3b82f6",
     backgroundImageUrl:
@@ -52,7 +52,7 @@ const trendingCategories = [
   {
     name: "To Be Launched",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
+      "Your passport to tomorrow's blockchain marvels. Uncharted tech territories await, with each token a potential revolution in your pocket.",
     link: "/gems?launchStatus=0%2C1&noteMin=1&noteMax=10&viewMode=grid",
     color: "#f97316",
     backgroundImageUrl:
@@ -61,7 +61,7 @@ const trendingCategories = [
   {
     name: "Metaverse",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas blandit convallis elit in convallis.",
+      "Where your portfolio goes beyond the blockchain — it enters realms of virtual reality, gaming, and digital frontiers untapped and unexplored.",
     link: "/gems?categories=16&noteMin=1&noteMax=10&viewMode=grid",
     color: "deeppink",
     backgroundImageUrl:
