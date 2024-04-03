@@ -8,7 +8,8 @@
   position: sticky;
   top: 0;
   border-bottom: var(--stroke-primary);
-  padding-top: var(--main-padding);
+  //padding-top: var(--main-padding);
+  padding-top: 38px;
   z-index: 500;
   background: linear-gradient(
     to bottom,
@@ -29,7 +30,8 @@
       transform: translateX(-50%);
       height: var(--stroke-width);
       background-color: var(--stroke-color);
-      top: var(--main-padding);
+      //top: var(--main-padding);
+      top: 38px;
     }
   }
 

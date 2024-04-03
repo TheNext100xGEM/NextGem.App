@@ -2,6 +2,7 @@ import "./_gems.scss"
 import GemCard from "@components/GemCard"
 import GemList from "@components/GemList"
 import PanelGem from "@components/PanelGem"
+import { TrendingGems } from "@components/TrendingGems"
 import {
   Button,
   Checkbox,
@@ -17,7 +18,7 @@ import { useGemsContext } from "@context/GemsContext"
 import CryptoBlockChains from "@data/cryptoBlockChains"
 import CryptoMarketAreas from "@data/cryptoMarketArea"
 import { mapGem } from "@models/GemCard"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger"
@@ -25,8 +26,7 @@ import { ReactNode, useEffect, useRef, useState } from "react"
 import React from "react"
 import { Helmet } from "react-helmet-async"
 
-import { getGemCollection } from "../../../queries/api"
-
+import { getGemCollection, getTrendingGems } from "../../../queries/api"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -166,6 +166,53 @@ const FilterByChains = () => {
   )
 }
 
+const FilterByLaunchStatus = () => {
+  const { launchStatus, setLaunchStatus } = useGemsContext()
+
+  const handleCheckboxChange = (status: number) => {
+    if (launchStatus.includes(status)) {
+      setLaunchStatus((prevLaunchStatus) =>
+        prevLaunchStatus.filter((prevStatus) => prevStatus !== status)
+      )
+    } else {
+      setLaunchStatus((prevLaunchStatus) => [...prevLaunchStatus, status])
+    }
+  }
+
+  const options = [
+    {
+      name: "Not Launched",
+      id: 0
+    },
+    {
+      name: "Launch in progress",
+      id: 1
+    },
+    {
+      name: "Live project",
+      id: 2
+    }
+  ]
+
+  return (
+    <FilterDrop name='Launch Status' right={options.length} className='listing'>
+      <ul>
+        {options.map((status, index) => (
+          <li key={index} className='item'>
+            <Checkbox
+              label={status.name}
+              name='launchStatus[]'
+              value={status.id}
+              onChange={() => handleCheckboxChange(status.id)}
+              checked={launchStatus.includes(status.id)}
+            />
+          </li>
+        ))}
+      </ul>
+    </FilterDrop>
+  )
+}
+
 const FilterAiNote = () => {
   const { noteMin, setNoteMin, noteMax, setNoteMax } = useGemsContext()
 
@@ -216,6 +263,7 @@ const Filter = () => {
       />
       <FilterSearchQuery />
       <div className='filter-actions'>
+        <FilterByLaunchStatus />
         <FilterBySort />
         <FilterAiNote />
         <FilterByCategories />
@@ -242,6 +290,7 @@ const Filter = () => {
 
 function GemsPage() {
   const {
+    launchStatus,
     noteMin,
     noteMax,
     categories,
@@ -254,6 +303,7 @@ function GemsPage() {
   const qGemCollection = useInfiniteQuery({
     queryKey: [
       "gemCollection",
+      launchStatus,
       noteMin,
       noteMax,
       categories,
@@ -264,6 +314,7 @@ function GemsPage() {
     queryFn: ({ pageParam }) =>
       getGemCollection({
         page: pageParam,
+        launchStatus,
         noteMin,
         noteMax,
         categories,
@@ -317,6 +368,11 @@ function GemsPage() {
     return () => observer.disconnect()
   }, [qGemCollection])
 
+  const { data: trendingGems } = useQuery({
+    queryKey: ["getTrendingGems"],
+    queryFn: () => getTrendingGems(),
+  })
+
   return (
     <>
       <Helmet>
@@ -325,6 +381,7 @@ function GemsPage() {
 
       <div className='gems'>
         <Filter />
+        {trendingGems ? <TrendingGems gems={trendingGems} /> : null}
         <div className='gem-list-wrapper'>
           {viewMode === "list" && (
             <table className='gem-list'>
@@ -346,7 +403,10 @@ function GemsPage() {
                   qGemCollection.data.map((page, pageIndex) => (
                     <React.Fragment key={`gem-list-page-${pageIndex}`}>
                       {page.map((item, gemIndex) => (
-                        <GemList {...item} key={`gem-${pageIndex}-${gemIndex}`} />
+                        <GemList
+                          {...item}
+                          key={`gem-${pageIndex}-${gemIndex}`}
+                        />
                       ))}
                     </React.Fragment>
                   ))}

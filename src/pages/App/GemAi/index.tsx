@@ -4,6 +4,7 @@ import Form from "@components/GemAi/Form"
 import List from "@components/GemAi/List"
 import Message from "@components/GemAi/Message"
 import { Alert, Button } from "@components/ui"
+import StarAnimation from "@components/ui/StarAnimation"
 import { CHAT_NAME, SITE_NAME } from "@constants/index"
 import { useAppContext } from "@context/AppContext"
 import { useChatContext } from "@context/ChatContext"
@@ -35,8 +36,13 @@ function GemAiPage() {
           onClick={() => setAsideResponsive(!asideResponsive)}
         />
         <div className='ai-module'>
+          <StarAnimation isChatPage />
           <div className='wrapper'>
-            <div className={classNames("ai-chat", { inProgress: responseInProgress })}>
+            <div
+              className={classNames("ai-chat", {
+                inProgress: responseInProgress
+              })}
+            >
               {currentChat.messages.length !== 0 && (
                 <ul className='ai-chat-content'>
                   {currentChat.messages.map((message, id) => (
@@ -84,7 +90,6 @@ function GemAiPage() {
             </div>
           </div>
         </div>
-        <div className='ai-bg'></div>
       </div>
     </>
   )

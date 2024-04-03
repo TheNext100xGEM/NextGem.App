@@ -3,6 +3,7 @@ import Form from "@components/GemAi/Form"
 import List from "@components/GemAi/List"
 import Message from "@components/GemAi/Message"
 import { Button, Loader } from "@components/ui"
+import StarAnimation from "@components/ui/StarAnimation"
 import { CHAT_NAME, SITE_NAME } from "@constants/index"
 import { useChatContext } from "@context/ChatContext"
 import { Behavior } from "@enums/Behavior"
@@ -14,7 +15,6 @@ import { Helmet } from "react-helmet-async"
 import { useParams } from "react-router-dom"
 
 import { getUserChatId, postChatMessage } from "../../../queries/api"
-
 
 const ScrollToBottom = (behavior: Behavior = "smooth") => {
   window.scrollTo({
@@ -28,13 +28,8 @@ function GemAiSinglePage() {
 
   const [asideResponsive, setAsideResponsive] = useState(false)
 
-  const {
-    setChatId,
-    setWssUrl,
-    currentChat,
-    setCurrentChat,
-    reset
-  } = useChatContext()
+  const { setChatId, setWssUrl, currentChat, setCurrentChat, reset } =
+    useChatContext()
 
   const [conversationActive, setConversationActive] = useState<{
     id: string
@@ -105,6 +100,7 @@ function GemAiSinglePage() {
           onClick={() => setAsideResponsive(!asideResponsive)}
         />
         <div className='ai-module'>
+          <StarAnimation isChatPage />
           <div className='wrapper'>
             <div className='ai-chat'>
               <ul className='ai-chat-content'>
@@ -123,7 +119,6 @@ function GemAiSinglePage() {
             </div>
           </div>
         </div>
-        <div className='ai-bg'></div>
       </div>
     </>
   )

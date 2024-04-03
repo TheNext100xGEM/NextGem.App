@@ -11,12 +11,14 @@ import { GemsPage, StakingPage, GemAiPage } from "@pages/App"
 import GemAiSinglePage from "@pages/App/GemAiSingle"
 import GemDetailPage from "@pages/App/GemDetail"
 import GemsPortal from "@pages/App/GemsPortal"
+import { PresalePortal } from "@pages/App/PresalePortal"
 import { HomePage, DefaultPage } from "@pages/index"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
 import { Toaster } from "react-hot-toast"
 import {
   createBrowserRouter,
+  Link,
   Outlet,
   RouterProvider,
   ScrollRestoration,
@@ -33,6 +35,9 @@ function App() {
         <SeoContextProvider>
           <ChatContextProvider>
             <QueryClientProvider client={queryClient}>
+              <Link to={"/presale"} className="presale-banner">
+                Join the $GEMAI Presale Here
+              </Link>
               <Header />
               <main className='main'>
                 <Outlet />
@@ -90,6 +95,10 @@ function App() {
         {
           path: "/infos",
           element: <HomePage />
+        },
+        {
+          path: "/presale",
+          element: <PresalePortal />
         },
         {
           path: "/portal",

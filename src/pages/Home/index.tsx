@@ -141,7 +141,8 @@ function HomePage() {
                 <p>
                   Leveraging the most powerful artificial intelligence, we track
                   and analyze crypto projects, making it easy for you to spot
-                  the next big success, let's find together the next gems.
+                  the next big success.
+                  <br /> Let's find the next gems together.
                 </p>
               </div>
               <div className='btn-group'>

@@ -1,92 +1,148 @@
 @import "../../assets/css/mixins/styles";
 
-
 .bar-outer_wrapper {
-    z-index: 90;
-    height: 50px;
-    width: 100%;
-    position: relative;
-    clip-path: polygon(18px 0, 80% 0%, 100% 0, 100% calc(50% + 7px), calc(100% - 18px) 100%, 0 100%, 0% 100%, 0 calc(50% - 7px));
+  z-index: 90;
+  height: 50px;
+  width: 100%;
+  position: relative;
+  animation-direction: reverse;
+  clip-path: polygon(
+    18px 0,
+    80% 0%,
+    100% 0,
+    100% calc(50% + 7px),
+    calc(100% - 18px) 100%,
+    0 100%,
+    0% 100%,
+    0 calc(50% - 7px)
+  );
+  background: rgb(103, 232, 249);
+  background: linear-gradient(
+    90deg,
+    rgba(103, 232, 249, 1) 0%,
+    rgba(190, 242, 100, 1) 25%,
+    rgba(253, 224, 71, 1) 45%,
+    rgba(251, 113, 133, 1) 80%,
+    rgba(219, 39, 119, 1) 100%
+  );
 }
 
 .single-corner {
-    position: absolute;
-    width: 20px;
-    height: 50px;
-    overflow: hidden;
-    
-    background-color: var(--bg-body);
-    z-index: 5;
+  position: absolute;
+  width: 20px;
+  height: 50px;
+  overflow: hidden;
 
-    &.left{
-        transform: rotate(45deg) translate(-20px);
-        top: 0;
-        bottom: 0;
-    }
+  background-color: var(--bg-body);
+  z-index: 5;
 
-    &.right{
-        transform: rotate(45deg) translate(-20px);
-        top: calc(100% - 10px);
-        left: 100%;
-    }
+  &.left {
+    transform: rotate(45deg) translate(-20px);
+    top: 0;
+    bottom: 0;
+  }
+
+  &.right {
+    transform: rotate(45deg) translate(-20px);
+    top: calc(100% - 10px);
+    left: 100%;
+  }
 }
 
-/* linear-gradient(90deg, rgba(43,168,239,1) 10%, rgba(255,255,255,1) 80%); */
-
-.bar-inner_wrapper{
-    transition: 0.3s;
-
-    height: 100%;
-    width: 0px;
-    background: rgb(43,168,239);
-    background: #eee;
-    clip-path: polygon(0 0, 80% 0%, 100% 0, 100% 0, calc(100% - 45px) 100%, 0 100%, 0% 80%, 0 36%);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    color: #222;
-    font-weight: 400;
-    font-size: 1.2rem;
-    gap: 10px;
+.bar-inner_wrapper {
+  height: 100%;
+  clip-path: polygon(
+    0 0,
+    80% 0%,
+    100% 0,
+    100% 0,
+    calc(100% - 45px) 100%,
+    0 100%,
+    0% 80%,
+    0 36%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #222;
+  font-weight: 400;
+  font-size: 1.2rem;
+  gap: 10px;
 }
 
-
-.bar-blur{
-    transition: 0.3s;
-    top: 0px;
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: #fff;
-    filter: blur(20px);
-    opacity: 0.3;
-    border-radius: 100%;
-    z-index: -5;
-    clip-path: none;
-
+.shrinker {
+  transition: 0.3s;
+  background-color: black;
+  position: absolute;
+  top: 0;
+  right: 0;
+  clip-path: polygon(
+    53px 0,
+    100% 0,
+    100% calc(50% + 8px),
+    calc(100% - 18px) 100%,
+    calc(100% - 45px) 100%,
+    0 100%
+  );
 }
 
-.bar-percentage{
-    margin-right: 60px;
-    font-weight: 700;
+@keyframes timelapse {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: var(--total);
+  }
 }
 
-.magic-container{
-    transition: 0.3s;
-    top: 0px;
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: transparent;
-    border-radius: 100%;
-    z-index: -5;
-    clip-path: none;
-
+.timelapse {
+  animation-name: timelapse;
+  animation-fill-mode: forwards;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.86, 0.05, 0.4, 0.96);
 }
 
-.gemDetail-analysis-container{
-    display: flex !important;
-    flex-direction: column;
-    gap: 20px !important;
-    width: 800px;
+.bar-percentage {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 60px;
+  font-weight: 700;
+  color: #ffffff;
+  opacity: 0.85;
+  text-shadow: 0px 0px 4px #222222;
+}
+
+.bar-blur {
+  transition: 0.3s;
+  top: 0px;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  filter: blur(20px);
+  opacity: 0.3;
+  border-radius: 100%;
+  z-index: -5;
+  clip-path: none;
+}
+
+.magic-container {
+  transition: 0.3s;
+  top: 0px;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 100%;
+  z-index: -5;
+  clip-path: none;
+}
+
+.gemDetail-analysis-container {
+  display: flex !important;
+  flex-direction: column;
+  gap: 20px !important;
+  width: 800px;
 }

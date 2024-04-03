@@ -2,6 +2,7 @@ import { ApiCollection } from "@models/API"
 import { ApiChat, ApiChatMessage, ApiUserChats } from "@models/Chat"
 import { ApiGem } from "@models/GemCard"
 import { ApiGemFull } from "@models/GemFull"
+import { Presales } from "@models/Presales"
 import Cookies from "js-cookie"
 
 import { APP_API_URL } from "../libs/constants"
@@ -11,9 +12,14 @@ export type ApiStatusReponse = {
   message?: string
 }
 
+export interface ApiAnalyzeReponse extends ApiStatusReponse {
+  statusUrl?: string
+}
+
 export const getGemCollection = async ({
   page = 0,
   limit = 20,
+  launchStatus,
   categories,
   noteMin,
   noteMax,
@@ -23,6 +29,7 @@ export const getGemCollection = async ({
 }: {
   page?: number
   limit?: number
+  launchStatus?: number[]
   categories?: string[]
   noteMin?: number
   noteMax?: number
@@ -33,6 +40,10 @@ export const getGemCollection = async ({
   const queryString = Object.entries({
     page,
     limit,
+    launchStatus:
+      launchStatus && launchStatus.length
+        ? JSON.stringify(launchStatus)
+        : undefined,
     categories:
       categories && categories.length ? JSON.stringify(categories) : undefined,
     noteMin,
@@ -50,36 +61,77 @@ export const getGemCollection = async ({
   return request<ApiCollection<ApiGem>>(url, "getGemCollection", "GET")
 }
 
+export const getPresales = async () =>
+  request<Presales>(`${APP_API_URL}/presales`, "getPresales", "GET")
+
+export const getTrendingGems = async () =>
+  request<ApiGem[]>(
+    `${APP_API_URL}/projects/trending`,
+    "getTrendingGems",
+    "GET"
+  )
+
 export const getGemSingle = async ({ id }: { id: string }) =>
   request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
 
-
 export const getUserChats = async () =>
-  request<ApiUserChats | ApiStatusReponse>(`${APP_API_URL}/user/chats`, "getUserChats", "GET")
+  request<ApiUserChats | ApiStatusReponse>(
+    `${APP_API_URL}/user/chats`,
+    "getUserChats",
+    "GET"
+  )
 
-  export const deleteUserChat = async (body: {
-    chatId: string
-  }) => request<ApiStatusReponse>(`${APP_API_URL}/user/chats/delete`, "deleteUserChat", "POST", body)
+export const deleteUserChat = async (body: { chatId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/user/chats/delete`,
+    "deleteUserChat",
+    "POST",
+    body
+  )
 
 export const getUserChatId = async ({ id }: { id: string }) =>
-  request<ApiChatMessage[]>(`${APP_API_URL}/chat/history/${id}`, "getUserChatId", "GET")
+  request<ApiChatMessage[]>(
+    `${APP_API_URL}/chat/history/${id}`,
+    "getUserChatId",
+    "GET"
+  )
 
 export const postChatMessage = async (body: {
   message: string
   chatId?: string
 }) => request<ApiChat>(`${APP_API_URL}/chat`, "postChatMessage", "POST", body)
 
-export const postUserFavorite = async (body: {
-  projectId: string
-}) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites`, "postUserFavorite", "POST", body)
+export const postUserFavorite = async (body: { projectId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/user/favorites`,
+    "postUserFavorite",
+    "POST",
+    body
+  )
 
-export const postReloadAnalysis = async (body: {
-    projectId: string
-  }) => request<ApiStatusReponse>(`${APP_API_URL}/projects/reload`, "postReloadAnalysis", "POST", body)
+export const postReloadAnalysis = async (body: { projectId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/projects/reload`,
+    "postReloadAnalysis",
+    "POST",
+    body
+  )
 
-export const deleteUserFavorite = async (body: {
-  projectId: string
-}) => request<ApiStatusReponse>(`${APP_API_URL}/user/favorites/delete`, "deleteUserFavorite", "POST", body)
+export const postAnalysis = async (body: { websiteUrl: string }) =>
+  request<ApiAnalyzeReponse>(
+    `${APP_API_URL}/analyze`,
+    "postAnalysis",
+    "POST",
+    body
+  )
+
+export const deleteUserFavorite = async (body: { projectId: string }) =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/user/favorites/delete`,
+    "deleteUserFavorite",
+    "POST",
+    body
+  )
 
 // Functions
 async function request<T, B = Record<string, unknown>>(

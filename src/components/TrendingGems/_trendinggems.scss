@@ -1,0 +1,33 @@
+.scroller {
+  position: relative;
+  z-index: 20;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 20%,
+    white 80%,
+    transparent
+  );
+  padding-top: 10px;
+  padding-bottom: 5px;
+  
+  .card {
+    transition-duration: 300ms;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    gap: .25rem;
+    background-color: transparent;
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  .card:hover {
+    cursor: pointer;
+    color: #eeeeee;
+    scale: 105%;
+  }
+}
+

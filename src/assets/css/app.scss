@@ -224,3 +224,25 @@ hr {
     display: none !important;
   }
 }
+
+/* Pre-sale banner */
+
+.presale-banner {
+  background-color: #2A2A2A;
+  color: #eeeeee;
+  letter-spacing: 0.025em;
+  text-align: center;
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  font-weight: 500;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 20%,
+    white 80%,
+    transparent
+  );
+  z-index: 1000;
+  position: fixed;
+}
