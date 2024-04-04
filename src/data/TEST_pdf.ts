@@ -24,21 +24,19 @@ export const PDF_DATA = {
     }
   ],
   tokenomics: {
-    labels: ["Liquidity Pool", "Public"],
-    datasets: [
-      {
-        label: "My First Dataset",
-        data: [70, 30],
-        backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
-        hoverOffset: 4
-      }
-    ]
+    values: [10, 20, 30, 40],
+    colors: ["#f43f5e", "#84cc16", "#3b82f6", "#f59e0b"],
+    labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4']
   },
   swot: {
-    strengths: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at.",
-    weaknesses: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at.",
-    opportunities: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at.",
-    threats: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at."
+    strengths:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at.",
+    weaknesses:
+      "Lorem ipsum dolor sit amet, id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at.",
+    opportunities:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit id dui nec orci. Nulla sagittis nibh est, quis sodales turpis posuere at.",
+    threats:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. id dui nec orci semper feugiat sit amet quis magna."
   },
   team: [
     {

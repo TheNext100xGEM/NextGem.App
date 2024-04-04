@@ -21,6 +21,7 @@ import {
   CornerTopRight
 } from "./Corners"
 import { GemIcon } from "./GemIcon"
+import { Tokenomics } from "./Tokenomics"
 
 Font.register({
   family: "Outfit",
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#212122",
     width: "262px",
     flexDirection: "column"
-  },
+  }
 })
 
 const PdfReport = () => {
@@ -214,8 +215,9 @@ const PdfReport = () => {
             <GemIcon />
             <Text>TOKENOMICS</Text>
           </View>
+          <Tokenomics data={PDF_DATA.tokenomics} />
         </View>
-        <View style={{...styles.section, gap: "8px"}}>
+        <View style={{ ...styles.section, gap: "8px" }}>
           <View style={styles.sectionTitle}>
             <GemIcon />
             <Text>SWOT</Text>
