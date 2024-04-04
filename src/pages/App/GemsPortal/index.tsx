@@ -14,14 +14,14 @@ import { Link } from "react-router-dom"
 import useSound from "use-sound"
 
 const trendingCategories = [
-  {
+  /* {
     name: "Solana Memes",
     description:
       "Where cryptocurrency meets comedy club. Invest in chuckles and watch your portfolio do stand-up on the blockchain.",
     link: "/gems?categories=11&noteMin=1&noteMax=10&chains=solana&viewMode=grid",
     color: "#84cc16",
     backgroundImageUrl: "https://cdn.frankerfacez.com/emoticon/439694/4"
-  },
+  }, */
   {
     name: "Ethereum DeFi",
     description:
