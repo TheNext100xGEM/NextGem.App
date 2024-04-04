@@ -55,5 +55,5 @@ export const PDF_DATA = {
       twitter: ""
     }
   ],
-  conclusion: ""
+  conclusion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at."
 }

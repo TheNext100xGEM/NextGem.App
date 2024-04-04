@@ -186,7 +186,7 @@ const PdfReport = () => {
             <Text>AI FEEDBACK</Text>
           </View>
           {PDF_DATA.ai.map((ai, i) => (
-            <View style={styles.card} key={`ai-feedback-${i}`}>
+            <View style={styles.card} key={`ai-feedback-${i}`} wrap={false}>
               <View style={styles.cardNote}>
                 <Text style={{ color: noteColor(Number(ai.note)) }}>
                   {ai.note}
@@ -263,16 +263,26 @@ const PdfReport = () => {
             </View>
           </View>
         </View>
-        <View style={styles.section}>
+        <View style={styles.section} wrap={false}>
           <View style={styles.sectionTitle}>
             <GemIcon />
             <Text>TEAM</Text>
+          </View>
+          <View>
+            <Text style={{ fontSize: 11, fontWeight: 400 }}>
+              {PDF_DATA.conclusion}
+            </Text>
           </View>
         </View>
         <View style={styles.section}>
           <View style={styles.sectionTitle}>
             <GemIcon />
             <Text>CONCLUSION</Text>
+          </View>
+          <View>
+            <Text style={{ fontSize: 11, fontWeight: 400 }}>
+              {PDF_DATA.conclusion}
+            </Text>
           </View>
         </View>
       </Page>
