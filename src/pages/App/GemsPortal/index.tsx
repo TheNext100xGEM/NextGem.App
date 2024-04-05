@@ -74,6 +74,8 @@ const GemsPortal = () => {
     volume: VOLUME_BUTTON_HOVER
   })
 
+  const isTotalOdd = trendingCategories.length % 2 !== 0
+
   return (
     <>
       <Helmet>
@@ -88,7 +90,7 @@ const GemsPortal = () => {
             {trendingCategories.map((category, index) => (
               <Link
                 to={category.link}
-                className='category'
+                className={`category ${isTotalOdd && index === trendingCategories.length - 1 ? 'last-odd-item' : ''}`}
                 style={
                   {
                     "--category-color": category.color,
