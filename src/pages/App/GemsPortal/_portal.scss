@@ -24,6 +24,7 @@ $responsiveAside: $xl;
     $el: &;
     position: relative;
     overflow: hidden;
+    min-height: 165px;
 
     &-before {
       content: "";
@@ -54,6 +55,8 @@ $responsiveAside: $xl;
       padding: 2rem 1rem;
       gap: 0.5rem;
       z-index: 3;
+      height: 100%;
+      justify-content: center;
 
       .desc p {
         color: white;
@@ -247,7 +250,7 @@ $responsiveAside: $xl;
 
   .grid {
     --grid-layout-gap: var(--size-3);
-    --grid-column-count: 3;
+    --grid-column-count: 2;
     --grid-item-min-width: calc(200px + 50 * (100vw - 320px) / 1080);
     --gap-count: calc(var(--grid-column-count) - 1);
     --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
@@ -263,5 +266,10 @@ $responsiveAside: $xl;
     grid-template-rows: auto auto;
     grid-gap: var(--grid-layout-gap);
     overflow: hidden;
+
+    & .last-odd-item {
+      grid-column: span 2;
+      max-width: calc(2 * var(--grid-item-max-width) + var(--grid-layout-gap));
+    }
   }
 }

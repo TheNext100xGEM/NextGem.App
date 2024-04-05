@@ -14,14 +14,14 @@ import { Link } from "react-router-dom"
 import useSound from "use-sound"
 
 const trendingCategories = [
-  {
+  /* {
     name: "Solana Memes",
     description:
       "Where cryptocurrency meets comedy club. Invest in chuckles and watch your portfolio do stand-up on the blockchain.",
     link: "/gems?categories=11&noteMin=1&noteMax=10&chains=solana&viewMode=grid",
     color: "#84cc16",
     backgroundImageUrl: "https://cdn.frankerfacez.com/emoticon/439694/4"
-  },
+  }, */
   {
     name: "Ethereum DeFi",
     description:
@@ -74,6 +74,8 @@ const GemsPortal = () => {
     volume: VOLUME_BUTTON_HOVER
   })
 
+  const isTotalOdd = trendingCategories.length % 2 !== 0
+
   return (
     <>
       <Helmet>
@@ -88,7 +90,7 @@ const GemsPortal = () => {
             {trendingCategories.map((category, index) => (
               <Link
                 to={category.link}
-                className='category'
+                className={`category ${isTotalOdd && index === trendingCategories.length - 1 ? 'last-odd-item' : ''}`}
                 style={
                   {
                     "--category-color": category.color,

@@ -11,12 +11,17 @@ import {
   Document,
   StyleSheet,
   Font,
-  Svg,
-  Path,
   Image
 } from "@react-pdf/renderer"
 
+import {
+  CornerBottomLeft,
+  CornerBottomRight,
+  CornerTopLeft,
+  CornerTopRight
+} from "./Corners"
 import { GemIcon } from "./GemIcon"
+import { Tokenomics } from "./Tokenomics"
 
 Font.register({
   family: "Outfit",
@@ -34,9 +39,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#09090A",
     color: "#ffffff",
     fontFamily: "Outfit",
-    paddingBottom: "48px",
-    paddingTop: "48px",
-    
+    paddingBottom: "32px",
+    paddingTop: "48px"
   },
   header: {
     position: "absolute",
@@ -52,9 +56,6 @@ const styles = StyleSheet.create({
   },
   hero: {
     position: "relative",
-    //marginHorizontal: "32px",
-    //marginVertical: "32px",
-    //flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: "28px",
@@ -80,17 +81,15 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     textAlign: "center",
     marginHorizontal: "32px",
-    marginTop: "8px"
+    marginTop: "12px",
+    marginBottom: "28px"
   },
   section: {
     marginHorizontal: "32px",
-    marginTop: "16px",
-    marginBottom: "32px",
     gap: "16px",
-    flexGrow: 1
+    marginTop: "28px"
   },
   sectionTitle: {
-    marginTop: "16px",
     flexDirection: "row",
     alignItems: "center",
     gap: "6px",
@@ -101,16 +100,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "relative"
   },
-  cardTopLeftCorner: {
-    position: "absolute",
-    top: -1,
-    left: -1
-  },
-  cardBottomRightCorner: {
-    position: "absolute",
-    bottom: -1,
-    right: -1
-  },
   cardNote: {
     backgroundColor: "#161616",
     width: "98px",
@@ -120,6 +109,7 @@ const styles = StyleSheet.create({
     fontWeight: 700
   },
   cardContent: {
+    position: "relative",
     backgroundColor: "#212122",
     width: "433px",
     flexDirection: "column"
@@ -127,13 +117,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     marginHorizontal: "16px",
     marginTop: "16px",
-    marginBottom: "8px",
+    marginBottom: "4px",
     fontSize: 15,
     fontWeight: 500
   },
   cardText: {
     marginHorizontal: "16px",
-    marginTop: "8px",
+    marginTop: "4px",
     marginBottom: "16px",
     fontSize: 11,
     fontWeight: 400
@@ -149,6 +139,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     textAlign: "center"
+  },
+  cardSwot: {
+    position: "relative",
+    backgroundColor: "#212122",
+    width: "262px",
+    flexDirection: "column"
   }
 })
 
@@ -190,7 +186,7 @@ const PdfReport = () => {
             <Text>AI FEEDBACK</Text>
           </View>
           {PDF_DATA.ai.map((ai, i) => (
-            <View style={styles.card} key={`ai-feedback-${i}`}>
+            <View style={styles.card} key={`ai-feedback-${i}`} wrap={false}>
               <View style={styles.cardNote}>
                 <Text style={{ color: noteColor(Number(ai.note)) }}>
                   {ai.note}
@@ -200,32 +196,8 @@ const PdfReport = () => {
                 <Text style={styles.cardTitle}>{ai.model}</Text>
                 <Text style={styles.cardText}>{ai.feedback}</Text>
               </View>
-              <Svg
-                style={styles.cardTopLeftCorner}
-                width='23'
-                height='23'
-                viewBox='0 0 46 46'
-                fill='none'
-              >
-                <Path
-                  d='M0 1.6549e-06L46 0L1.51107e-06 46L0 1.6549e-06Z'
-                  fill='#09090A'
-                  stroke='#09090A'
-                />
-              </Svg>
-              <Svg
-                style={styles.cardBottomRightCorner}
-                width='25'
-                height='25'
-                viewBox='0 0 50 50'
-                fill='none'
-              >
-                <Path
-                  d='M49 49.5H49.5V49L49.5 3L49.5 1.7929L48.6464 2.64645L2.64645 48.6464L1.7929 49.5L3 49.5L49 49.5Z'
-                  fill='#09090A'
-                  stroke='#09090A'
-                />
-              </Svg>
+              <CornerTopLeft />
+              <CornerBottomRight />
             </View>
           ))}
         </View>
@@ -237,6 +209,81 @@ const PdfReport = () => {
             }
           />
           <Text>Powered by https://thenextgem.ai</Text>
+        </View>
+        <View style={styles.section}>
+          <View style={styles.sectionTitle}>
+            <GemIcon />
+            <Text>TOKENOMICS</Text>
+          </View>
+          <Tokenomics data={PDF_DATA.tokenomics} />
+        </View>
+        <View style={{ ...styles.section, gap: "8px" }}>
+          <View style={styles.sectionTitle}>
+            <GemIcon />
+            <Text>SWOT</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: "8px",
+              justifyContent: "space-between"
+            }}
+          >
+            <View style={styles.cardSwot}>
+              <Text style={styles.cardTitle}>STRENGTHS</Text>
+              <Text style={styles.cardText}>{PDF_DATA.swot.strengths}</Text>
+              <CornerTopLeft />
+              <CornerBottomRight />
+            </View>
+            <View style={styles.cardSwot}>
+              <Text style={styles.cardTitle}>WEAKNESSES</Text>
+              <Text style={styles.cardText}>{PDF_DATA.swot.weaknesses}</Text>
+              <CornerTopRight />
+              <CornerBottomLeft />
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: "8px",
+              justifyContent: "space-between"
+            }}
+          >
+            <View style={styles.cardSwot}>
+              <Text style={styles.cardTitle}>OPPORTUNITIES</Text>
+              <Text style={styles.cardText}>{PDF_DATA.swot.opportunities}</Text>
+              <CornerTopRight />
+              <CornerBottomLeft />
+            </View>
+            <View style={styles.cardSwot}>
+              <Text style={styles.cardTitle}>THREATS</Text>
+              <Text style={styles.cardText}>{PDF_DATA.swot.threats}</Text>
+              <CornerTopLeft />
+              <CornerBottomRight />
+            </View>
+          </View>
+        </View>
+        <View style={styles.section} wrap={false}>
+          <View style={styles.sectionTitle}>
+            <GemIcon />
+            <Text>TEAM</Text>
+          </View>
+          <View>
+            <Text style={{ fontSize: 11, fontWeight: 400 }}>
+              {PDF_DATA.conclusion}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.section}>
+          <View style={styles.sectionTitle}>
+            <GemIcon />
+            <Text>CONCLUSION</Text>
+          </View>
+          <View>
+            <Text style={{ fontSize: 11, fontWeight: 400 }}>
+              {PDF_DATA.conclusion}
+            </Text>
+          </View>
         </View>
       </Page>
     </Document>

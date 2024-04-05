@@ -72,9 +72,7 @@ export const PresalePortal: React.FC<PresalePortalProps> = () => {
                   </tbody>
                 </table>
                 <Button
-                  href={
-                    presale.pad_url || presale.main_url || presale.raise_url
-                  }
+                  href={presale.raise_url}
                   blank
                   color='primary'
                 >
