@@ -29,7 +29,7 @@ function AnalysisPage() {
 
   const handleAnalysis = async () => {
     if (websiteUrl === "") {
-      toast.error("Enter the link you want to analyze first!")
+      toast.error("Enter a website link to proceed with the analysis")
       return
     }
     if (!Cookies.get("web3TokenAuth")) {
@@ -43,9 +43,9 @@ function AnalysisPage() {
 
       navigate(pathName, { replace: true })
     } else if (analyze.message === "Unauthorized") {
-      toast.error("Beta Access requiered")
+      toast.error("Beta Access required")
     } else {
-      toast.error(analyze.message ?? "Unknow Error - Try again later")
+      toast.error(analyze.message ?? "Unknown error - Try again later")
     }
   }
 
