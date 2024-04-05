@@ -2,8 +2,10 @@ import "./_AiAnalysis.scss"
 import { Input, Button } from "@components/ui"
 import { SITE_NAME } from "@constants/index"
 import { Icon } from "@iconify/react/dist/iconify.js"
+import Cookies from "js-cookie"
 import { useState, ReactNode } from "react"
 import { Helmet } from "react-helmet-async"
+import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom"
 
 import { postAnalysis } from "../../queries/api"
@@ -26,14 +28,24 @@ function AnalysisPage() {
   const navigate = useNavigate()
 
   const handleAnalysis = async () => {
+    if (websiteUrl === "") {
+      toast.error("Enter the link you want to analyze first!")
+      return
+    }
+    if (!Cookies.get("web3TokenAuth")) {
+      toast.error("Wallet connection required to proceed.")
+      return
+    }
     const analyze = await postAnalysis({ websiteUrl })
     if (analyze.status && analyze.statusUrl) {
       const urlObj = new URL(analyze.statusUrl)
       const pathName = urlObj.pathname
 
       navigate(pathName, { replace: true })
+    } else if (analyze.message === "Unauthorized") {
+      toast.error("Beta Access requiered")
     } else {
-      console.log(analyze)
+      toast.error(analyze.message ?? "Unknow Error - Try again later")
     }
   }
 
