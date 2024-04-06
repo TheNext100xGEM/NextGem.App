@@ -128,7 +128,7 @@
       right: calc(var(--main-padding) * -1);
       pointer-events: none;
       @include trueMinHeight;
-      z-index: 1000;
+      z-index: 1001;
       display: flex;
       flex-direction: column;
       overflow: hidden;
