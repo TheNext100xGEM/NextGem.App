@@ -13,8 +13,15 @@ import { Link } from "react-router-dom"
 
 import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
 
-const MenuGemCard = ({ name, id, isFavorite }: { name: string; id: string, isFavorite: boolean }) => {
-
+const MenuGemCard = ({
+  name,
+  id,
+  isFavorite
+}: {
+  name: string
+  id: string
+  isFavorite: boolean
+}) => {
   const qPostUserFavorite = useMutation({
     mutationFn: postUserFavorite
   })
@@ -25,9 +32,9 @@ const MenuGemCard = ({ name, id, isFavorite }: { name: string; id: string, isFav
   const [saved, setSaved] = useState(isFavorite)
   const handleSave = async () => {
     if (saved) {
-      await qDeleteUserFavorite.mutateAsync({projectId: id});
+      await qDeleteUserFavorite.mutateAsync({ projectId: id })
     } else {
-      await qPostUserFavorite.mutateAsync({projectId: id});
+      await qPostUserFavorite.mutateAsync({ projectId: id })
     }
 
     setSaved(!saved)
@@ -47,20 +54,20 @@ const MenuGemCard = ({ name, id, isFavorite }: { name: string; id: string, isFav
   ]
 
   // const subMenuItems = [
-    // <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
-    //   Ask Gem AI
-    // </Button>,
-    // <NavLink to={`/gems/${slug}`}>
-    //   <Button icon='carbon:search' color='tertiary'>
-    //     See details
-    //   </Button>
-    // </NavLink>,
-    // <Button icon='carbon:share' color='tertiary'>
-    //   Share
-    // </Button>,
-    // <Button icon='carbon:debug' color='tertiary'>
-    //   Reported
-    // </Button>
+  // <Button href='/gem-ai' icon='carbon:text-mining-applier' color='tertiary'>
+  //   Ask Gem AI
+  // </Button>,
+  // <NavLink to={`/gems/${slug}`}>
+  //   <Button icon='carbon:search' color='tertiary'>
+  //     See details
+  //   </Button>
+  // </NavLink>,
+  // <Button icon='carbon:share' color='tertiary'>
+  //   Share
+  // </Button>,
+  // <Button icon='carbon:debug' color='tertiary'>
+  //   Reported
+  // </Button>
   // ]
 
   // return <Menu items={menuItems} sub={subMenuItems} />
@@ -84,9 +91,9 @@ function GemCard({
   isTrending
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
-  
+
   //hotfix for when chains is "No information found", which happens with python scorings api
-  chains = (typeof chains === 'object') ? chains : []
+  chains = typeof chains === "object" ? chains : []
   type PropsSection = {
     children: ReactNode[] | ReactNode
   }
@@ -144,7 +151,12 @@ function GemCard({
   }
 
   return (
-    <div className='gem' data-colors='tertiary' data-project-status={status} data-project-trendy={isTrending}>
+    <div
+      className='gem'
+      data-colors='tertiary'
+      data-project-status={status}
+      data-project-trendy={isTrending}
+    >
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
@@ -152,8 +164,8 @@ function GemCard({
         </div>
         <Link to={`/gems/${slug}`} className='gem-title'>
           <span>{name}</span>
-          {isTrending && <Icon icon="solar:flame-bold-duotone"/>}
-          </Link>
+          {isTrending && <Icon icon='solar:flame-bold-duotone' />}
+        </Link>
         <a
           className='gem-link'
           href={href}
@@ -162,23 +174,31 @@ function GemCard({
         >
           {urlTransform} <Icon icon='carbon:link' />
         </a>
-        <div className="gem-status">
-          {status === -1 && (<>
-            <span>Launch status unavailable</span>
-            <Icon icon='mdi:gauge-empty' />
-          </>)}
-          {status === 0 && (<>
-            <span>Not launched</span>
-            <Icon icon='material-symbols:settings-outline' />
-          </>)}
-          {status === 1 && (<>
-            <span>Launch in progress</span>
-            <Icon icon='material-symbols:rocket-launch-outline' />
-          </>)}
-          {status === 2 && (<>
-            <span>Live project</span>
-            <Icon icon='tabler:sparkles' />
-          </>)}
+        <div className='gem-status'>
+          {status === -1 && (
+            <>
+              <span>Launch status unavailable</span>
+              <Icon icon='mdi:gauge-empty' />
+            </>
+          )}
+          {status === 0 && (
+            <>
+              <span>Not launched</span>
+              <Icon icon='material-symbols:settings-outline' />
+            </>
+          )}
+          {status === 1 && (
+            <>
+              <span>Launch in progress</span>
+              <Icon icon='material-symbols:rocket-launch-outline' />
+            </>
+          )}
+          {status === 2 && (
+            <>
+              <span>Live project</span>
+              <Icon icon='tabler:sparkles' />
+            </>
+          )}
         </div>
 
         <div className='gem-desc'>
