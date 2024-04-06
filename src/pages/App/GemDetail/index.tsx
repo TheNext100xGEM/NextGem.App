@@ -163,7 +163,7 @@ function GemDetailPage() {
 
   return (
     <>
-      <Helmet>
+      <Helmet prioritizeSeoTags>
         {/* Standard metadata tags */}
         <title>{pageTitle}</title>
         <meta name='title' content={pageTitle} />
