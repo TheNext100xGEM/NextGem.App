@@ -342,7 +342,7 @@ function StakingPage() {
                     burning a specific amount of GEMAI through a transaction on
                     the Ethereum chain, recorded on our deployed smart contract.
                   </p>
-                  <p>
+                  <div>
                     Here are some key features of our Premium service:
                     <ul>
                       <li>
@@ -374,7 +374,7 @@ function StakingPage() {
                         system, delivered directly without delay.
                       </li>
                     </ul>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>

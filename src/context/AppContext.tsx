@@ -10,6 +10,7 @@ import React, {
   useRef
 } from "react"
 import { useLocation } from "react-router-dom"
+import { useAccount, useSignMessage } from "wagmi"
 
 interface AppContextProps {
   isInApp: boolean
@@ -32,6 +33,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation()
 
   // const { account, provider } = useWeb3React()
+  const { address: account } = useAccount()
+  const { signMessage } = useSignMessage()
   const hasCalledGetToken = useRef(false)
 
   useEffect(() => {
@@ -41,6 +44,50 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       setWeb3Token(storedToken)
     }
   }, [])
+
+  useEffect(() => {
+    if (!provider || hasCalledGetToken.current || web3Token || !account) {
+      return
+    }
+
+    hasCalledGetToken.current = true
+    const signer = provider.getSigner()
+
+    const getToken = async () => {
+      const provider = await connector.getProvider()
+      try {
+        const token = await Web3Token.sign(
+          async (msg: string) => {
+            try {
+              return signer.signMessage(msg)
+              // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+              // return await signer.signMessage(hexMessage)
+            } catch (err) {
+              console.log(err)
+            }
+          },
+          {
+            domain: "thenextgem.ai",
+            expires_in: "1 day",
+            nonce: 12345678,
+            uri: "https://thenextgem.ai/",
+            web3_token_version: 1,
+            chain_id: 1,
+            issued_at: new Date(),
+            request_id: 12345,
+            address: account
+          }
+        )
+        Cookies.set("web3TokenAuth", token, { expires: 1 })
+        setWeb3Token(token)
+        console.log("token", token)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    getToken().catch(console.error)
+  }, [account, provider, web3Token])
 
   // useEffect(() => {
   //   if (!provider || hasCalledGetToken.current || web3Token || !account) {
