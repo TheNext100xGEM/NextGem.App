@@ -1,13 +1,15 @@
-export { Input, type PropsInput, Checkbox, type PropsCheckbox } from './Input'
-export { Button, type PropsButton } from './Button'
-export { Alert, type PropsAlert } from './Alert'
-export { Grid, Item } from './Grid'
-export { default as Corner } from './Corner'
-export { default as BuyNextGemButton } from './BuyNextGemButton'
-export { default as OpenAppButton } from './OpenAppButton'
-export { default as Loader } from './Loader'
-export { default as Logotype } from './Logotype'
-export { default as Range } from './Range'
-export { default as Menu } from './Menu'
-export { default as Dropdown } from './Dropdown'
-export { default as Modal } from './Modal'
+export { Alert, type PropsAlert } from "./Alert"
+export { Button, type PropsButton } from "./Button"
+export { default as BuyNextGemButton } from "./BuyNextGemButton"
+export { default as Corner } from "./Corner"
+export { default as Dropdown } from "./Dropdown"
+export { Grid, Item } from "./Grid"
+export { Checkbox, Input, type PropsCheckbox, type PropsInput } from "./Input"
+export { default as Loader } from "./Loader"
+export { default as Logotype } from "./Logotype"
+export { Marquee, type MarqueeProps } from "./Marquee"
+export { default as Menu } from "./Menu"
+export { default as Modal } from "./Modal"
+export { default as OpenAppButton } from "./OpenAppButton"
+export { default as Picture } from "./Picture"
+export { default as Range } from "./Range"
