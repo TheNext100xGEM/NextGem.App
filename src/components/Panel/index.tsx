@@ -19,9 +19,11 @@ import {
   getConnection,
   tryActivateConnector
 } from "../../libs/connections"
+import { WalletOptions } from "./options"
 
 function Panel() {
-  const { account } = useWeb3React()
+  // const { account } = useWeb3React()
+  const account = false;
 
   const [modalIsOpen, setIsOpen] = useState(false)
 
@@ -138,6 +140,7 @@ function Panel() {
               <Wallet {...wallet} />
             </Item>
           ))}
+          <WalletOptions />
         </Grid>
       </Modal>
     )
@@ -146,6 +149,7 @@ function Panel() {
   return (
     <>
       <ButtonPanel />
+
       <ModalConnect />
     </>
   )

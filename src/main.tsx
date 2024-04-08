@@ -1,17 +1,21 @@
 import "@assets/css/app.scss"
-import { Web3ContextProvider } from "@components/Web3ContextProvider.tsx"
+import { Buffer } from 'buffer'
 import gsap from "gsap"
 import ScrollTrigger from "gsap/ScrollTrigger"
 import React, { ReactNode } from "react"
 import ReactDOM from "react-dom/client"
 import Modal from "react-modal"
+import { WagmiProvider } from "wagmi"
 
 import App from "./App.tsx"
-
+import { config } from "./libs/config.ts"
 
 // Initialize libraries
 gsap.registerPlugin(ScrollTrigger)
 Modal.setAppElement("#root")
+
+globalThis.Buffer = Buffer
+
 
 // Enable or disable React.StrictMode
 // eslint-disable-next-line react-refresh/only-export-components
@@ -27,8 +31,10 @@ const StrictMode = ({ children }: { children: ReactNode }) => {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Web3ContextProvider>
-      <App />
-    </Web3ContextProvider>
+    <WagmiProvider config={config}>
+      {/* <Web3ContextProvider> */}
+        <App />
+      {/* </Web3ContextProvider> */}
+    </WagmiProvider>
   </StrictMode>
 )
