@@ -12,7 +12,11 @@
 /* General Styles */
 
 .modal-overlay {
-  z-index: 80 !important;
+  z-index: 800 !important;
+}
+
+wcm-modal {
+  z-index: 802;
 }
 
 html {
@@ -105,12 +109,48 @@ $statuses: info custom success warning danger;
   }
 }
 
+/* Reveal */
+
+[data-reveal] {
+  --translate: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(var(--x, 0), var(--y, 0));
+  transform-style: preserve-3d;
+
+  &[data-reveal="bottom"] {
+    --y: var(--translate);
+  }
+
+  &[data-reveal="top"] {
+    --y: calc(var(--translate) * -1);
+  }
+
+  &[data-reveal="right"] {
+    --x: var(--translate);
+  }
+
+  &[data-reveal="left"] {
+    --x: calc(var(--translate) * -1);
+  }
+
+  &[data-reveal="opacity"] {
+    transform: none !important;
+  }
+}
+
 /* Main */
 
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.home {
+  overflow: hidden;
+  width: calc(100% + var(--main-padding) * 2);
+  left: calc(var(--main-padding) * -1);
 }
 
 /* Wrapper */
@@ -143,9 +183,25 @@ h5,
 .h5,
 h6,
 .h6 {
-  @include text-gradient;
+  &:not(.color) {
+    @include text-gradient;
+  }
   font-family: var(--font-family-heading);
   font-weight: 700;
+  line-height: 1.2;
+
+  strong {
+    -webkit-text-fill-color: var(--primary-1);
+    color: var(--primary-1);
+  }
+  small {
+    @include text-gradient;
+
+    @include min($xxs) {
+      display: block;
+      font-size: 75%;
+    }
+  }
 }
 
 @for $i from 1 through 6 {
@@ -217,6 +273,32 @@ hr {
   border-top: var(--stroke-primary);
 }
 
+.sub-title {
+  font-size: var(--size-3);
+  text-transform: uppercase;
+  letter-spacing: 1em;
+  font-weight: 200;
+  margin-bottom: calc(var(--size-2) * -1);
+}
+
+/* Point */
+
+.point {
+  --mask: radial-gradient(#000 0%, transparent 70%);
+  inset: var(--point, 0);
+  position: absolute;
+  background: radial-gradient(
+    var(--point-color, var(--text-primary)) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 17px 17px;
+  opacity: 0.2;
+  z-index: -2;
+  pointer-events: none;
+  mask: var(--mask);
+  -webkit-mask: var(--mask);
+}
+
 /* Toast */
 
 .toast-ct {
@@ -228,7 +310,7 @@ hr {
 /* Pre-sale banner */
 
 .presale-banner {
-  background-color: #2A2A2A;
+  background-color: #2a2a2a;
   color: #eeeeee;
   letter-spacing: 0.025em;
   text-align: center;
@@ -245,4 +327,5 @@ hr {
   );
   z-index: 1000;
   position: fixed;
+  top: 0;
 }

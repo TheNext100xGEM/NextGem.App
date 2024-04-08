@@ -1,0 +1,91 @@
+@import "../../../assets/css/mixins/styles";
+@import "../../../assets/css/mixins/medias";
+
+.home {
+  .scoring {
+    margin-top: calc(var(--main-margin-1) * 2);
+    margin-bottom: var(--main-margin-1);
+    z-index: 50;
+
+    .heading {
+      --point: -25% 60% 40% -10%;
+      margin-bottom: var(--main-margin-1);
+
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: radial-gradient(var(--light-primary), transparent 60%);
+        filter: blur(50px);
+        border-radius: 50%;
+        opacity: 0.5;
+        inset: -30% 60% 20% -10%;
+      }
+    }
+
+    .bck {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -10;
+      left: 50%;
+      width: 125vw;
+      min-width: 1000px;
+      opacity: 0.75;
+
+      img {
+        will-change: transform;
+      }
+    }
+
+    .intro {
+      font-size: calc(16px + 2 * (100vw - 320px) / 1080);
+      max-width: 100%;
+      width: calc(400px + 150 * (100vw - 320px) / 1080);
+      font-weight: 200;
+    }
+
+    .arrow {
+      --point: -20% -20% 60% 60%;
+      position: absolute;
+      width: 60%;
+      right: 5%;
+      top: 0;
+      z-index: -1;
+
+      img {
+        transform-origin: bottom left;
+      }
+
+      @include max($l) {
+        right: 0%;
+        top: 35%;
+      }
+
+      @include max($xxs) {
+        display: none;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: radial-gradient(var(--light-primary), transparent 60%);
+        filter: blur(50px);
+        border-radius: 50%;
+        opacity: 0.5;
+        inset: -20% -20% 60% 60%;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: radial-gradient(var(--bg-body), transparent 60%);
+        border-radius: 50%;
+        opacity: 1;
+        inset: 30% 30% -20% -20%;
+      }
+    }
+  }
+}

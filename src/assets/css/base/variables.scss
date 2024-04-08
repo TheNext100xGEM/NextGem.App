@@ -48,7 +48,6 @@
   --color-l-2: 80%;
   --color-l-3: 23%;
 
-
   --color-primary-base: #fff;
   --color-secondary-base: #24cafe;
 
@@ -75,6 +74,12 @@
 
   --light-primary: rgba(255 255 255 / 30%);
 
+  --primary-1: #d2ff1f;
+  --pink: #ff2667;
+  --yellow: var(--primary-1);
+  --blue: #0897ff;
+  --orange: #ff820f;
+
   /* Stroke */
   --stroke-color: rgba(74 74 83 / 40%);
   --stroke-width: 1px;
@@ -83,10 +88,12 @@
   /* Main */
   --main-padding: var(--size-4);
   --main-size: calc(14px + 1 * (100vw - 320px) / 1080);
+  --main-margin-1: calc(60px + 50 * (100vw - 320px) / 1080);
 
   /* Wrapper */
-  --wrapper-width: calc(700px + 400 * (100vw - 320px) / 1080);
+  --wrapper-width: calc(700px + 500 * (100vw - 320px) / 1080);
   --wrapper-max: 85vw;
+  --wrapper-padding: calc((100vw - var(--wrapper-max)) / 2);
 
   /* Header */
   --header-padding: var(--size-3);
@@ -102,7 +109,8 @@
 
   @include max($xl) {
     --main-padding: var(--size-3);
-    --wrapper-max: 92vw;
+    --wrapper-max: 88vw;
+    --wrapper-padding: calc((100vw - var(--wrapper-max)) / 2);
   }
 
   @include max($xs) {

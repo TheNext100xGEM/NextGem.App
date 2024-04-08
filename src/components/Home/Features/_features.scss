@@ -1,0 +1,226 @@
+@import "../../../assets/css/mixins/styles";
+@import "../../../assets/css/mixins/medias";
+
+.home {
+  .features {
+    margin-top: var(--main-margin-1);
+    z-index: 100;
+
+    .heading {
+      --point: -50% 50% -50% -15%;
+      margin-bottom: var(--main-margin-1);
+
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: radial-gradient(var(--light-primary), transparent 60%);
+        filter: blur(50px);
+        border-radius: 50%;
+        opacity: 0.5;
+        inset: -50% 60% -50% -10%;
+      }
+
+      picture {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: -1;
+        left: 25%;
+        width: 90%;
+      }
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--main-margin-1);
+  }
+
+  @mixin line {
+    content: "";
+    position: absolute;
+    height: 70%;
+    top: 15%;
+    left: 0;
+    z-index: 5;
+    width: var(--stroke-width);
+    background: linear-gradient(to bottom, transparent, #fff, transparent);
+  }
+
+  .feature {
+    --point: 0 20%;
+    --padding: calc(32px + 32 * (100vw - 320px) / 1080);
+    display: flex;
+    align-items: center;
+    padding: var(--padding);
+    gap: var(--padding);
+
+    @include max($xl) {
+      flex-direction: column !important;
+
+      &-right {
+        margin-bottom: -40px;
+      }
+
+      & > .corner {
+        height: calc(100% - 80px);
+      }
+    }
+
+    @include min($xl) {
+      &:nth-child(odd) {
+        padding-right: 0;
+      }
+
+      &:nth-child(even) {
+        flex-direction: row-reverse;
+        padding-left: 0;
+
+        &::before,
+        .feature-right::before,
+        & > .corner {
+          right: 0;
+          left: auto;
+        }
+
+        .feature-right::after {
+          left: 50%;
+          right: -20%;
+        }
+      }
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      height: var(--stroke-width);
+      left: 25%;
+      bottom: 0;
+      z-index: 5;
+      width: 50%;
+      opacity: 0.5;
+      background: linear-gradient(to right, transparent, #fff, transparent);
+
+      @include max($xl) {
+        top: 0;
+      }
+    }
+
+    .number {
+      font-family: var(--font-family-heading);
+      width: 0px;
+      display: flex;
+      justify-content: center;
+      font-size: calc(14px + 2 * (100vw - 320px) / 1080);
+    }
+
+    hr {
+      border: 0;
+      flex: 1;
+      background: linear-gradient(to bottom, var(--text-primary), transparent);
+      opacity: 0.5;
+      width: var(--stroke-width);
+      margin-bottom: calc(var(--padding) * -0.25);
+      min-height: var(--padding);
+    }
+
+    &::before {
+      @include line;
+    }
+
+    .icon {
+      --size: calc(56px + 8 * (100vw - 320px) / 1080);
+      --corner-size: calc(var(--size) / 4);
+      color: var(--color);
+      width: var(--size);
+      height: var(--size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        fill: transparent;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        width: 60%;
+      }
+
+      .corner {
+        opacity: 0.5;
+
+        &-top-bottom {
+          &::before,
+          &::after {
+            background: currentColor;
+          }
+        }
+        &-left,
+        &-right {
+          &::before,
+          &::after {
+            background-color: currentColor;
+          }
+        }
+      }
+    }
+
+    @include min($xl) {
+      & > .corner {
+        width: 85%;
+      }
+    }
+
+    &-left {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--padding) / 2.5);
+      flex: 1;
+
+      @include max($xl) {
+        width: 100%;
+      }
+    }
+
+    &-right {
+      flex-basis: 55%;
+      user-select: none;
+      -webkit-user-select: none;
+
+      &::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: radial-gradient(var(--light-primary), transparent 60%);
+        filter: blur(50px);
+        border-radius: 50%;
+        opacity: 0.75;
+        inset: -10% 50% -10% -20%;
+
+        @include max($xl) {
+          inset: -25% -10% 25% -10%;
+        }
+      }
+
+      @include min($xl) {
+        &::before {
+          @include line;
+        }
+      }
+    }
+
+    h3 {
+      color: var(--color);
+      font-size: calc(32px + 16 * (100vw - 320px) / 1080);
+    }
+
+    .p {
+      font-size: calc(16px + 2 * (100vw - 320px) / 1080);
+      width: 100%;
+      font-weight: 200;
+    }
+  }
+}

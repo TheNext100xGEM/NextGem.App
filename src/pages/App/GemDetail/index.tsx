@@ -4,7 +4,6 @@ import ProgressBar from "@components/ProgressBar"
 import { SocialList } from "@components/Socials"
 import { Button, Corner } from "@components/ui"
 import Markdown from "@components/ui/Markdown"
-import { SITE_NAME } from "@constants/index"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { mapGemFull } from "@models/GemFull"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -37,7 +36,12 @@ function GemDetailPage() {
     queryKey: ["gemSingle", id],
     queryFn: () => getGemSingle({ id: id! }),
     select: mapGemFull,
-    enabled: !!id
+    enabled: !!id,
+    refetchInterval: (data) =>
+      data.state.data?.analyzeProgress?.analyzeState !== "analyzed"
+        ? 10000
+        : false,
+    refetchIntervalInBackground: true
   })
 
   const qPostUserFavorite = useMutation({
@@ -149,18 +153,31 @@ function GemDetailPage() {
     }
   }
 
-  //
   const chains =
     typeof qGemSingle.data?.chains === "object" ? qGemSingle.data?.chains : []
   const isBeingAnalyzed =
     qGemSingle.data?.analyzeProgress?.analyzeState !== "analyzed"
 
+  const pageTitle = `${qGemSingle.data?.name} AI Analysis — The Next Gem`
+  const pageDesc = qGemSingle.data?.description
+
   return (
     <>
-      <Helmet>
-        <title>{`${SITE_NAME} — ${qGemSingle.data?.name ?? token}`}</title>
-        <meta name='description' content={qGemSingle.data?.description} />
-        <meta name='og:description' content={qGemSingle.data?.description} />
+      <Helmet prioritizeSeoTags>
+        {/* Standard metadata tags */}
+        <title>{pageTitle}</title>
+        <meta name='title' content={pageTitle} />
+        <meta name='description' content={pageDesc} />
+        {/* Facebook tags */}
+        <meta property='og:type' content={"website"} />
+        {/* <meta property='og:image' content='/thumbnail.png' /> */}
+        <meta property='og:title' content={pageTitle} />
+        <meta property='og:description' content={pageDesc} />
+        {/* Twitter tags */}
+        <meta name='twitter:card' content={"summary_large_image"} />
+        <meta name='twitter:title' content={pageTitle} />
+        <meta name='twitter:description' content={pageDesc} />
+        {/* <meta property='twitter:image' content={`/thumbnail.png`} /> */}
       </Helmet>
       <div className='gemDetail'>
         <div className='wrapper'>
@@ -190,35 +207,35 @@ function GemDetailPage() {
                         </table>
                       </Card>
                     </div>
-                  ) : (
-                    <div>&nbsp;</div>
-                  )}
-                  <div className='gemDetail-header-content'>
-                    <div className='gem-sub'>{qGemSingle.data.category}</div>
-                    <h1 className='gem-title'>
-                      {qGemSingle.data.name ?? "Analyzing..."}
-                    </h1>
-                    <div className='gem-infos'>
-                      <a
-                        className='gem-link'
-                        href={qGemSingle.data.href}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                      >
-                        {removeUrlPrefix(qGemSingle.data.href)}{" "}
-                        <Icon icon='carbon:link' />
-                      </a>
-                      <Button
-                        icon={
-                          saved ? "carbon:bookmark-filled" : "carbon:bookmark"
-                        }
-                        onClick={handleSave}
-                        color='tertiary'
-                        minus
-                        title='Save'
-                      />
+                  ) : null}
+                  {!isBeingAnalyzed ? (
+                    <div className='gemDetail-header-content'>
+                      <div className='gem-sub'>{qGemSingle.data.category}</div>
+                      <h1 className='gem-title'>
+                        {qGemSingle.data.name ?? "Analyzing..."}
+                      </h1>
+                      <div className='gem-infos'>
+                        <a
+                          className='gem-link'
+                          href={qGemSingle.data.href}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                        >
+                          {removeUrlPrefix(qGemSingle.data.href)}{" "}
+                          <Icon icon='carbon:link' />
+                        </a>
+                        <Button
+                          icon={
+                            saved ? "carbon:bookmark-filled" : "carbon:bookmark"
+                          }
+                          onClick={handleSave}
+                          color='tertiary'
+                          minus
+                          title='Save'
+                        />
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
                   {!isBeingAnalyzed ? (
                     <div className='gemDetail-header-note'>
                       <NoteCard total={qGemSingle.data.note.total} />
@@ -230,9 +247,7 @@ function GemDetailPage() {
                         Reload analysis
                       </Button>
                     </div>
-                  ) : (
-                    <div>&nbsp;</div>
-                  )}
+                  ) : null}
                 </div>
               </Section>
               {!isBeingAnalyzed ? (

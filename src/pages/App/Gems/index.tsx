@@ -358,7 +358,7 @@ function GemsPage() {
     }
 
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
+      if (entries[0].isIntersecting && qGemCollection.hasNextPage) {
         qGemCollection.fetchNextPage()
       }
     })
@@ -370,7 +370,7 @@ function GemsPage() {
 
   const { data: trendingGems } = useQuery({
     queryKey: ["getTrendingGems"],
-    queryFn: () => getTrendingGems(),
+    queryFn: () => getTrendingGems()
   })
 
   return (
