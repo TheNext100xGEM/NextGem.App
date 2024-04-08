@@ -1,5 +1,7 @@
 import "@assets/css/app.scss"
-import { Buffer } from 'buffer'
+import { Buffer } from "buffer"
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import gsap from "gsap"
 import ScrollTrigger from "gsap/ScrollTrigger"
 import React, { ReactNode } from "react"
@@ -16,7 +18,6 @@ Modal.setAppElement("#root")
 
 globalThis.Buffer = Buffer
 
-
 // Enable or disable React.StrictMode
 // eslint-disable-next-line react-refresh/only-export-components
 const StrictModeEnabled = false
@@ -29,12 +30,16 @@ const StrictMode = ({ children }: { children: ReactNode }) => {
   )
 }
 
+const queryClient = new QueryClient()
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <WagmiProvider config={config}>
-      {/* <Web3ContextProvider> */}
+      <QueryClientProvider client={queryClient}>
+        {/* <Web3ContextProvider> */}
         <App />
-      {/* </Web3ContextProvider> */}
+        {/* </Web3ContextProvider> */}
+      </QueryClientProvider>
     </WagmiProvider>
   </StrictMode>
 )

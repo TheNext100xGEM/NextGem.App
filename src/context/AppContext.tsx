@@ -1,5 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
-
 import Cookies from "js-cookie"
 import React, {
   createContext,
@@ -34,9 +32,10 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   // const { account, provider } = useWeb3React()
   const { address: account } = useAccount()
-  const { signMessage } = useSignMessage()
+  const {data: signMessageData, signMessageAsync, signMessage } = useSignMessage()
   const hasCalledGetToken = useRef(false)
 
+  console.log('signMessageData', signMessageData)
   useEffect(() => {
     const storedToken = Cookies.get("web3TokenAuth")
 
@@ -46,48 +45,53 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   useEffect(() => {
-    if (!provider || hasCalledGetToken.current || web3Token || !account) {
+    if (hasCalledGetToken.current || web3Token || !account) {
       return
     }
 
     hasCalledGetToken.current = true
-    const signer = provider.getSigner()
+    signMessage({
 
-    const getToken = async () => {
-      const provider = await connector.getProvider()
-      try {
-        const token = await Web3Token.sign(
-          async (msg: string) => {
-            try {
-              return signer.signMessage(msg)
-              // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
-              // return await signer.signMessage(hexMessage)
-            } catch (err) {
-              console.log(err)
-            }
-          },
-          {
-            domain: "thenextgem.ai",
-            expires_in: "1 day",
-            nonce: 12345678,
-            uri: "https://thenextgem.ai/",
-            web3_token_version: 1,
-            chain_id: 1,
-            issued_at: new Date(),
-            request_id: 12345,
-            address: account
-          }
-        )
-        Cookies.set("web3TokenAuth", token, { expires: 1 })
-        setWeb3Token(token)
-        console.log("token", token)
-      } catch (err) {
-        console.log(err)
-      }
-    }
+      message: "thenextgem.ai",
+      account
+    })
+    // const signer = provider.getSigner()
 
-    getToken().catch(console.error)
-  }, [account, provider, web3Token])
+    // const getToken = async () => {
+    //   // const provider = await connector.getProvider()
+    //   try {
+    //     const token = await Web3Token.sign(
+    //       async (msg: string) => {
+    //         try {
+    //           return signer.signMessage(msg)
+    //           // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+    //           // return await signer.signMessage(hexMessage)
+    //         } catch (err) {
+    //           console.log(err)
+    //         }
+    //       },
+    //       {
+    //         domain: "thenextgem.ai",
+    //         expires_in: "1 day",
+    //         nonce: 12345678,
+    //         uri: "https://thenextgem.ai/",
+    //         web3_token_version: 1,
+    //         chain_id: 1,
+    //         issued_at: new Date(),
+    //         request_id: 12345,
+    //         address: account
+    //       }
+    //     )
+    //     Cookies.set("web3TokenAuth", token, { expires: 1 })
+    //     setWeb3Token(token)
+    //     console.log("token", token)
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
+    // }
+
+    // getToken().catch(console.error)
+  }, [account, web3Token])
 
   // useEffect(() => {
   //   if (!provider || hasCalledGetToken.current || web3Token || !account) {
