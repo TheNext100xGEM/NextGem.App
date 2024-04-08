@@ -57,7 +57,7 @@ function GemAiPage() {
 
               {currentChat.messages.length === 0 && (
                 <div className='start'>
-                  <img src={logo} alt={SITE_NAME} draggable='false' />
+                  <img src={logo} alt={SITE_NAME} draggable='false' loading="lazy" />
                   <h4>Welcome to {CHAT_NAME}</h4>
                   <div className='intro'>
                     <p>

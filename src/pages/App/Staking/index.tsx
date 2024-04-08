@@ -41,7 +41,7 @@ const Card = ({ children, className, reverse = false }: PropsCard) => {
 }
 
 const LogoToken = () => {
-  return <img src={logoTokenSrc} alt={TOKEN_NAME} width='346' height='255' />
+  return <img src={logoTokenSrc} alt={TOKEN_NAME} width='346' height='255' loading="lazy" />
 }
 
 function StakingPage() {
