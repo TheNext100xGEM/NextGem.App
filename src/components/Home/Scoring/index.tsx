@@ -32,15 +32,13 @@ const Scoring = () => {
           </div>
           <h2 className='h1' data-reveal='bottom'>
             <small>
-              Persisting <strong>community scoring</strong> combining
+              Community <strong>Sentiment Analysis</strong> combining
             </small>{" "}
-            AI sentiment analysis
+            Real-Time Insights with AI
           </h2>
           <div className='intro' data-reveal='bottom'>
             <p>
-              Nam sole orto magnitudine angusti gurgitis sed profundi a transitu
-              arcebantur et dum piscatorios. Nam sole orto magnitudine angusti
-              gurgitis sed profundi a transitu arcebantur et dum piscatorios.
+            Explore the core of crypto communities with our AI analysis. We look at the most recent messages from each project's channels to understand true feelings. This way, we can tell real excitement from simple airdrop waiting. With this insight, plus a score based on social media activities, you get to know the real vibe and quality of the community.
             </p>
           </div>
           <div className='btn-group' data-reveal='bottom'>

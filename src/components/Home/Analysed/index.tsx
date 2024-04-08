@@ -63,17 +63,17 @@ const Analysed = () => {
           </div>
           <h2 className='h1' data-reveal='bottom'>
             <small>
-              The first <strong>artificial intelligence</strong>
+              The first <strong>artificial intelligence</strong> protocol
             </small>{" "}
-            that truly analyzes crypto
+            that analyzes crypto gems
           </h2>
           <div className='intro' data-reveal='bottom'>
             <p>
-              Already <span>+500 projects analyzed</span>, including:
+              Already <span>+6000 projects analyzed</span> on our protocol
             </p>
           </div>
-          <LogoList list={LogoListTop} />
-          <LogoList list={LogoListBottom} direction='right' />
+          {/* <LogoList list={LogoListTop} />
+          <LogoList list={LogoListBottom} direction='right' /> */}
           <div className='btn-group' data-reveal='bottom'>
             <Button href='/gems'>See all Analyzes</Button>
             <div className='point'></div>

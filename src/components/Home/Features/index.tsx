@@ -99,13 +99,12 @@ const Features = () => {
         <div className='list'>
           <FeatureCard
             number={1}
-            title='AI Chat'
+            title='Next Gem AI'
             icon='chat'
             color='pink'
-            img={<Picture src={aiSrc} width='736' height='421' alt='AI Chat' />}
+            img={<Picture src={aiSrc} width='736' height='421' alt='Next Gem AI' />}
           >
-            Nam sole orto magnitudine angusti gurgitis sed profundi a transitu
-            arcebantur et dum piscatorios.
+            As we are customizing and fine-tuning AI models - all of the knowledge is available through our chat to enhance your experience. Ask precise questions on any gem and get exactly the answers you're looking for.
           </FeatureCard>
           <FeatureCard
             number={2}
@@ -121,8 +120,7 @@ const Features = () => {
               />
             }
           >
-            Nam sole orto magnitudine angusti gurgitis sed profundi a transitu
-            arcebantur et dum piscatorios.
+           Streamline your research with our AI-driven scoring and detailed description layer, offering immediate insights into any project. Our system quickly evaluates and ranks projects, enabling you to efficiently identify and focus on those most worthy of your attention.
           </FeatureCard>
           <FeatureCard
             number={3}
@@ -138,12 +136,11 @@ const Features = () => {
               />
             }
           >
-            Nam sole orto magnitudine angusti gurgitis sed profundi a transitu
-            arcebantur et dum piscatorios.
+            Start your own analysis by entering the URL of a crypto-project website, and quickly obtain a comprehensive overview and actionable insights in no time: you'll never need more than 5 minutes to understand a project's essentials again.
           </FeatureCard>
           <FeatureCard
             number={4}
-            title='Staking & Burn'
+            title='Sustainable Model'
             icon='fire'
             color='orange'
             img={
@@ -151,12 +148,11 @@ const Features = () => {
                 src={stakingSrc}
                 width='761'
                 height='421'
-                alt='Staking & Burn'
+                alt='Sustainable Model'
               />
             }
           >
-            Nam sole orto magnitudine angusti gurgitis sed profundi a transitu
-            arcebantur et dum piscatorios.
+            Unlock our premium features by staking or burning the $GEMAI token, enabling access to exclusive benefits. This approach not only supports a sustainable model but also contributes to making our token deflationary over time, assisting in covering AI operational costs.
           </FeatureCard>
         </div>
       </div>
