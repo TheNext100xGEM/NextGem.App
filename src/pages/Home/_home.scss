@@ -1,4 +1,8 @@
 .home {
+  picture {
+    pointer-events: none;
+  }
+
   .scroll {
     text-transform: uppercase;
     letter-spacing: 0.3em;
