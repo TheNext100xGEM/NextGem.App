@@ -53,6 +53,7 @@ function AnalysisPage() {
     <>
       <Helmet>
         <title>{`${SITE_NAME} — Ai Analysis`}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" data-rh="true" />
         <meta
           name='description'
           content='Analyze any crypto project with a website/dextools or coinmarketcap link.'
