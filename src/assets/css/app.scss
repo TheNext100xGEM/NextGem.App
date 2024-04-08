@@ -145,6 +145,9 @@ $statuses: info custom success warning danger;
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.home {
   overflow: hidden;
   width: calc(100% + var(--main-padding) * 2);
   left: calc(var(--main-padding) * -1);

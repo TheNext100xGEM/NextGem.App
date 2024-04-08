@@ -15,10 +15,29 @@ $responsiveAside: $xl;
   flex-direction: column;
   gap: 2rem;
 
+  h2 {
+    text-align: center;
+    margin-bottom: var(--size-3);
+  }
+
   .section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .bck {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -10;
+    left: 50%;
+    width: 125vw;
+    min-width: 1400px;
+
+    img {
+      will-change: transform;
+    }
   }
 
   .launchpad {
@@ -26,81 +45,152 @@ $responsiveAside: $xl;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
 
-  .launchpad img {
-    width: 100%;
-    height: 128px;
-    background-color: #666666;
-    clip-path: polygon(18px 0%, 100% 0%, 100% 100%, 0 100%, 0% 100%, 0% 18px);
-  }
-
-  .launchpad .launch-infos {
-    td {
-      padding: 0.5rem 0rem;
+    &:hover {
+      .corner-hover {
+        opacity: 0.75;
+      }
     }
-    td:nth-child(1) {
-      text-align: start;
-    }
-    td:nth-child(2) {
-      text-align: end;
-    }
-  }
 
-  .launchpad .heading {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: center;
+    & > .corner {
+      opacity: 0.5;
+    }
 
-    .status {
+    .corner-hover {
+      transition: opacity 0.6s;
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+
+      .corner {
+        &-top-bottom {
+          &::before,
+          &::after {
+            background: var(--primary-1);
+          }
+        }
+        &-left,
+        &-right {
+          &::before,
+          &::after {
+            background-color: var(--primary-1);
+          }
+        }
+      }
+    }
+
+    &::after {
+      content: "";
+      height: 1px;
+      top: 0;
+      background: linear-gradient(
+        to right,
+        transparent,
+        var(--primary-1),
+        transparent
+      );
+      width: 70%;
+      left: 15%;
+      position: absolute;
+    }
+
+    .btn {
+      --padding-v: 1em;
+
+      svg {
+        color: var(--primary-1);
+      }
+
+      .corner {
+        &-top-bottom {
+          &::before,
+          &::after {
+            background: var(--primary-1);
+          }
+        }
+        &-left,
+        &-right {
+          &::before,
+          &::after {
+            background-color: var(--primary-1);
+          }
+        }
+      }
+    }
+
+    img {
+      width: 100%;
+      background-color: #666666;
+      clip-path: polygon(18px 0%, 100% 0%, 100% 100%, 0 100%, 0% 100%, 0% 18px);
+    }
+
+    .launch-infos {
+      td {
+        padding: 0.5rem 0rem;
+      }
+      td:nth-child(1) {
+        text-align: start;
+      }
+      td:nth-child(2) {
+        text-align: end;
+      }
+    }
+
+    .heading {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.3rem;
 
-      .ping {
-        height: 0.6rem;
-        width: 0.6rem;
+      .status {
         display: flex;
-        position: relative;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.3rem;
 
-        .animate {
-          height: 100%;
-          width: 100%;
-          position: absolute;
-          border-radius: 9999px;
-          opacity: 0.75;
-          animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
-
-        .bg {
+        .ping {
           height: 0.6rem;
           width: 0.6rem;
+          display: flex;
           position: relative;
-          border-radius: 9999px;
-        }
 
-        .ended {
-          background-color: #a1a1aa;
-          opacity: 0.2;
-        }
+          .animate {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            border-radius: 9999px;
+            opacity: 0.75;
+            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+          }
 
-        .upcoming {
-          background-color: #22d3ee;
-        }
+          .bg {
+            height: 0.6rem;
+            width: 0.6rem;
+            position: relative;
+            border-radius: 9999px;
+          }
 
-        .live {
-          background-color: #4ade80;
-        }
+          .ended {
+            background-color: #a1a1aa;
+            opacity: 0.2;
+          }
 
-        @keyframes ping {
-          75%,
-          100% {
-            transform: scale(2);
-            opacity: 0;
+          .upcoming {
+            background-color: #22d3ee;
+          }
+
+          .live {
+            background-color: #4ade80;
+          }
+
+          @keyframes ping {
+            75%,
+            100% {
+              transform: scale(2);
+              opacity: 0;
+            }
           }
         }
       }
@@ -108,7 +198,7 @@ $responsiveAside: $xl;
   }
 
   .grid {
-    --grid-layout-gap: var(--size-3);
+    --grid-layout-gap: var(--size-4);
     --grid-column-count: 4;
     --grid-item-min-width: calc(200px + 50 * (100vw - 320px) / 1080);
     --gap-count: calc(var(--grid-column-count) - 1);

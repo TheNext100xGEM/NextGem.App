@@ -62,11 +62,15 @@
     .bck {
       position: absolute;
       top: 0;
-      width: 100%;
+      width: 100vw;
       min-width: 1000px;
       left: 50%;
       transform: translateX(-50%);
       z-index: -5;
+
+      img {
+        will-change: transform;
+      }
     }
 
     .marquee {

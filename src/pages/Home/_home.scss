@@ -1,0 +1,50 @@
+.home {
+  .scroll {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.8;
+    color: var(--primary-1);
+    margin-top: var(--size-3);
+    position: fixed;
+    bottom: 0;
+    z-index: 999;
+    pointer-events: none;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    text-align: center;
+
+    &::before {
+      content: "";
+      position: absolute;
+      background: var(--bg-body);
+      filter: blur(15px);
+      inset: -100% -25% -50%;
+      border-radius: 50%;
+    }
+
+    span {
+      animation: scrollto 1.5s infinite linear;
+    }
+
+    @keyframes scrollto {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .l {
+      width: var(--stroke-width);
+      height: var(--size-4);
+      background-color: var(--bg-secondary);
+      margin: auto;
+      margin-top: var(--size-2);
+    }
+  }
+}

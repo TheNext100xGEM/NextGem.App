@@ -1,5 +1,5 @@
 import Scene from "@components/3D"
-import { OpenAppButton } from "@components/ui"
+import { Button, OpenAppButton } from "@components/ui"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import "./_hero.scss"
@@ -34,7 +34,7 @@ const Hero = () => {
         "a"
       )
       .from(
-        ".hero .btn-group",
+        ".hero .btn-group, .hero .analyse",
         {
           scale: 1.5,
           opacity: 0,
@@ -164,6 +164,11 @@ const Hero = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className='analyse'>
+            <Button href='/analyze' icon='mage:stars-c'>
+              Analysed now
+            </Button>
           </div>
         </div>
       </div>

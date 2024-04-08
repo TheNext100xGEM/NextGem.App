@@ -29,9 +29,13 @@
       transform: translate(-50%, -50%);
       z-index: -10;
       left: 50%;
-      width: 125%;
+      width: 125vw;
       min-width: 1000px;
       opacity: 0.75;
+
+      img {
+        will-change: transform;
+      }
     }
 
     .intro {

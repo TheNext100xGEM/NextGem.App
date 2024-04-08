@@ -38,6 +38,15 @@
       width: calc(var(--wrapper-width) / 2);
     }
 
+    .analyse {
+      margin-top: calc(var(--size-3) * -1);
+
+      .btn {
+        --padding-v: 1.2em;
+        font-size: 0.8em;
+      }
+    }
+
     .lines {
       pointer-events: none;
       overflow: hidden;
