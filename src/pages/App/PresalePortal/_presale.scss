@@ -34,6 +34,7 @@ $responsiveAside: $xl;
     left: 50%;
     width: 125vw;
     min-width: 1400px;
+    pointer-events: none;
 
     img {
       will-change: transform;
@@ -61,6 +62,7 @@ $responsiveAside: $xl;
       position: absolute;
       inset: 0;
       opacity: 0;
+      pointer-events: none;
 
       .corner {
         &-top-bottom {
