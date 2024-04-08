@@ -45,7 +45,7 @@ export const PresalePortal: React.FC<PresalePortalProps> = () => {
           <Grid>
             {presales?.map((presale, i) => (
               <div className='launchpad' key={presale._id}>
-                <img className='banner' src={Cards[i]} />
+                <img className='banner' src={Cards[i]} loading="lazy" />
                 <div className='heading'>
                   <h6>{presale.name ?? "_"}</h6>
 
