@@ -27,10 +27,12 @@ function Panel() {
   const { connectors, connectAsync } = useConnect()
   const { disconnect } = useDisconnect()
 
-  const handleDisconnect = () => {
-    disconnect()
+  console.log('connectors', connectors)
 
+  const handleDisconnect = () => {
     Cookies.remove("web3TokenAuth")
+
+    disconnect()
   }
 
   const ButtonPanel = () => {
@@ -79,11 +81,18 @@ function Panel() {
       connector: connectors.find((c) => c.type.includes("walletConnect"))
     },
     {
-      name: "Binance Wallet",
-      icon: "simple-icons:binance",
-      desc: "Connect with Binance Chain Wallet",
-      disabled: true
+      name: "OKX Wallet",
+      icon: "arcticons:okx",
+      desc: "Connect with OKX Wallet",
+      connector: connectors.find((c) => c.id.includes("okx")),
+      disabled: !!window["okxwallet"]
     },
+    // {
+    //   name: "Binance Wallet",
+    //   icon: "simple-icons:binance",
+    //   desc: "Connect with Binance Chain Wallet",
+    //   disabled: true
+    // },
     {
       name: "Coinbase Wallet",
       icon: "tabler:brand-coinbase",
