@@ -8,7 +8,7 @@ export const TWITTER: string = "https://twitter.com/NextGemAI"
 export const TELEGRAM: string = "https://t.me/NextGemAI_Group"
 export const DISCORD: string = "https://discord.gg/rpPTF3DRFk"
 export const GITHUB: string = "https://github.com/TheNext100xGEM"
-export const COINMARKETCAP: string = "https://coinmarketcap.com/"
+export const COINMARKETCAP: string = "https://coinmarketcap.com/currencies/the-next-gem/"
 
 export const TOAST_DURATION: number = 4000
 
