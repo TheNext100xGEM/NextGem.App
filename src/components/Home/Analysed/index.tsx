@@ -2,15 +2,16 @@ import bgSrc from "@assets/img/home/bg-analysed.png"
 import { Button, Marquee, Picture } from "@components/ui"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
+import { Link } from "react-router-dom"
 
 import "./_analysed.scss"
 import { LogoListBottom, LogoListTop, LogoProps } from "./list"
 
 const Logo = ({ name, logo, url }: LogoProps) => {
   return (
-    <a className='logo' href={url} target='_blank' rel='noopener noreferrer'>
+    <Link className='logo' to={url} /* target='_blank' rel='noopener noreferrer' */>
       <Picture src={logo} width='200' height='200' alt={name} />
-    </a>
+    </Link>
   )
 }
 
@@ -72,8 +73,8 @@ const Analysed = () => {
               Already <span>+6000 projects analyzed</span> on our protocol
             </p>
           </div>
-          {/* <LogoList list={LogoListTop} />
-          <LogoList list={LogoListBottom} direction='right' /> */}
+          <LogoList list={LogoListTop} />
+          <LogoList list={LogoListBottom} direction='right' />
           <div className='btn-group' data-reveal='bottom'>
             <Button href='/gems'>See all Analyzes</Button>
             <div className='point'></div>
