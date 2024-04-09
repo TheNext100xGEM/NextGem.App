@@ -1,12 +1,11 @@
-import "./_header.scss"
 import Nav from "@components/Nav"
 import Panel from "@components/Panel"
 import { SocialListNext } from "@components/Socials"
 import {
   Button,
   BuyNextGemButton,
-  OpenAppButton,
-  Logotype
+  Logotype,
+  OpenAppButton
 } from "@components/ui"
 import {
   CHAT_NAME,
@@ -18,6 +17,7 @@ import { NavItem } from "@models/Nav"
 import classNames from "classnames"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
+import "./_header.scss"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"

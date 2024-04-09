@@ -1,0 +1,32 @@
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  user-select: none;
+
+  &::after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      var(--bg-body) 0%,
+      transparent 10%,
+      transparent 90%,
+      var(--bg-body) 100%
+    );
+  }
+
+  &-right {
+    justify-content: flex-end;
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+    will-change: transform;
+  }
+}
