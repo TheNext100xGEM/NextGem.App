@@ -65,7 +65,7 @@ Request ID: 12345`
       try {
         const token = await signMessageAsync({
           message: message,
-          account
+          account: account
         })
         Cookies.set("web3TokenAuth", token, { expires: 1 })
         setWeb3Token(token)

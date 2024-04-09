@@ -15,7 +15,6 @@ import GemsPortal from "@pages/App/GemsPortal"
 import { PresalePortal } from "@pages/App/PresalePortal"
 import { HomePage, DefaultPage } from "@pages/index"
 import { PDFViewer } from "@react-pdf/renderer"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
 import { Toaster } from "react-hot-toast"
 import {
@@ -28,14 +27,12 @@ import {
 function App() {
   useWindowHeight()
 
-  const queryClient = new QueryClient()
 
   const Container = (
     <HelmetProvider>
       <AppContextProvider>
         <SeoContextProvider>
           <ChatContextProvider>
-            <QueryClientProvider client={queryClient}>
               <Header />
               <main className='main'>
                 <Outlet />
@@ -75,7 +72,6 @@ function App() {
                 }}
               />
               <ScrollRestoration />
-            </QueryClientProvider>
           </ChatContextProvider>
         </SeoContextProvider>
       </AppContextProvider>

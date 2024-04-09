@@ -36,9 +36,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        {/* <Web3ContextProvider> */}
         <App />
-        {/* </Web3ContextProvider> */}
       </QueryClientProvider>
     </WagmiProvider>
   </StrictMode>

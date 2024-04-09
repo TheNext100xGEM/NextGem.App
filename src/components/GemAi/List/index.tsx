@@ -10,11 +10,10 @@ import { Link, useParams } from "react-router-dom"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
-import web3Token from "web3-token"
 
 import { deleteUserChat, getUserChats } from "../../../queries/api"
 
-function GemAiList({opened}: {opened: boolean}) {
+function GemAiList({ opened }: { opened: boolean }) {
   const { chatId } = useParams()
 
   const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
@@ -24,7 +23,7 @@ function GemAiList({opened}: {opened: boolean}) {
   const [usersToday, setUsersToday] = useState<UserChat[]>([])
   const [usersLast7Days, setUsersLast7Days] = useState<UserChat[]>([])
   const [usersLast30Days, setUsersLast30Days] = useState<UserChat[]>([])
-
+  const { web3Token } = useAppContext()
   const { setIsPremium } = useAppContext()
 
   const qDeleteUserChat = useMutation({
