@@ -91,7 +91,7 @@ const navLanding: NavItem[] = [
 ]
 
 const navApp: NavItem[] = [
-  { component: <NavLink to='/infos' title='Home' /> },
+  { component: <NavLink to='/' title='Home' /> },
   { component: <NavLink to='/gems' title='Gems' /> },
   { component: <NavLink to='/staking' title='Staking' /> },
   { component: <NavLink to='/gem-ai' title={CHAT_NAME} /> },
@@ -116,7 +116,7 @@ const navApp: NavItem[] = [
   {
     component: (
       <Button
-        href='/infos'
+        href='/'
         icon='carbon:close'
         minus
         color='secondary'
@@ -165,7 +165,7 @@ function Header() {
 
   return (
     <header className={headerClass}>
-      <Link to='/infos' className='header-logo' onClick={soundClick}>
+      <Link to='/' className='header-logo' onClick={soundClick}>
         <Logotype />
       </Link>
       <Link to={"/presale"} className='presale-banner'>

@@ -90,10 +90,10 @@ function App() {
           path: "/",
           element: <HomePage />
         },
-        {
-          path: "/infos",
-          element: <HomePage />
-        },
+        // {
+        //   path: "/infos",
+        //   element: <HomePage />
+        // },
         {
           path: "/presale",
           element: <PresalePortal />

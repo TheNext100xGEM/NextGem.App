@@ -9,6 +9,7 @@ export const SeoContextProvider = ({ children }: { children: ReactNode }) => {
   return (
     <SeoContext.Provider value={{}}>
       <Helmet>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" data-rh="true" />
         <link rel='canonical' href={window.location.href} />
         <meta
           name='description'

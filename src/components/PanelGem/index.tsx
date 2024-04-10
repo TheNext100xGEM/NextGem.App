@@ -27,7 +27,7 @@ function PanelGem() {
 
   const qGemSingle = useQuery({
     queryKey: ["gemSingle", id],
-    queryFn: () => getGemSingle({ id }),
+    queryFn: () => getGemSingle({ id, isFundamentalAnalysis: true }),
     select: (data) => {
       return mapGemFull(data)
     },

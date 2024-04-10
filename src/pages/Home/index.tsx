@@ -15,7 +15,7 @@ function HomePage() {
   useEffect(() => {
     const websiteVisited = localStorage.getItem("websiteVisited")
 
-    const isInfosPage = location.pathname === "/infos"
+    const isInfosPage = location.pathname === "/"
 
     if (websiteVisited && !isInfosPage) {
       navigate("/gems")

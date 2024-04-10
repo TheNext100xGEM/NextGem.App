@@ -71,8 +71,18 @@ export const getTrendingGems = async () =>
     "GET"
   )
 
-export const getGemSingle = async ({ id }: { id: string }) =>
-  request<ApiGemFull>(`${APP_API_URL}/projects/${id}`, "getGemSingle", "GET")
+export const getGemSingle = async ({
+  id,
+  isFundamentalAnalysis
+}: {
+  id: string
+  isFundamentalAnalysis: boolean
+}) =>
+  request<ApiGemFull>(
+    `${APP_API_URL}/projects/${id}?fundamentalAnalysis=${isFundamentalAnalysis}`,
+    "getGemSingle",
+    "GET"
+  )
 
 export const getUserChats = async () =>
   request<ApiUserChats | ApiStatusReponse>(
