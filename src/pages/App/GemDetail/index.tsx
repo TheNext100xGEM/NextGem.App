@@ -37,7 +37,7 @@ function GemDetailPage() {
 
   const qGemSingle = useQuery({
     queryKey: ["gemSingle", id, isToggled],
-    queryFn: () => getGemSingle({ id: id!, isFundamentalAnalysis: isToggled }),
+    queryFn: () => getGemSingle({ id: id!, isFundamentalAnalysis: !isToggled }),
     select: mapGemFull,
     enabled: !!id,
     refetchInterval: (data) =>
