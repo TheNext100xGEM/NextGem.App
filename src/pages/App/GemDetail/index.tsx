@@ -2,7 +2,7 @@ import "./_gemDetail.scss"
 import { NoteCard } from "@components/Note"
 import ProgressBar from "@components/ProgressBar"
 import { SocialList } from "@components/Socials"
-import { Button, Corner } from "@components/ui"
+import { Button, Corner, Loader } from "@components/ui"
 import Markdown from "@components/ui/Markdown"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { mapGemFull } from "@models/GemFull"
@@ -352,6 +352,9 @@ function GemDetailPage() {
               )}
             </div>
           ) : (
+            <Loader big />
+          )}
+          {qGemSingle.data && qGemSingle.data?.errorProcessing ? (
             <div className='AnalysisError'>
               <div className='AnalysisError-heading'>
                 We couldn't analyze this project
@@ -368,7 +371,7 @@ function GemDetailPage() {
                 </div>
               ) : null}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </>
