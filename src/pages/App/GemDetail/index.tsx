@@ -20,6 +20,7 @@ import {
   postUserFavorite,
   postReloadAnalysis
 } from "../../../queries/api"
+import { SentimentAnalysis } from "@components/Chart/SentimentAnalysis"
 
 function GemDetailPage() {
   const { tokenId } = useParams()
@@ -292,6 +293,8 @@ function GemDetailPage() {
               </Section>
               {!isBeingAnalyzed ? (
                 <div className='gemDetail-content'>
+                  <SentimentAnalysis />
+
                   {isToggled ? (
                     <Alert status='info'>
                       Disclaimer: You are currently viewing this project through
@@ -299,6 +302,7 @@ function GemDetailPage() {
                       fundamentals, click on "Switch to Fundamental Analysis"
                     </Alert>
                   ) : null}
+
                   <div className='gemDetail-desc'>
                     {isToggled ? (
                       <Markdown>{qGemSingle.data.meme_description}</Markdown>
