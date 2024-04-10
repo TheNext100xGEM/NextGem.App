@@ -17,6 +17,7 @@
     "@splinetool/react-spline": "^2.2.6",
     "@splinetool/runtime": "^1.0.17",
     "@tanstack/react-query": "^5.17.9",
+    "@types/chart.js": "^2.9.41",
     "@types/js-cookie": "^3.0.6",
     "@types/moment": "^2.13.0",
     "@types/react-modal": "^3.16.3",

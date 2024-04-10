@@ -90,7 +90,7 @@ const apiData = [
   }
 ]
 
-const getOrCreateTooltip = (chart) => {
+const getOrCreateTooltip = (chart: any) => {
   let tooltipEl = chart.canvas.parentNode.querySelector("div")
 
   if (!tooltipEl) {
@@ -103,7 +103,7 @@ const getOrCreateTooltip = (chart) => {
   return tooltipEl
 }
 
-const externalTooltipHandler = (context) => {
+const externalTooltipHandler = (context: any) => {
   // Tooltip Element
   const { chart, tooltip } = context
   const tooltipEl = getOrCreateTooltip(chart)
@@ -163,7 +163,7 @@ const externalTooltipHandler = (context) => {
   tooltipEl.style.top = positionY + tooltip.caretY + "px"
 }
 
-const options = {
+const options: any = {
   responsive: true,
   maintainAspectRatio: false,
   interaction: {
@@ -181,15 +181,14 @@ const options = {
   },
   elements: {
     point: {
-      pointRadius: 5
+      radius: 3,
+      hoverRadius: 6
     }
   }
 }
 
-const labels = apiData.map((val) => val.date)
-
 const data = {
-  labels,
+  labels: apiData.map((val) => val.date),
   datasets: [
     {
       data: apiData.map((val) => val.value),
