@@ -2,7 +2,7 @@ import "./_gemDetail.scss"
 import { NoteCard } from "@components/Note"
 import ProgressBar from "@components/ProgressBar"
 import { SocialList } from "@components/Socials"
-import { Button, Corner } from "@components/ui"
+import { Alert, Button, Corner } from "@components/ui"
 import Markdown from "@components/ui/Markdown"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { mapGemFull } from "@models/GemFull"
@@ -292,6 +292,13 @@ function GemDetailPage() {
               </Section>
               {!isBeingAnalyzed ? (
                 <div className='gemDetail-content'>
+                  {isToggled ? (
+                    <Alert status='info'>
+                      Disclaimer: You are currently viewing this project through
+                      the eyes of a degen (this uses Meme Analysis). To view
+                      fundamentals, click on "Switch to Fundamental Analysis"
+                    </Alert>
+                  ) : null}
                   <div className='gemDetail-desc'>
                     {isToggled ? (
                       <Markdown>{qGemSingle.data.meme_description}</Markdown>

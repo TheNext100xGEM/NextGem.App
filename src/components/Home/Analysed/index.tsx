@@ -5,7 +5,7 @@ import gsap from "gsap"
 import { Link } from "react-router-dom"
 
 import "./_analysed.scss"
-import { LogoListBottom, LogoListTop, LogoProps } from "./list"
+import { LogoProps } from "./list"
 
 const Logo = ({ name, logo, url }: LogoProps) => {
   return (
@@ -20,7 +20,7 @@ interface LogoListProps {
   direction?: "left" | "right"
 }
 
-const LogoList = ({ list, direction = "left" }: LogoListProps) => {
+({ list, direction = "left" }: LogoListProps) => {
   return (
     <Marquee direction={direction}>
       {list.map((partner, index) => (
