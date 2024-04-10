@@ -17,75 +17,77 @@ export interface GemFull {
   launchpad: string
   tokenSymbol: string
   note: NoteInfo
+  errorProcessing: boolean
   status?: number
   socials: PropsSocialLink[]
-  hasSummary : boolean
-  analyzeProgress: analyzeProgress;
-  gemini_raw?: string;
-  gemini_score?: string;
-  gpt_raw?: string;
-  gpt_score?: string;
-  mistral_raw?: string;
-  mistral_score?: string;
-  analyzed?: boolean;
+  hasSummary: boolean
+  analyzeProgress: analyzeProgress
+  gemini_raw?: string
+  gemini_score?: string
+  gpt_raw?: string
+  gpt_score?: string
+  mistral_raw?: string
+  mistral_score?: string
+  analyzed?: boolean
 }
 
-export interface analyzeProgress { 
-    eta: number,
-    progress: number,
-    analyzeState: 'analyzed' | 'analyzing' | 'queue',
-    positionInQueue: number,
-    totalInQueue: number
+export interface analyzeProgress {
+  eta: number
+  progress: number
+  analyzeState: "analyzed" | "analyzing" | "queue"
+  positionInQueue: number
+  totalInQueue: number
 }
 
 export interface ApiGemFull {
-  _id: string;
-  uniqueKey: string;
-  presaleAddress: string;
-  tokenName: string;
-  tokenSymbol: string;
-  baseSymbol: string;
-  saleToken: string;
-  audit: boolean;
-  isFavorite: boolean;
-  auditLink: string;
-  kyc: boolean;
-  safu: boolean;
-  softCap: number;
-  hardCap: number | null;
-  amountRaised: number;
-  telegramLink?: string;
-  twitterLink?: string;
-  websiteLink?: string;
-  submittedDescription: string;
-  githubLink?: string | null;
-  redditLink?: string | null;
-  logoLink: string;
-  startTime: string;
-  endTime: string;
-  poolType: string;
-  chain: number;
-  status: number;
-  telegramMemberCount: number;
-  telegramOnlineCount: number | null;
-  launchpad: string;
-  source: string;
-  chains: string[];
-  launchpads: string[];
-  analyzed: boolean;
-  blockchain_area: string;
-  gemini_raw?: string;
-  gemini_score?: string;
-  gpt_raw?: string;
-  gpt_score?: string;
-  mistral_raw?: string;
-  mistral_score?: string;
-  category: string;
-  updatedAt: string;
-  area_project: string;
-  llm_summary?: string;
-  weighted_score: number;
-  analyzeProgress: analyzeProgress;
+  _id: string
+  uniqueKey: string
+  presaleAddress: string
+  tokenName: string
+  tokenSymbol: string
+  baseSymbol: string
+  saleToken: string
+  audit: boolean
+  isFavorite: boolean
+  auditLink: string
+  kyc: boolean
+  safu: boolean
+  softCap: number
+  hardCap: number | null
+  amountRaised: number
+  telegramLink?: string
+  twitterLink?: string
+  websiteLink?: string
+  submittedDescription: string
+  githubLink?: string | null
+  redditLink?: string | null
+  logoLink: string
+  startTime: string
+  endTime: string
+  poolType: string
+  chain: number
+  status: number
+  telegramMemberCount: number
+  telegramOnlineCount: number | null
+  launchpad: string
+  source: string
+  chains: string[]
+  launchpads: string[]
+  errorProcessing: boolean
+  analyzed: boolean
+  blockchain_area: string
+  gemini_raw?: string
+  gemini_score?: string
+  gpt_raw?: string
+  gpt_score?: string
+  mistral_raw?: string
+  mistral_score?: string
+  category: string
+  updatedAt: string
+  area_project: string
+  llm_summary?: string
+  weighted_score: number
+  analyzeProgress: analyzeProgress
 }
 
 export const mapGemFull = (data: ApiGemFull): GemFull => {
@@ -128,13 +130,14 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     id: data._id,
     name: data.tokenName,
     category: data.category ?? "",
-    href: data.websiteLink ?? '',
+    href: data.websiteLink ?? "",
     description: data.llm_summary ?? data.submittedDescription,
     hasSummary: !!data.llm_summary,
     chains: data.chains,
     launchpad: data.launchpad,
     tokenSymbol: data.tokenSymbol,
     note,
+    errorProcessing: data.errorProcessing,
     isFavorite: data.isFavorite,
     gemini_score: data.gemini_score,
     gemini_raw: data.gemini_raw,

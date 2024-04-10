@@ -38,7 +38,8 @@ function GemDetailPage() {
     select: mapGemFull,
     enabled: !!id,
     refetchInterval: (data) =>
-      data.state.data?.analyzeProgress?.analyzeState !== "analyzed"
+      data.state.data?.analyzeProgress?.analyzeState !== "analyzed" &&
+      !data.state.data?.errorProcessing
         ? 10000
         : false,
     refetchIntervalInBackground: true
@@ -185,7 +186,7 @@ function GemDetailPage() {
             <Icon icon='material-symbols:arrow-back' />
             Back to gems
           </Link>
-          {qGemSingle.data && (
+          {qGemSingle.data && !qGemSingle.data?.errorProcessing ? (
             <div className='gem'>
               <Section>
                 <div className='gemDetail-header'>
@@ -349,6 +350,23 @@ function GemDetailPage() {
                   </div>
                 </div>
               )}
+            </div>
+          ) : (
+            <div className='AnalysisError'>
+              <div className='AnalysisError-heading'>
+                We couldn't analyze this project
+              </div>
+              <div className='AnalysisError-sub'>
+                If you believe this is an error, please contact our development
+                team on Telegram
+              </div>
+              {qGemSingle.data ? (
+                <div className='AnalysisError-sub'>
+                  Website: {qGemSingle.data.href}
+                  <br />
+                  Project ID: {qGemSingle.data.id}
+                </div>
+              ) : null}
             </div>
           )}
         </div>
