@@ -2,17 +2,17 @@ import "./_gemDetail.scss"
 import { NoteCard } from "@components/Note"
 import ProgressBar from "@components/ProgressBar"
 import { SocialList } from "@components/Socials"
-import { Button, Corner } from "@components/ui"
+import { Alert, Button, Corner } from "@components/ui"
 import Markdown from "@components/ui/Markdown"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { mapGemFull } from "@models/GemFull"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { removeUrlPrefix } from "@utils/url"
 import classNames from "classnames"
-import { Children, ReactNode, useRef, useState } from "react"
+import { Children, ReactNode, useEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 
 import {
   deleteUserFavorite,
@@ -32,13 +32,17 @@ function GemDetailPage() {
     id = tokenId.substring(lastDashIndex + 1)
   }
 
+  const [isToggled, setIsToggled] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+
   const qGemSingle = useQuery({
-    queryKey: ["gemSingle", id],
-    queryFn: () => getGemSingle({ id: id! }),
+    queryKey: ["gemSingle", id, isToggled],
+    queryFn: () => getGemSingle({ id: id!, isFundamentalAnalysis: !isToggled }),
     select: mapGemFull,
     enabled: !!id,
     refetchInterval: (data) =>
-      data.state.data?.analyzeProgress?.analyzeState !== "analyzed"
+      data.state.data?.analyzeProgress?.analyzeState !== "analyzed" &&
+      !data.state.data?.errorProcessing
         ? 10000
         : false,
     refetchIntervalInBackground: true
@@ -161,6 +165,35 @@ function GemDetailPage() {
   const pageTitle = `${qGemSingle.data?.name} AI Analysis — The Next Gem`
   const pageDesc = qGemSingle.data?.description
 
+  useEffect(() => {
+    if (!qGemSingle.data) return
+    const analysis = searchParams.get("analysis")
+
+    if (!qGemSingle.data?.isMemecoin && analysis === "meme") {
+      setSearchParams({ analysis: "fundamental" }, { replace: true })
+    } else if (qGemSingle.data?.isMemecoin && analysis === "meme") {
+      setIsToggled(true)
+    } else {
+      setIsToggled(false)
+    }
+  }, [
+    searchParams,
+    qGemSingle.data?.isMemecoin,
+    qGemSingle.data,
+    setSearchParams
+  ])
+
+  const handleToggle = () => {
+    if (!qGemSingle.data) return
+    if (!qGemSingle.data.isMemecoin) return
+
+    const newToggleState = !isToggled
+    setIsToggled(newToggleState)
+
+    const newAnalysisValue = newToggleState ? "meme" : "fundamental"
+    setSearchParams({ analysis: newAnalysisValue })
+  }
+
   return (
     <>
       <Helmet prioritizeSeoTags>
@@ -185,7 +218,7 @@ function GemDetailPage() {
             <Icon icon='material-symbols:arrow-back' />
             Back to gems
           </Link>
-          {qGemSingle.data && (
+          {qGemSingle.data && !qGemSingle.data?.errorProcessing ? (
             <div className='gem'>
               <Section>
                 <div className='gemDetail-header'>
@@ -246,68 +279,115 @@ function GemDetailPage() {
                       >
                         Reload analysis
                       </Button>
+                      {qGemSingle.data.isMemecoin ? (
+                        <Button onClick={handleToggle} color='tertiary'>
+                          {isToggled
+                            ? "Switch to Fundamental Analysis"
+                            : "Switch to Meme Analysis"}
+                        </Button>
+                      ) : null}
                     </div>
                   ) : null}
                 </div>
               </Section>
               {!isBeingAnalyzed ? (
                 <div className='gemDetail-content'>
+                  {isToggled ? (
+                    <Alert status='info'>
+                      Disclaimer: You are currently viewing this project through
+                      the eyes of a degen (this uses Meme Analysis). To view
+                      fundamentals, click on "Switch to Fundamental Analysis"
+                    </Alert>
+                  ) : null}
                   <div className='gemDetail-desc'>
-                    <Markdown>{qGemSingle.data.description}</Markdown>
+                    {isToggled ? (
+                      <Markdown>{qGemSingle.data.meme_description}</Markdown>
+                    ) : (
+                      <Markdown>{qGemSingle.data.description}</Markdown>
+                    )}
                   </div>
-
-                  {parseInt(qGemSingle.data.gemini_score ?? "0") > 0 &&
-                    qGemSingle.data.gemini_raw && (
-                      <Card>
-                        <div className='gemDetail-block'>
-                          <div className='gemDetail-block-header'>
-                            <h2>Gemini</h2>
-                            <NoteCard
-                              total={parseInt(
-                                qGemSingle.data.gemini_score ?? "0"
-                              )}
-                            ></NoteCard>
-                          </div>
-                          <div className='gemDetail-block-content'>
-                            <Markdown>{qGemSingle.data.gemini_raw}</Markdown>
-                          </div>
-                        </div>
-                      </Card>
-                    )}
-                  {parseInt(qGemSingle.data.mistral_score ?? "0") > 0 &&
-                    qGemSingle.data.mistral_raw && (
-                      <Card>
-                        <div className='gemDetail-block'>
-                          <div className='gemDetail-block-header'>
-                            <h2>Mistral</h2>
-                            <NoteCard
-                              total={parseInt(
-                                qGemSingle.data.mistral_score ?? "0"
-                              )}
-                            ></NoteCard>
-                          </div>
-                          <div className='gemDetail-block-content'>
-                            <Markdown>{qGemSingle.data.mistral_raw}</Markdown>
-                          </div>
-                        </div>
-                      </Card>
-                    )}
                   {parseInt(qGemSingle.data.gpt_score ?? "0") > 0 &&
-                    qGemSingle.data.gpt_raw && (
-                      <Card>
-                        <div className='gemDetail-block'>
-                          <div className='gemDetail-block-header'>
-                            <h2>GPT</h2>
-                            <NoteCard
-                              total={parseInt(qGemSingle.data.gpt_score ?? "0")}
-                            ></NoteCard>
-                          </div>
-                          <div className='gemDetail-block-content'>
-                            <Markdown>{qGemSingle.data.gpt_raw}</Markdown>
-                          </div>
+                  qGemSingle.data.gpt_raw ? (
+                    <Card>
+                      <div className='gemDetail-block'>
+                        <div className='gemDetail-block-header'>
+                          <h2>GPT</h2>
+                          <NoteCard
+                            total={
+                              isToggled && qGemSingle.data.meme_gpt_score
+                                ? parseInt(
+                                    qGemSingle.data.meme_gpt_score ?? "0"
+                                  )
+                                : parseInt(qGemSingle.data.gpt_score ?? "0")
+                            }
+                          ></NoteCard>
                         </div>
-                      </Card>
-                    )}
+                        <div className='gemDetail-block-content'>
+                          {isToggled && qGemSingle.data.meme_gpt_raw ? (
+                            <Markdown>{qGemSingle.data.meme_gpt_raw}</Markdown>
+                          ) : (
+                            <Markdown>{qGemSingle.data.gpt_raw}</Markdown>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  ) : null}
+                  {parseInt(qGemSingle.data.mistral_score ?? "0") > 0 &&
+                  qGemSingle.data.mistral_raw ? (
+                    <Card>
+                      <div className='gemDetail-block'>
+                        <div className='gemDetail-block-header'>
+                          <h2>Mistral</h2>
+                          <NoteCard
+                            total={
+                              isToggled && qGemSingle.data.meme_mistral_score
+                                ? parseInt(
+                                    qGemSingle.data.meme_mistral_score ?? "0"
+                                  )
+                                : parseInt(qGemSingle.data.mistral_score ?? "0")
+                            }
+                          ></NoteCard>
+                        </div>
+                        <div className='gemDetail-block-content'>
+                          {isToggled && qGemSingle.data.meme_mistral_raw ? (
+                            <Markdown>
+                              {qGemSingle.data.meme_mistral_raw}
+                            </Markdown>
+                          ) : (
+                            <Markdown>{qGemSingle.data.mistral_raw}</Markdown>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  ) : null}
+                  {parseInt(qGemSingle.data.gemini_score ?? "0") > 0 &&
+                  qGemSingle.data.gemini_raw ? (
+                    <Card>
+                      <div className='gemDetail-block'>
+                        <div className='gemDetail-block-header'>
+                          <h2>Gemini</h2>
+                          <NoteCard
+                            total={
+                              isToggled && qGemSingle.data.meme_gemini_score
+                                ? parseInt(
+                                    qGemSingle.data.meme_gemini_score ?? "0"
+                                  )
+                                : parseInt(qGemSingle.data.gemini_score ?? "0")
+                            }
+                          ></NoteCard>
+                        </div>
+                        <div className='gemDetail-block-content'>
+                          {isToggled && qGemSingle.data.meme_gemini_raw ? (
+                            <Markdown>
+                              {qGemSingle.data.meme_gemini_raw}
+                            </Markdown>
+                          ) : (
+                            <Markdown>{qGemSingle.data.gemini_raw}</Markdown>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  ) : null}
                 </div>
               ) : (
                 <div className='gemDetail-content'>
@@ -350,7 +430,25 @@ function GemDetailPage() {
                 </div>
               )}
             </div>
-          )}
+          ) : null}
+          {qGemSingle.data && qGemSingle.data?.errorProcessing ? (
+            <div className='AnalysisError'>
+              <div className='AnalysisError-heading'>
+                We couldn't analyze this project
+              </div>
+              <div className='AnalysisError-sub'>
+                If you believe this is an error, please contact our development
+                team on Telegram
+              </div>
+              {qGemSingle.data ? (
+                <div className='AnalysisError-sub'>
+                  Website: {qGemSingle.data.href}
+                  <br />
+                  Project ID: {qGemSingle.data.id}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     </>

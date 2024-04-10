@@ -18,5 +18,16 @@ export default defineConfig({
       '@constants': `${ path.resolve(__dirname, 'src/constants') }`,
       '@data': `${ path.resolve(__dirname, 'src/data') }`,
     }
-  }
+  },
+  build: {
+    minify: 'terser', // here we set up terser instead default esbuild
+    terserOptions: { 
+     mangle: {
+      reserved: ['dc'] // here we set up variable we want to exclude //from naming
+     }
+    },
+    rollupOptions: {
+      // some other code
+    },
+  },
 })

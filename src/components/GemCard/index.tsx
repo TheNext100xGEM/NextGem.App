@@ -87,8 +87,7 @@ function GemCard({
   status,
   socials,
   slug,
-  isFavorite,
-  isTrending
+  isFavorite
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -151,12 +150,7 @@ function GemCard({
   }
 
   return (
-    <div
-      className='gem'
-      data-colors='tertiary'
-      data-project-status={status}
-      data-project-trendy={isTrending}
-    >
+    <div className='gem' data-colors='tertiary' data-project-status={status}>
       <Section>
         <div className='gem-heading'>
           <div className='gem-sub'>{category}</div>
@@ -164,7 +158,6 @@ function GemCard({
         </div>
         <Link to={`/gems/${slug}`} className='gem-title'>
           <span>{name}</span>
-          {isTrending && <Icon icon='solar:flame-bold-duotone' />}
         </Link>
         <a
           className='gem-link'
