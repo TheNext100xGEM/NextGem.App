@@ -53,6 +53,7 @@ export interface ApiGemFull {
   _id: string
   uniqueKey: string
   presaleAddress: string
+  projectName?: string
   tokenName: string
   tokenSymbol: string
   baseSymbol: string
@@ -166,7 +167,7 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
 
   return {
     id: data._id,
-    name: data.tokenName,
+    name: data.projectName || data.tokenName,
     category: data.category ?? "",
     href: data.websiteLink ?? "",
     description: data.llm_summary ?? data.submittedDescription,

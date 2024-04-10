@@ -282,8 +282,8 @@ function GemDetailPage() {
                       {qGemSingle.data.isMemecoin ? (
                         <Button onClick={handleToggle} color='tertiary'>
                           {isToggled
-                            ? "Switch to Fundamental"
-                            : "Switch to Meme"}
+                            ? "Switch to Fundamental Analysis"
+                            : "Switch to Meme Analysis"}
                         </Button>
                       ) : null}
                     </div>
