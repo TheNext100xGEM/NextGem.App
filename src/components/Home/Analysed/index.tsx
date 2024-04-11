@@ -9,7 +9,7 @@ import { LogoListBottom, LogoListTop, LogoProps } from "./list"
 
 const Logo = ({ name, logo, url }: LogoProps) => {
   return (
-    <Link className='logo' to={url} /* target='_blank' rel='noopener noreferrer' */>
+    <Link className='logo' to={url} title={name} /* target='_blank' rel='noopener noreferrer' */>
       <Picture src={logo} width='200' height='200' alt={name} />
     </Link>
   )

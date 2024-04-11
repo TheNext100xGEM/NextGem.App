@@ -21,6 +21,7 @@ import gsap from "gsap"
 import { ReactNode, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
+import LazyLoad from "react-lazyload"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
@@ -41,7 +42,15 @@ const Card = ({ children, className, reverse = false }: PropsCard) => {
 }
 
 const LogoToken = () => {
-  return <img src={logoTokenSrc} alt={TOKEN_NAME} width='346' height='255' loading="lazy" />
+  return (
+    <img
+      src={logoTokenSrc}
+      alt={TOKEN_NAME}
+      width='346'
+      height='255'
+      loading='lazy'
+    />
+  )
 }
 
 function StakingPage() {
@@ -342,7 +351,7 @@ function StakingPage() {
                     burning a specific amount of GEMAI through a transaction on
                     the Ethereum chain, recorded on our deployed smart contract.
                   </p>
-                  <p>
+                  <div>
                     Here are some key features of our Premium service:
                     <ul>
                       <li>
@@ -374,12 +383,15 @@ function StakingPage() {
                         system, delivered directly without delay.
                       </li>
                     </ul>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
+
             <div className='staking-bottom-bg'>
-              <Scene id='ANnAzezL-kW4IEPO' />
+              <LazyLoad offset={100} height={100} once>
+                <Scene id='ANnAzezL-kW4IEPO' />
+              </LazyLoad>
             </div>
           </div>
         </div>
