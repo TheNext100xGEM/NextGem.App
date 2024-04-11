@@ -27,8 +27,6 @@ function Panel() {
   const { connectors, connectAsync } = useConnect()
   const { disconnect } = useDisconnect()
 
-  console.log('connectors', connectors)
-
   const handleDisconnect = () => {
     Cookies.remove("web3TokenAuth")
 
@@ -72,19 +70,19 @@ function Panel() {
       name: "Metamask",
       icon: "arcticons:metamask",
       desc: "Connect to your Metamask",
-      connector: connectors.find((c) => c.type.includes("injected"))
+      connector: connectors.find((c) => c.id.includes("metamask")),
     },
     {
       name: "WalletConnect",
       icon: "simple-icons:walletconnect",
       desc: "Connect to your WalletConnect",
-      connector: connectors.find((c) => c.type.includes("walletConnect"))
+      connector: connectors.find((c) => c.id.includes("walletConnect"))
     },
     {
       name: "OKX Wallet",
       icon: "arcticons:okx",
       desc: "Connect with OKX Wallet",
-      connector: connectors.find((c) => c.id.includes("okx")),
+      connector: connectors.find((c) => c.id.includes("okex")),
       disabled: !!window["okxwallet"]
     },
     // {
