@@ -9,7 +9,7 @@ import { LogoListBottom, LogoListTop, LogoProps } from "./list"
 
 const Logo = ({ name, logo, url }: LogoProps) => {
   return (
-    <Link className='logo' to={url} title={name} /* target='_blank' rel='noopener noreferrer' */>
+    <Link className='logo' to={url} title={name}>
       <Picture src={logo} width='200' height='200' alt={name} />
     </Link>
   )
@@ -50,13 +50,7 @@ const Analysed = () => {
 
   return (
     <div className='analysed'>
-      <Picture
-        src={bgSrc}
-        width='1800'
-        height='1467'
-        alt='Trade'
-        classPicture='bck'
-      />
+      <img src={bgSrc} width='1800' height='1467' alt='Trade' className='bck' />
       <div className='wrapper'>
         <div className='heading content'>
           <div className='sub-title' data-reveal='bottom'>
