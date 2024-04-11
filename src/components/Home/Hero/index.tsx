@@ -167,7 +167,7 @@ const Hero = () => {
           </div>
           <div className='analyse'>
             <Button href='/analyze' icon='mage:stars-c'>
-              Analysed now
+              Analyse now
             </Button>
           </div>
         </div>

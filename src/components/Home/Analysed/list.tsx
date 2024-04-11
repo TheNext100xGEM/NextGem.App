@@ -64,7 +64,7 @@ export const LogoListTop: LogoProps[] = [
     name: "GraphLinq",
     logo: logoGraphlinq,
     //url: "https://graphlinq.io/"
-    url: "https://graphlinq.io/"
+    url: "/gems/graphlinq-66174fdb197399816002465e"
   },
   {
     name: "Spectre Bot AI",
@@ -103,7 +103,7 @@ export const LogoListBottom: LogoProps[] = [
     name: "PEPE",
     logo: logoPepe,
     //url: "https://www.pepe.vip/"
-    url: "https://www.pepe.vip/"
+    url: "/gems/pepe-6617f4f7df6d32479050e83d"
   },
   {
     name: "Nodes AI",
@@ -121,7 +121,7 @@ export const LogoListBottom: LogoProps[] = [
     name: "Pandora",
     logo: logoPandora,
     //url: "https://www.pandora.build/"
-    url: "https://www.pandora.build/"
+    url: "/gems/pandora-65cf92b532ca917b1e6e1189"
   },
   {
     name: "1Inch",
