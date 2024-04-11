@@ -1,0 +1,112 @@
+@import "../../../assets/css/mixins/styles";
+@import "../../../assets/css/mixins/medias";
+
+.home {
+  .analysed {
+    --point: -20% 20% 30% 20%;
+    margin-top: calc(-150px - 50 * (100vw - 320px) / 1080);
+    padding-top: calc(500px + 400 * (100vw - 320px) / 1080);
+    padding-bottom: var(--main-margin-1);
+    z-index: 50;
+    text-align: center;
+
+    .heading {
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: radial-gradient(var(--light-primary), transparent 60%);
+        filter: blur(50px);
+        border-radius: 50%;
+        opacity: 0.5;
+        inset: -25% 20% 40% 20%;
+      }
+    }
+
+    .intro {
+      font-size: calc(16px + 4 * (100vw - 320px) / 1080);
+      width: 100%;
+      font-weight: 200;
+      text-align: center;
+      margin-bottom: var(--size-4);
+
+      span {
+        color: var(--text-secondary);
+        display: inline-block;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -10px;
+          width: 80%;
+          height: 1px;
+          left: 10%;
+          background: linear-gradient(to right, transparent, #fff, transparent);
+        }
+      }
+    }
+
+    .sub-title {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h2 {
+      margin: auto;
+    }
+
+    .content {
+      justify-content: center;
+    }
+
+    .bck {
+      position: absolute;
+      top: 0;
+      width: 100vw;
+      min-width: 1000px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: -5;
+
+      img {
+        will-change: transform;
+      }
+    }
+
+    .marquee {
+      transition: opacity 0.5s;
+      opacity: 0.7;
+      width: 100vw;
+      left: 50%;
+      transform: translateX(-50%);
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .btn-group {
+      --point: -200% -100%;
+      margin: auto;
+    }
+
+    .logo {
+      transition: opacity var(--transition-link);
+      min-width: calc(200px + 100 * (100vw - 320px) / 1080);
+      //height: calc(60px + 20 * (100vw - 320px) / 1080);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.3;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      & > * {
+        max-width: 80%;
+        max-height: 70%;
+      }
+    }
+  }
+}

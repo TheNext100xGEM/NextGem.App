@@ -129,6 +129,8 @@ textarea {
 
 picture {
   display: block;
+  user-select: none;
+  -webkit-user-select: none;
 
   img {
     max-width: 100%;

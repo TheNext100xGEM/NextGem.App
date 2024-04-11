@@ -13,6 +13,9 @@ import { Link } from "react-router-dom"
 
 import { deleteUserFavorite, postUserFavorite } from "../../queries/api"
 
+type PropsList = {
+  children: ReactNode[] | ReactNode
+}
 
 function GemList({
   id,
@@ -29,10 +32,6 @@ function GemList({
   isFavorite
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
-
-  type PropsList = {
-    children: ReactNode[] | ReactNode
-  }
 
   const List = ({ children }: PropsList): ReactNode => {
     const childrenArray = Children.toArray(children)

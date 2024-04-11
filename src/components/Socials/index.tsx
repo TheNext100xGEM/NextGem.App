@@ -1,5 +1,5 @@
 import './_socials.scss'
-import { DISCORD, GITHUB, SOUND_BUTTON_CLICK, TELEGRAM, TWITTER, VOLUME_BUTTON_CLICK } from '@constants/index'
+import { DISCORD, GITHUB, SOUND_BUTTON_CLICK, TELEGRAM, TWITTER, COINMARKETCAP, VOLUME_BUTTON_CLICK } from '@constants/index'
 import { Icon } from '@iconify/react'
 import { PropsSociaList, PropsSocialLink, SocialId, SocialInfo, SocialListInfos } from '@models/Socials'
 import { FC } from 'react'
@@ -57,6 +57,10 @@ export const SocialListNext = () => {
     {
       id: "discord",
       href: DISCORD
+    },
+    {
+      id: "coinmarketcap",
+      href: COINMARKETCAP
     }
   ]
 

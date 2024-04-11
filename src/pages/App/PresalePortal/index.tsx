@@ -1,15 +1,16 @@
-import "./_presale.scss"
+import bgSrc from "@assets/img/home/bg-uniswap.png"
 import ApeTerminalCard from "@assets/img/launchpads/apeterminal.jpg"
 import ChainGptCard from "@assets/img/launchpads/chaingpt.jpg"
 import FjordCard from "@assets/img/launchpads/fjord.jpg"
 import SeedifyCard from "@assets/img/launchpads/seedify.jpg"
-import { Button, Corner, Grid } from "@components/ui"
+import { Button, Corner, Grid, Picture } from "@components/ui"
 import StarAnimation from "@components/ui/StarAnimation"
 import { SITE_NAME } from "@constants/index"
 import { useQuery } from "@tanstack/react-query"
 import moment from "moment"
 import React, { useMemo } from "react"
 import { Helmet } from "react-helmet-async"
+import "./_presale.scss"
 
 import { getPresales } from "../../../queries/api"
 
@@ -37,18 +38,20 @@ export const PresalePortal: React.FC<PresalePortalProps> = () => {
       <Helmet>
         <title>{SITE_NAME} — Presale</title>
       </Helmet>
-
       <div className='presale'>
         <div className='section'>
           <StarAnimation />
-          <h5 className='portal-heading'>Join Pre-Sale</h5>
+          <h2>
+            Join <strong>Pre-Sale</strong>
+          </h2>
           <Grid>
             {presales?.map((presale, i) => (
               <div className='launchpad' key={presale._id}>
+
                 <img className='banner' src={Cards[i]} loading="lazy" />
+
                 <div className='heading'>
                   <h6>{presale.name ?? "_"}</h6>
-
                   <div className='status'>
                     <span className='ping'>
                       <span className='animate upcoming' />
@@ -75,14 +78,25 @@ export const PresalePortal: React.FC<PresalePortalProps> = () => {
                   href={presale.raise_url}
                   blank
                   color='primary'
+                  icon='ic:outline-arrow-outward'
                 >
                   Join
                 </Button>
                 <Corner color='secondary' />
+                <div className='corner-hover'>
+                  <Corner color='secondary' />
+                </div>
               </div>
             ))}
           </Grid>
         </div>
+        <Picture
+          src={bgSrc}
+          width='1800'
+          height='937'
+          alt='Trade'
+          classPicture='bck'
+        />
       </div>
     </>
   )

@@ -232,3 +232,23 @@
   margin-top: 10px;
   color: var(--color-primary-base);
 }
+
+.AnalysisError {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  height: 100%;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.AnalysisError-heading {
+  font-size: x-large;
+  font-weight: 600;
+  color: #eeeeee;
+}
+
+.AnalysisError-sub {
+  font-size: larger;
+}

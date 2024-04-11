@@ -1,0 +1,101 @@
+@import "../../../assets/css/mixins/styles";
+@import "../../../assets/css/mixins/medias";
+
+.home {
+  .trade {
+    margin-top: calc(var(--main-margin-1) * 2);
+    padding: var(--main-margin-1) 0;
+    z-index: 50;
+
+    &-content {
+      --point: -15% 50% -15% -15%;
+      --padding: calc(32px + 40 * (100vw - 320px) / 1080);
+      padding: var(--padding);
+      margin: auto;
+
+      @include min($xl) {
+        width: 70%;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: radial-gradient(var(--light-primary), transparent 60%);
+        filter: blur(50px);
+        border-radius: 50%;
+        opacity: 0.5;
+        inset: -15% 50% -15% 0%;
+      }
+    }
+
+    .btn-group {
+      display: inline-flex;
+      gap: 1em;
+      flex-wrap: wrap;
+
+      .btn {
+        --padding-v: 1.25em;
+        font-size: 0.85em;
+      }
+    }
+
+    .bck {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -10;
+      left: 50%;
+      width: 125vw;
+      min-width: 1400px;
+
+      img {
+        will-change: transform;
+      }
+    }
+
+    .logos {
+      position: absolute;
+      right: -17%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 75%;
+
+      @include max($xl) {
+        right: -5%;
+        width: 70%;
+      }
+
+      @include max($sm) {
+        left: 45%;
+        width: 70%;
+      }
+
+      @include max($xxs) {
+        transform: translateY(-75%);
+        top: 0;
+      }
+    }
+
+    .light {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+
+      &::after,
+      &::before {
+        content: "";
+        width: 35%;
+        left: 15%;
+        height: var(--stroke-width);
+        background: linear-gradient(to right, transparent, #fff, transparent);
+        position: absolute;
+      }
+
+      &::after {
+        bottom: 0;
+        left: 5%;
+      }
+    }
+  }
+}
