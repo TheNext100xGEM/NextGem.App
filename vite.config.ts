@@ -2,10 +2,10 @@ import path from "path"
 
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
-import { compression, tarball } from "vite-plugin-compression2"
+import { compression } from "vite-plugin-compression2"
 
 export default defineConfig({
-  plugins: [react(), compression(), tarball()],
+  plugins: [react(), compression()],
   resolve: {
     alias: {
       "@components": `${path.resolve(__dirname, "src/components")}`,
