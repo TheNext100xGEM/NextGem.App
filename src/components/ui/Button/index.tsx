@@ -26,6 +26,7 @@ export type PropsButton = {
   blank?: boolean
   reverseCorner?: boolean
   loaded?: boolean
+  disabled?: boolean
 }
 
 export function Button({ 
@@ -43,7 +44,8 @@ export function Button({
   pathSoundHover, 
   blank,
   reverseCorner,
-  loaded
+  loaded,
+  disabled = false,
 }: PropsButton) {
 
   const [soundClick] = useSound(pathSoundClick || SOUND_BUTTON_CLICK, { volume: VOLUME_BUTTON_CLICK })
@@ -64,10 +66,21 @@ export function Button({
 
   const commonProps = {
     onMouseEnter: soundHover,
-    className: classNames('btn', className, { minus: minus, loaded: loaded }),
+    className: classNames('btn', className, { minus: minus, loaded: loaded, disabled: disabled }),
     title: title,
     'data-colors': color,
     'data-status': status,
+  }
+
+  if (disabled) {
+    return (
+      <button
+        disabled={true}
+        {...commonProps}
+      >
+        {Content}
+      </button>
+    )
   }
 
   if (onClick) {

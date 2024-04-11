@@ -13,6 +13,7 @@ import { Helmet } from "react-helmet-async"
 import "./_presale.scss"
 
 import { getPresales } from "../../../queries/api"
+import { PresaleStatus } from "@models/Presales"
 
 interface PresalePortalProps {}
 
@@ -47,18 +48,11 @@ export const PresalePortal: React.FC<PresalePortalProps> = () => {
           <Grid>
             {presales?.map((presale, i) => (
               <div className='launchpad' key={presale._id}>
-
-                <img className='banner' src={Cards[i]} loading="lazy" />
+                <img className='banner' src={Cards[i]} loading='lazy' />
 
                 <div className='heading'>
                   <h6>{presale.name ?? "_"}</h6>
-                  <div className='status'>
-                    <span className='ping'>
-                      <span className='animate upcoming' />
-                      <span className='bg upcoming' />
-                    </span>
-                    <span>Upcoming</span>
-                  </div>
+                  <Status status={presale.status ?? 0} />
                 </div>
                 <table className='launch-infos'>
                   <tbody>
@@ -80,7 +74,7 @@ export const PresalePortal: React.FC<PresalePortalProps> = () => {
                   color='primary'
                   icon='ic:outline-arrow-outward'
                 >
-                  Join
+                  {presale.status === 1 ? "Join" : "View"}
                 </Button>
                 <Corner color='secondary' />
                 <div className='corner-hover'>
@@ -100,4 +94,48 @@ export const PresalePortal: React.FC<PresalePortalProps> = () => {
       </div>
     </>
   )
+}
+
+const Status = ({ status }: { status: PresaleStatus }) => {
+  switch (status) {
+    case PresaleStatus.UPCOMING:
+      return (
+        <div className='status'>
+          <span className='ping'>
+            <span className='animate upcoming' />
+            <span className='bg upcoming' />
+          </span>
+          <span>Upcoming</span>
+        </div>
+      )
+    case PresaleStatus.LIVE:
+      return (
+        <div className='status'>
+          <span className='ping'>
+            <span className='animate live' />
+            <span className='bg live' />
+          </span>
+          <span>Live</span>
+        </div>
+      )
+    case PresaleStatus.ENDED:
+      return (
+        <div className='status'>
+          <span className='ping'>
+            <span className='bg ended' />
+          </span>
+          <span>Completed</span>
+        </div>
+      )
+    default:
+      return (
+        <div className='status'>
+          <span className='ping'>
+            <span className='animate upcoming' />
+            <span className='bg upcoming' />
+          </span>
+          <span>Upcoming</span>
+        </div>
+      )
+  }
 }

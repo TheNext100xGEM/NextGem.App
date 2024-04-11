@@ -10,4 +10,11 @@ export interface Presale {
   pad_url?: string
   "name:"?: string
   main_url?: string
+  status?: PresaleStatus
+}
+
+export enum PresaleStatus {
+  UPCOMING,
+  LIVE,
+  ENDED
 }
