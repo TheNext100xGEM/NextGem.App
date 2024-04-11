@@ -108,7 +108,7 @@ const Features = () => {
           </FeatureCard>
           <FeatureCard
             number={2}
-            title='AI Ranked'
+            title='AI Rankings'
             icon='list'
             color='yellow'
             img={
@@ -116,7 +116,7 @@ const Features = () => {
                 src={rankedSrc}
                 width='761'
                 height='421'
-                alt='AI Ranked'
+                alt='AI Rankings'
               />
             }
           >
