@@ -83,7 +83,7 @@ function Panel() {
       icon: "arcticons:okx",
       desc: "Connect with OKX Wallet",
       connector: connectors.find((c) => c.id.includes("okex")),
-      disabled: !!window["okxwallet"]
+      disabled: !!connectors.find((c) => c.id.includes("okex"))
     },
     // {
     //   name: "Binance Wallet",
