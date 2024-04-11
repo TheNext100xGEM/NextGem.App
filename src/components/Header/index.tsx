@@ -169,7 +169,7 @@ function Header() {
         <Logotype />
       </Link>
       <Link to={"/presale"} className='presale-banner'>
-        Join the $GEMAI Presale Here
+        Presale live on FJORD Foundry until the 15th April
       </Link>
       <div className='header-wrapper'>
         <div className='header-wrapper-content header-landing'>
