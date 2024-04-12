@@ -13,6 +13,28 @@ import { useEffect, useRef } from "react"
 import "./_sentimentAnalysis.scss"
 import { useQuery } from "@tanstack/react-query"
 import { getSentimentScoringsComments } from "../../queries/api"
+import Corner from "@components/ui/Corner"
+
+function generateFakeScores() {
+  const data = []
+  const startDate = new Date("2024-04-11")
+
+  for (let i = 0; i < 1000; i++) {
+    const currentDate = new Date(startDate)
+    currentDate.setDate(currentDate.getDate() + i)
+
+    const point = {
+      date: currentDate.toISOString().split("T")[0],
+      bullVsBear: Math.floor(Math.random() * 10) + 1, // Random number between 1 and 10 for bullVsBear
+      emotionalCharge: Math.floor(Math.random() * 10) + 1, // Random number between 1 and 10 for emotionalCharge
+      interactionQuality: Math.floor(Math.random() * 10) + 1 // Random number between 1 and 10 for interactionQuality
+    }
+
+    data.push(point)
+  }
+
+  return data
+}
 
 export const ChartComponent = ({
   data,
@@ -63,14 +85,16 @@ export const ChartComponent = ({
       height: 300
     })
 
+    // data.scores = generateFakeScores()
+
     const bullVsBearData = data.scores.map((score) => ({
       time: score.date,
       value: score.bullVsBear
     }))
     const bullVsBearSerie = chart.addAreaSeries({
       lineColor: "rgba(41, 98, 255, 1)",
-      topColor: "rgba(41, 98, 255, 1)",
-      bottomColor: "rgba(41, 98, 255, 0.28)",
+      topColor: "transparent",
+      bottomColor: "transparent",
       lineType: LineType.Curved
     })
     bullVsBearSerie.setData(bullVsBearData)
@@ -81,8 +105,8 @@ export const ChartComponent = ({
     }))
     const emotionalChargeSerie = chart.addAreaSeries({
       lineColor: "rgba(255, 41, 98, 1)",
-      topColor: "rgba(255, 41, 98, 1)",
-      bottomColor: "rgba(255, 41, 98, 0.28)",
+      topColor: "transparent",
+      bottomColor: "transparent",
       lineType: LineType.Curved
     })
     emotionalChargeSerie.setData(emotionalChargeData)
@@ -93,8 +117,8 @@ export const ChartComponent = ({
     }))
     const interactionQualitySerie = chart.addAreaSeries({
       lineColor: "rgba(98, 255, 41, 1)",
-      topColor: "rgba(98, 255, 41, 1)",
-      bottomColor: "rgba(98, 255, 41, 0.28)",
+      topColor: "transparent",
+      bottomColor: "transparent",
       lineType: LineType.Curved
     })
     interactionQualitySerie.setData(interactionQualityData)
@@ -109,6 +133,7 @@ export const ChartComponent = ({
 
     const toolTip = document.createElement("div")
     toolTip.classList.add("SentimentAnalysis-tooltip")
+    container.querySelector(".SentimentAnalysis-tooltip")?.remove()
     container.appendChild(toolTip)
 
     chart.subscribeCrosshairMove((param) => {
@@ -164,7 +189,7 @@ export const ChartComponent = ({
               ? `
             <h4>Live comments</h4>
             <ul>
-              ${ttComments.map((com) => `<li>${com}</li>`)}
+              ${ttComments.map((com) => `<li>${com}</li>`).join("")}
             </ul>
             `
               : ""
@@ -192,8 +217,14 @@ export const ChartComponent = ({
       }
     })
 
-    chart.timeScale().fitContent()
+    const rangeVisible = window.innerWidth < 768 ? 10 : 30
 
+    chart.timeScale().setVisibleLogicalRange({
+      from: data.scores[data.scores.length - rangeVisible]
+        ? data.scores.length - rangeVisible
+        : 0,
+      to: data.scores.length - 1
+    })
     window.addEventListener("resize", handleResize)
 
     return () => {
@@ -201,12 +232,18 @@ export const ChartComponent = ({
 
       chart.remove()
     }
-  }, [data])
+  }, [data, comments])
 
   return <div ref={chartContainerRef} />
 }
 
-export function SentimentAnalysis({ data }: { data: SentimentScorings }) {
+export function SentimentAnalysis({
+  data,
+  telegramLink
+}: {
+  data: SentimentScorings
+  telegramLink?: string
+}) {
   const qSentimentScoringsComments = useQuery({
     queryKey: ["sentimentScoringsComments"],
     queryFn: () => getSentimentScoringsComments({ url: data.textFile })
@@ -215,12 +252,24 @@ export function SentimentAnalysis({ data }: { data: SentimentScorings }) {
   return (
     <div className='SentimentAnalysis' id='sentiment-analysis'>
       <h3>Sentiment analysis</h3>
-      {/* <p>Live data from telegram.me</p> */}
+      {telegramLink && (
+        <p className='SentimentAnalysis-source'>
+          <span className='ping'>
+            <span className='animate live'></span>
+            <span className='bg live'></span>
+          </span>
+          Live data from{" "}
+          <a href={telegramLink} target='_blank'>
+            {telegramLink.replace("https://", "")}
+          </a>
+        </p>
+      )}
       <div className='SentimentAnalysis-canvas'>
         <ChartComponent
           data={data}
           comments={qSentimentScoringsComments.data}
         ></ChartComponent>
+        <Corner />
       </div>
     </div>
   )

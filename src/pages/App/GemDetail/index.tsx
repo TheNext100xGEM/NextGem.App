@@ -195,6 +195,10 @@ function GemDetailPage() {
     setSearchParams({ analysis: newAnalysisValue })
   }
 
+  const telegramLink = qGemSingle.data?.socials.find(
+    (social) => social.id === "telegram"
+  )?.href
+
   return (
     <>
       <Helmet prioritizeSeoTags>
@@ -296,6 +300,7 @@ function GemDetailPage() {
                   {qGemSingle.data.sentimentScorings && (
                     <SentimentAnalysis
                       data={qGemSingle.data.sentimentScorings}
+                      telegramLink={telegramLink}
                     />
                   )}
                   <div className='gemDetail-desc'>

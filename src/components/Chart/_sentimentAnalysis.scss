@@ -1,9 +1,82 @@
 .SentimentAnalysis {
+  &-source {
+    a {
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .ping {
+      height: 0.6rem;
+      width: 0.6rem;
+      display: inline-flex;
+      position: relative;
+      margin-right: var(--size-2);
+
+      .animate {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        border-radius: 9999px;
+        opacity: 0.75;
+        animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+      }
+
+      .bg {
+        height: 0.6rem;
+        width: 0.6rem;
+        position: relative;
+        border-radius: 9999px;
+      }
+
+      .ended {
+        background-color: #a1a1aa;
+        opacity: 0.2;
+      }
+
+      .upcoming {
+        background-color: #22d3ee;
+      }
+
+      .live {
+        background-color: #d2ff1f;
+      }
+
+      @keyframes ping {
+        75%,
+        100% {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+    }
+  }
   &-canvas {
     position: relative;
     z-index: 5;
     height: 300px;
     margin-top: var(--size-4);
+
+    &:before,
+    &:after {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: -12px;
+      width: 24px;
+      height: 24px;
+      background-color: var(--bg-body);
+      z-index: 2;
+      transform: rotate(45deg);
+    }
+
+    &:after {
+      top: initial;
+      left: initial;
+      bottom: -13px;
+      right: -12px;
+    }
   }
 
   &-tooltip {
