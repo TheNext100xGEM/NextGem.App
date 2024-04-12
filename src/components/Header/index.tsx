@@ -85,7 +85,7 @@ const navLanding: NavItem[] = [
       />
     )
   },
-  { component: <NavLink to='mailto:info@thenextgem.ai' title='Contact' /> },
+  { component: <NavLink to='mailto:contact@thenextgem.ai' title='Contact' /> },
   { component: <BuyNextGemButton /> },
   { component: <OpenAppButton /> }
 ]
