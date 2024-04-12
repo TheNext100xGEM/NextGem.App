@@ -1,4 +1,5 @@
 import "./_gemDetail.scss"
+import { SentimentAnalysis } from "@components/Chart/SentimentAnalysis"
 import { NoteCard } from "@components/Note"
 import ProgressBar from "@components/ProgressBar"
 import { SocialList } from "@components/Socials"
@@ -20,7 +21,6 @@ import {
   postUserFavorite,
   postReloadAnalysis
 } from "../../../queries/api"
-import { SentimentAnalysis } from "@components/Chart/SentimentAnalysis"
 
 function GemDetailPage() {
   const { tokenId } = useParams()
@@ -220,11 +220,11 @@ function GemDetailPage() {
             Back to gems
           </Link>
           {qGemSingle.data && !qGemSingle.data?.errorProcessing ? (
-            <div className='gem'>
+            <>
               <Section>
                 <div className='gemDetail-header'>
                   {!isBeingAnalyzed ? (
-                    <div className='gemDetail-header-socials'>
+                    <div className='gemDetail-header-socials gem'>
                       <Card>
                         <table>
                           <tbody>
@@ -293,16 +293,11 @@ function GemDetailPage() {
               </Section>
               {!isBeingAnalyzed ? (
                 <div className='gemDetail-content'>
-                  <SentimentAnalysis />
-
-                  {isToggled ? (
-                    <Alert status='info'>
-                      Disclaimer: You are currently viewing this project through
-                      the eyes of a degen (this uses Meme Analysis). To view
-                      fundamentals, click on "Switch to Fundamental Analysis"
-                    </Alert>
-                  ) : null}
-
+                  {qGemSingle.data.sentimentScorings && (
+                    <SentimentAnalysis
+                      data={qGemSingle.data.sentimentScorings}
+                    />
+                  )}
                   <div className='gemDetail-desc'>
                     {isToggled ? (
                       <Markdown>{qGemSingle.data.meme_description}</Markdown>
@@ -433,7 +428,7 @@ function GemDetailPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </>
           ) : null}
           {qGemSingle.data && qGemSingle.data?.errorProcessing ? (
             <div className='AnalysisError'>

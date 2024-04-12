@@ -6,6 +6,7 @@ import { Presales } from "@models/Presales"
 import Cookies from "js-cookie"
 
 import { APP_API_URL } from "../libs/constants"
+import { SentimentScoringsComments } from "@models/SentimentScorings"
 
 export type ApiStatusReponse = {
   status: boolean
@@ -83,6 +84,9 @@ export const getGemSingle = async ({
     "getGemSingle",
     "GET"
   )
+
+export const getSentimentScoringsComments = async ({ url }: { url: string }) =>
+  request<SentimentScoringsComments>(url, "getSentimentScoringsComments", "GET")
 
 export const getUserChats = async () =>
   request<ApiUserChats | ApiStatusReponse>(

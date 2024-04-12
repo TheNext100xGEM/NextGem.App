@@ -33,5 +33,9 @@
       list-style-type: disc;
       padding-left: var(--size-3);
     }
+
+    ul + h4 {
+      margin-top: var(--size-3);
+    }
   }
 }
