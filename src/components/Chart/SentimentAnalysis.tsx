@@ -15,27 +15,6 @@ import { useQuery } from "@tanstack/react-query"
 import { getSentimentScoringsComments } from "../../queries/api"
 import Corner from "@components/ui/Corner"
 
-function generateFakeScores() {
-  const data = []
-  const startDate = new Date("2024-04-11")
-
-  for (let i = 0; i < 1000; i++) {
-    const currentDate = new Date(startDate)
-    currentDate.setDate(currentDate.getDate() + i)
-
-    const point = {
-      date: currentDate.toISOString().split("T")[0],
-      bullVsBear: Math.floor(Math.random() * 10) + 1, // Random number between 1 and 10 for bullVsBear
-      emotionalCharge: Math.floor(Math.random() * 10) + 1, // Random number between 1 and 10 for emotionalCharge
-      interactionQuality: Math.floor(Math.random() * 10) + 1 // Random number between 1 and 10 for interactionQuality
-    }
-
-    data.push(point)
-  }
-
-  return data
-}
-
 export const ChartComponent = ({
   data,
   comments
@@ -84,8 +63,6 @@ export const ChartComponent = ({
       width: chartContainerRef.current.clientWidth,
       height: 300
     })
-
-    // data.scores = generateFakeScores()
 
     const bullVsBearData = data.scores.map((score) => ({
       time: score.date,
