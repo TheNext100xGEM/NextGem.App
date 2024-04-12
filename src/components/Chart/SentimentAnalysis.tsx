@@ -146,8 +146,6 @@ export const ChartComponent = ({
           )
         }
 
-        console.log(ttComments)
-
         toolTip.innerHTML = `
           <h4>Sentiments</h4>
           <ul>
@@ -162,13 +160,14 @@ export const ChartComponent = ({
             }</b></li>
           </ul>
           ${
-            ttComments &&
-            `
+            ttComments
+              ? `
             <h4>Live comments</h4>
             <ul>
               ${ttComments.map((com) => `<li>${com}</li>`)}
             </ul>
             `
+              : ""
           }
 
           <div class="corner" data-colors="tertiary">
