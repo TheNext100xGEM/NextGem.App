@@ -1,8 +1,9 @@
 import "./_gemDetail.scss"
+import { SentimentAnalysis } from "@components/Chart/SentimentAnalysis"
 import { NoteCard } from "@components/Note"
 import ProgressBar from "@components/ProgressBar"
 import { SocialList } from "@components/Socials"
-import { Alert, Button, Corner } from "@components/ui"
+import { Button, Corner } from "@components/ui"
 import Markdown from "@components/ui/Markdown"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { mapGemFull } from "@models/GemFull"
@@ -194,6 +195,10 @@ function GemDetailPage() {
     setSearchParams({ analysis: newAnalysisValue })
   }
 
+  const telegramLink = qGemSingle.data?.socials.find(
+    (social) => social.id === "telegram"
+  )?.href
+
   return (
     <>
       <Helmet prioritizeSeoTags>
@@ -219,11 +224,11 @@ function GemDetailPage() {
             Back to gems
           </Link>
           {qGemSingle.data && !qGemSingle.data?.errorProcessing ? (
-            <div className='gem'>
+            <>
               <Section>
                 <div className='gemDetail-header'>
                   {!isBeingAnalyzed ? (
-                    <div className='gemDetail-header-socials'>
+                    <div className='gemDetail-header-socials gem'>
                       <Card>
                         <table>
                           <tbody>
@@ -292,13 +297,12 @@ function GemDetailPage() {
               </Section>
               {!isBeingAnalyzed ? (
                 <div className='gemDetail-content'>
-                  {isToggled ? (
-                    <Alert status='info'>
-                      Disclaimer: You are currently viewing this project through
-                      the eyes of a degen (this uses Meme Analysis). To view
-                      fundamentals, click on "Switch to Fundamental Analysis"
-                    </Alert>
-                  ) : null}
+                  {qGemSingle.data.sentimentScorings && (
+                    <SentimentAnalysis
+                      data={qGemSingle.data.sentimentScorings}
+                      telegramLink={telegramLink}
+                    />
+                  )}
                   <div className='gemDetail-desc'>
                     {isToggled ? (
                       <Markdown>{qGemSingle.data.meme_description}</Markdown>
@@ -429,7 +433,7 @@ function GemDetailPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </>
           ) : null}
           {qGemSingle.data && qGemSingle.data?.errorProcessing ? (
             <div className='AnalysisError'>

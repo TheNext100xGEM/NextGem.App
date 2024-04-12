@@ -1,4 +1,9 @@
 import { NoteInfo } from "./Note"
+import {
+  ApiSentimentScorings,
+  Score,
+  SentimentScorings
+} from "./SentimentScorings"
 import { PropsSocialLink } from "./Socials"
 
 export interface Launchpad {
@@ -39,6 +44,7 @@ export interface GemFull {
   mistral_score?: string
   meme_mistral_score?: string
   analyzed?: boolean
+  sentimentScorings?: SentimentScorings
 }
 
 export interface analyzeProgress {
@@ -108,6 +114,7 @@ export interface ApiGemFull {
   meme_llm_summary?: string
   weighted_score: number
   analyzeProgress: analyzeProgress
+  sentimentScorings?: ApiSentimentScorings
 }
 
 export const mapGemFull = (data: ApiGemFull): GemFull => {
@@ -165,6 +172,30 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
   }
   meme_note.total = Math.round(meme_note.total! / meme_note.analyser.length)
 
+  let sentimentScorings
+  if (data.sentimentScorings) {
+    const scores: Score[] = []
+
+    for (const date in data.sentimentScorings.scores) {
+      const score: Score = {
+        date,
+        bullVsBear: data.sentimentScorings.scores[date].bullVsBear,
+        emotionalCharge: data.sentimentScorings.scores[date].emotionalCharge,
+        interactionQuality:
+          data.sentimentScorings.scores[date].interactionQuality
+      }
+      scores.push(score)
+    }
+
+    sentimentScorings = {
+      id: data.sentimentScorings._id,
+      scores,
+      textFile: data.sentimentScorings.textFile,
+      updatedAt: data.sentimentScorings.updatedAt,
+      createdAt: data.sentimentScorings.createdAt
+    }
+  }
+
   return {
     id: data._id,
     name: data.projectName || data.tokenName,
@@ -197,6 +228,7 @@ export const mapGemFull = (data: ApiGemFull): GemFull => {
     status: data.status,
     analyzed: data.analyzed,
     analyzeProgress: data.analyzeProgress,
-    socials
+    socials,
+    sentimentScorings
   }
 }
