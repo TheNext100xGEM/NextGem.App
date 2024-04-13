@@ -1,0 +1,30 @@
+@import "../../assets/css/mixins/styles";
+@import "../../assets/css/mixins/medias";
+
+.not-found {
+  padding-block: var(--size-7);
+  padding-inline: var(--size-2);
+  text-align: center;
+  @include min($xs) {
+
+  max-width: 50vw;
+  }
+
+  h1 {
+    margin: var(--size-4) 0;
+  }
+
+  h5 {
+    margin-bottom: var(--size-5);
+  }
+
+  .btn {
+    font-size: 0.9em;
+  }
+
+  &__image {
+    opacity: 0.5;
+    max-width: 20rem;
+    margin: 0 auto;
+  }
+}
