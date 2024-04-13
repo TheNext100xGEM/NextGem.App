@@ -1,14 +1,13 @@
-{
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "methods": ["GET"]
-    },
+
  {
-      "src": "/sitemap.xml",
-      "dest": "/sitemap.xml",
-      "methods": ["GET"]
-    }
-  ]
-}
+   "rewrites": [
+     {
+       "source": "/sitemap.xml",
+       "destination": "/sitemap.xml"
+     },
+     {
+       "source": "/(.*)",
+       "destination": "/index.html"
+     }
+   ]
+ }
