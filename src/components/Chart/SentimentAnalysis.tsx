@@ -104,10 +104,6 @@ export const ChartComponent = ({
 
     if (!container) return
 
-    const toolTipWidth = 80
-    const toolTipHeight = 80
-    const toolTipMargin = 15
-
     const toolTip = document.createElement("div")
     toolTip.classList.add("SentimentAnalysis-tooltip")
     container.querySelector(".SentimentAnalysis-tooltip")?.remove()
@@ -141,15 +137,16 @@ export const ChartComponent = ({
           interactionQualitySerie
         ) as TimeData
 
-        let ttComments
+        let topComments, scoreJustification
         if (comments && param.time && comments[param.time as string]) {
-          ttComments = comments[param.time as string].topComments.map(
+          topComments = comments[param.time as string].topComments.map(
             (com) => com.message
           )
+          scoreJustification = comments[param.time as string].scoreJustification
         }
 
         toolTip.innerHTML = `
-          <h4>Sentiments</h4>
+          <h5>Sentiments</h5>
           <ul>
             <li style="color: rgba(41, 98, 255, 1);">Bull vs Bear: <b>${
               ttBullVsBearData.value
@@ -162,12 +159,29 @@ export const ChartComponent = ({
             }</b></li>
           </ul>
           ${
-            ttComments
+            comments && topComments
               ? `
-            <h4>Live comments</h4>
+            <h5>Live comments</h5>
             <ul>
-              ${ttComments.map((com) => `<li>${com}</li>`).join("")}
+              ${topComments.map((com) => `<li>${com}</li>`).join("")}
             </ul>
+            ${
+              scoreJustification
+                ? `<div class="SentimentAnalysis-tooltip-score">
+              <h6 class="color">
+              AI score justification
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--tabler" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2m0-12a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2M9 18a6 6 0 0 1 6-6a6 6 0 0 1-6-6a6 6 0 0 1-6 6a6 6 0 0 1 6 6"></path></svg>
+              </h6>
+              <p>${scoreJustification}</p>
+              <div class="corner" data-colors="secondary">
+              <div class="corner-left"></div>
+              <div class="corner-right"></div>
+              <div class="corner-top-bottom"></div>
+            </div>
+            </div>
+            `
+                : ""
+            }
             `
               : ""
           }
@@ -179,18 +193,13 @@ export const ChartComponent = ({
           </div>
         `
 
-        const y = param.point.y
-        let left = param.point.x + toolTipMargin
-        if (left > container.clientWidth - toolTipWidth) {
-          left = param.point.x - toolTipMargin - toolTipWidth
-        }
+        const x =
+          param.point.x > container.clientWidth / 2
+            ? param.point.x - 360 - 20
+            : param.point.x + 20
 
-        let top = y + toolTipMargin
-        if (top > container.clientHeight - toolTipHeight) {
-          top = y - toolTipHeight - toolTipMargin
-        }
-        toolTip.style.left = left + "px"
-        toolTip.style.top = top + "px"
+        toolTip.style.left = x + "px"
+        toolTip.style.top = param.point.y + "px"
       }
     })
 
