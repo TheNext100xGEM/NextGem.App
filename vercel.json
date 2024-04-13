@@ -1,5 +1,4 @@
-
- {
+{
    "rewrites": [
      {
        "source": "/sitemap.xml",
@@ -10,4 +9,4 @@
        "destination": "/index.html"
      }
    ]
- }
+}

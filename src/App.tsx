@@ -13,7 +13,7 @@ import GemAiSinglePage from "@pages/App/GemAiSingle"
 import GemDetailPage from "@pages/App/GemDetail"
 import GemsPortal from "@pages/App/GemsPortal"
 import { PresalePortal } from "@pages/App/PresalePortal"
-import { HomePage, DefaultPage } from "@pages/index"
+import { HomePage, DefaultPage, NotFoundPage } from "@pages/index"
 import { PDFViewer } from "@react-pdf/renderer"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
@@ -156,9 +156,10 @@ function App() {
         {
           path: "*",
           element: (
-            <GemsContextProvider>
-              <GemsPage />
-            </GemsContextProvider>
+            <NotFoundPage />
+            // <GemsContextProvider>
+            // <GemsPage />
+            // </GemsContextProvider>
           )
         }
       ]
