@@ -326,6 +326,6 @@ hr {
     transparent
   );
   z-index: 1000;
-  position: fixed;
-  top: 0;
+  display: block;
+  width: 100%;
 }

@@ -165,38 +165,42 @@ function Header() {
 
   return (
     <header className={headerClass}>
-      <Link to='/' className='header-logo' onClick={soundClick}>
-        <Logotype />
-      </Link>
       <Link to={"/presale"} className='presale-banner'>
         Presale is live on Fjord Foundry till 15th April
       </Link>
-      <div className='header-wrapper'>
-        <div className='header-wrapper-content header-landing'>
-          <div className='header-left'>
-            <SocialListNext />
+
+      <div className="header-bottom">
+        <Link to='/' className='header-logo' onClick={soundClick}>
+          <Logotype />
+        </Link>
+
+        <div className='header-wrapper'>
+          <div className='header-wrapper-content header-landing'>
+            <div className='header-left'>
+              <SocialListNext />
+            </div>
+            <div className='header-right'>
+              <Nav items={navLanding} />
+            </div>
           </div>
-          <div className='header-right'>
-            <Nav items={navLanding} />
+          <div ref={navRef} className='header-wrapper-content header-app'>
+            <div className='header-left'>
+              <SocialListNext />
+            </div>
+            <div
+              className={classNames("header-right", { opened: navResponsive })}
+              onClick={closeNavResponsive}
+            >
+              <Nav items={navApp} />
+            </div>
+            <Button
+              icon='carbon:menu'
+              minus
+              title='Navigation'
+              className='btn-nav'
+              onClick={() => setNavResponsive(true)}
+            />
           </div>
-        </div>
-        <div ref={navRef} className='header-wrapper-content header-app'>
-          <div className='header-left'>
-            <SocialListNext />
-          </div>
-          <div
-            className={classNames("header-right", { opened: navResponsive })}
-            onClick={closeNavResponsive}
-          >
-            <Nav items={navApp} />
-          </div>
-          <Button
-            icon='carbon:menu'
-            minus
-            title='Navigation'
-            className='btn-nav'
-            onClick={() => setNavResponsive(true)}
-          />
         </div>
       </div>
     </header>
