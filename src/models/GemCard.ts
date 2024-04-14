@@ -38,6 +38,7 @@ export interface ApiGem {
   status?: number
   isFavorite: boolean
   isTrending: boolean
+  isMemecoin: boolean
   socials: {
     telegram?: string
     twitter?: string
@@ -64,7 +65,7 @@ export const mapGem = (data: ApiGem): Gem => {
   return {
     id: data.id,
     name: data.name,
-    slug: data.slug,
+    slug: data.isMemecoin ? data.slug + "?analysis=meme" : data.slug,
     category: data.category ?? "",
     isFavorite: data.isFavorite,
     isTrending: data.isTrending,
