@@ -165,9 +165,6 @@ function Header() {
 
   return (
     <header className={headerClass}>
-      <Link to={"/presale"} className='presale-banner'>
-        Presale is live on Fjord Foundry till 15th April
-      </Link>
 
       <div className="header-bottom">
         <Link to='/' className='header-logo' onClick={soundClick}>
