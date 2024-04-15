@@ -50,7 +50,10 @@ const Analysed = () => {
 
   return (
     <div className='analysed'>
-      <img src={bgSrc} width='1800' height='1467' alt='Trade' className='bck' />
+      <div className='bck'>
+        <Picture src={bgSrc} width='1800' height='1467' alt='Trade' />
+      </div>
+      {/* <img src={bgSrc} width='1800' height='1467' alt='Trade' className='bck' /> */}
       <div className='wrapper'>
         <div className='heading content'>
           <div className='sub-title' data-reveal='bottom'>
