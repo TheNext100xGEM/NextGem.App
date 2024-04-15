@@ -6,7 +6,7 @@
   position: sticky;
   top: 0;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
-  //padding-top: var(--main-padding);
+  padding-top: var(--main-padding);
   z-index: 500;
   background: linear-gradient(
     to bottom,
@@ -27,8 +27,8 @@
       transform: translateX(-50%);
       height: var(--stroke-width);
       background-color: var(--stroke-color);
-      //top: var(--main-padding);
-      top: 38px;
+      top: var(--main-padding);
+      //top: 38px;
     }
   }
 
