@@ -2,7 +2,7 @@ export const SITE_NAME: string = "The Next Gem"
 export const CHAT_NAME: string = "NextGem AI"
 export const TOKEN_NAME: string = "GEMAI"
 
-export const BUY_URL: string = "https://uniswap.org/"
+export const BUY_URL: string = "https://app.uniswap.org/swap?inputCurrency=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&outputCurrency=0xFBE44caE91d7Df8382208fCdc1fE80E40FBc7e9a"
 
 export const TWITTER: string = "https://twitter.com/NextGemAI"
 export const TELEGRAM: string = "https://t.me/NextGemAI_Group"
