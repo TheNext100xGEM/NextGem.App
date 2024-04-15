@@ -9,6 +9,7 @@ export const TELEGRAM: string = "https://t.me/NextGemAI_Group"
 export const DISCORD: string = "https://discord.gg/rpPTF3DRFk"
 export const GITHUB: string = "https://github.com/TheNext100xGEM"
 export const COINMARKETCAP: string = "https://coinmarketcap.com/currencies/the-next-gem/"
+export const DEXTOOLS: string = "https://www.dextools.io/app/fr/ether/pair-explorer/0x3afbae812f3c29b5926504250888415a01aac57f"
 
 export const TOAST_DURATION: number = 4000
 
