@@ -231,13 +231,15 @@ const PdfReport = () => {
           >
             <View style={styles.cardSwot}>
               <Text style={styles.cardTitle}>STRENGTHS</Text>
-              <Text style={styles.cardText}>{PDF_DATA.swot.strengths}</Text>
+              <Text style={styles.cardText}>{PDF_DATA.industry.strengths}</Text>
               <CornerTopLeft />
               <CornerBottomRight />
             </View>
             <View style={styles.cardSwot}>
               <Text style={styles.cardTitle}>WEAKNESSES</Text>
-              <Text style={styles.cardText}>{PDF_DATA.swot.weaknesses}</Text>
+              <Text style={styles.cardText}>
+                {PDF_DATA.industry.weaknesses}
+              </Text>
               <CornerTopRight />
               <CornerBottomLeft />
             </View>
@@ -251,13 +253,15 @@ const PdfReport = () => {
           >
             <View style={styles.cardSwot}>
               <Text style={styles.cardTitle}>OPPORTUNITIES</Text>
-              <Text style={styles.cardText}>{PDF_DATA.swot.opportunities}</Text>
+              <Text style={styles.cardText}>
+                {PDF_DATA.industry.opportunities}
+              </Text>
               <CornerTopRight />
               <CornerBottomLeft />
             </View>
             <View style={styles.cardSwot}>
               <Text style={styles.cardTitle}>THREATS</Text>
-              <Text style={styles.cardText}>{PDF_DATA.swot.threats}</Text>
+              <Text style={styles.cardText}>{PDF_DATA.industry.threats}</Text>
               <CornerTopLeft />
               <CornerBottomRight />
             </View>
@@ -268,10 +272,18 @@ const PdfReport = () => {
             <GemIcon />
             <Text>TEAM</Text>
           </View>
-          <View>
-            <Text style={{ fontSize: 11, fontWeight: 400 }}>
-              {PDF_DATA.conclusion}
-            </Text>
+          <View
+            style={{
+              flexDirection: "column",
+              gap: "12px"
+              //justifyContent: "space-between"
+            }}
+          >
+            {PDF_DATA.team.members.map((member) => (
+              <Text style={{ fontSize: 11, fontWeight: 400 }}>
+                {member.name} — {member.position}
+              </Text>
+            ))}
           </View>
         </View>
         <View style={styles.section}>
