@@ -56,6 +56,7 @@
     "sass": "^1.69.5",
     "sort-by": "^0.0.2",
     "use-sound": "^4.0.1",
+    "web3": "^4.8.0",
     "web3-token": "^1.0.6"
   },
   "devDependencies": {
