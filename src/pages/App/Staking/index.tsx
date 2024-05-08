@@ -3,6 +3,7 @@ import logoTokenSrc from "@assets/img/logo-token-next-gem.webp"
 import Scene from "@components/3D"
 import { Button, BuyNextGemButton, Corner } from "@components/ui"
 import { BigNumber } from "@ethersproject/bignumber"
+import {ROLE} from '@constants/index'
 import {
   CHAT_NAME,
   COINMARKETCAP,
@@ -72,7 +73,7 @@ function StakingPage() {
     `https://mainnet.infura.io/v3/5982800e8b2940c689c2b7335f104c61`
   )
 
-  const handlePremium = (tokenAmt: Number) => {
+  const handlePremium = (tokenAmt: Number, activeOffer: any) => {
     ;(async () => {
       if (account) {
         const currentGasPrice = await web3.eth.getGasPrice()
@@ -92,6 +93,9 @@ function StakingPage() {
             )
             .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
         }
+        await stakingContract.methods
+          .subscribe(ROLE[activeOffer])
+          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
         toast.success(`You have unlocked access to our services.`)
         setPremium(true)
         setProlonged(false)
@@ -266,7 +270,7 @@ function StakingPage() {
           <Button
             status='success'
             icon='carbon:unlocked'
-            onClick={() => handlePremium(info.token)}
+            onClick={() => handlePremium(info.token, offerActive)}
           >
             Get premium access
           </Button>
