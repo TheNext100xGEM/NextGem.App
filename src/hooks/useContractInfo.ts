@@ -76,6 +76,7 @@ const useTokenInfo = (): TokenInfo => {
             return totalTokenHolders
         } catch (error) {
             console.error('Error fetching token holder count:', error);
+            return 0
         }
         }
 
