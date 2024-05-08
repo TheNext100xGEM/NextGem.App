@@ -2,6 +2,7 @@ import "./_staking.scss"
 import logoTokenSrc from "@assets/img/logo-token-next-gem.webp"
 import Scene from "@components/3D"
 import { Button, BuyNextGemButton, Corner } from "@components/ui"
+import {BigNumber} from '@ethersproject/bignumber'
 import {
   CHAT_NAME,
   COINMARKETCAP,
@@ -26,6 +27,9 @@ import useTokenInfo from "@hooks/useContractInfo"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
+import { useStakeContract, useTokenContract } from '../../../hooks/useContract';
+import { useWeb3React } from "@web3-react/core"
+
 
 type PropsCard = {
   children: ReactNode
@@ -59,11 +63,30 @@ function StakingPage() {
   const handleProlonged = () => setProlonged(!prolonged)
   const {totalSupply, holderCount} = useTokenInfo()
   console.log(totalSupply, holderCount)
+  const tokenContract = useTokenContract();
+  const stakingContract = useStakeContract()
   const [premium, setPremium] = useState(false)
-  const handlePremium = () => {
-    toast.success(`You have unlocked access to our services.`)
-    setPremium(true)
-    setProlonged(false)
+  const { account } = useWeb3React()
+  const handlePremium = (tokenAmt: Number) => {
+    (async()=>{
+    if(account){
+    const allowance = await tokenContract.methods
+          .allowance(account,'0x4dcD2a5E68638E0b64766f59C15C02ca11411D98')
+          .call();
+        if (
+          BigNumber.from(String(allowance)).lt(BigNumber.from(String(tokenAmt)))
+        ) {
+          await tokenContract.methods
+            .approve('0x4dcD2a5E68638E0b64766f59C15C02ca11411D98', tokenAmt)
+            .send({ from: account });
+        }
+        toast.success(`You have unlocked access to our services.`)
+        setPremium(true)
+        setProlonged(false)
+    }else{
+      toast.success(`Please connect your wallet.`)
+    }
+    })();
   }
 
   const offers: PropsOffer[] = [
@@ -231,7 +254,7 @@ function StakingPage() {
           <Button
             status='success'
             icon='carbon:unlocked'
-            onClick={handlePremium}
+            onClick={()=>handlePremium(info.price)}
           >
             Get premium access
           </Button>
