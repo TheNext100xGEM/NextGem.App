@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import stakingContractJson from '@constants/ABI/NextGemStaking.json';
 import tokenContractJson from '@constants/ABI/NextGemToken.json'
 import Web3 from 'web3';
+
 const httpProvider = 'https://mainnet.infura.io/v3/5982800e8b2940c689c2b7335f104c61';
+
 const web3NoAccount = new Web3(httpProvider);
 let web3 = window.ethereum ? new Web3(window.ethereum) : web3NoAccount;
 
