@@ -22,6 +22,7 @@ import { ReactNode, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
 import LazyLoad from "react-lazyload"
+import useTokenInfo from "@hooks/useContractInfo"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
@@ -56,7 +57,8 @@ const LogoToken = () => {
 function StakingPage() {
   const [prolonged, setProlonged] = useState(false)
   const handleProlonged = () => setProlonged(!prolonged)
-
+  const {totalSupply, holderCount} = useTokenInfo()
+  console.log(totalSupply, holderCount)
   const [premium, setPremium] = useState(false)
   const handlePremium = () => {
     toast.success(`You have unlocked access to our services.`)
