@@ -29,6 +29,7 @@ import useTokenInfo from "@hooks/useContractInfo"
 import useSound from "use-sound"
 import { useStakeContract, useTokenContract } from '../../../hooks/useContract';
 import { useWeb3React } from "@web3-react/core"
+import { ethers } from 'ethers';
 
 
 type PropsCard = {
@@ -69,6 +70,7 @@ function StakingPage() {
   const { account } = useWeb3React()
   const handlePremium = (tokenAmt: Number) => {
     (async()=>{
+      console.log(tokenAmt)
     if(account){
     const allowance = await tokenContract.methods
           .allowance(account,'0x4dcD2a5E68638E0b64766f59C15C02ca11411D98')
@@ -77,7 +79,7 @@ function StakingPage() {
           BigNumber.from(String(allowance)).lt(BigNumber.from(String(tokenAmt)))
         ) {
           await tokenContract.methods
-            .approve('0x4dcD2a5E68638E0b64766f59C15C02ca11411D98', tokenAmt)
+            .approve('0x4dcD2a5E68638E0b64766f59C15C02ca11411D98', ethers.parseEther(String(tokenAmt)))
             .send({ from: account });
         }
         toast.success(`You have unlocked access to our services.`)
@@ -254,7 +256,7 @@ function StakingPage() {
           <Button
             status='success'
             icon='carbon:unlocked'
-            onClick={()=>handlePremium(info.price)}
+            onClick={()=>handlePremium(info.token)}
           >
             Get premium access
           </Button>
