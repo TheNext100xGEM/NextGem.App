@@ -2,14 +2,17 @@ export const SITE_NAME: string = "The Next Gem"
 export const CHAT_NAME: string = "NextGem AI"
 export const TOKEN_NAME: string = "GEMAI"
 
-export const BUY_URL: string = "https://app.uniswap.org/swap?inputCurrency=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&outputCurrency=0xFBE44caE91d7Df8382208fCdc1fE80E40FBc7e9a"
+export const BUY_URL: string =
+  "https://app.uniswap.org/swap?inputCurrency=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&outputCurrency=0xFBE44caE91d7Df8382208fCdc1fE80E40FBc7e9a"
 
 export const TWITTER: string = "https://twitter.com/NextGemAI"
 export const TELEGRAM: string = "https://t.me/NextGemAI_Group"
 export const DISCORD: string = "https://discord.gg/rpPTF3DRFk"
 export const GITHUB: string = "https://github.com/TheNext100xGEM"
-export const COINMARKETCAP: string = "https://coinmarketcap.com/currencies/the-next-gem/"
-export const DEXTOOLS: string = "https://www.dextools.io/app/fr/ether/pair-explorer/0x3afbae812f3c29b5926504250888415a01aac57f"
+export const COINMARKETCAP: string =
+  "https://coinmarketcap.com/currencies/the-next-gem/"
+export const DEXTOOLS: string =
+  "https://www.dextools.io/app/fr/ether/pair-explorer/0x3afbae812f3c29b5926504250888415a01aac57f"
 
 export const TOAST_DURATION: number = 4000
 
@@ -24,3 +27,8 @@ export const SOUND_BUTTON_HOVER: string = PATH_SOUND + "hover-button.mp3"
 export const VOLUME_BUTTON_HOVER: number = 0.25
 export const SOUND_OPEN_APP: string = PATH_SOUND + "open-app.mp3"
 export const SOUND_SEND_MESSAGE: string = PATH_SOUND + "send-message.mp3"
+export const ROLE = [
+  "0xb45abeefa31a9185f5920960185683efb1784b27ba6a8b2530a45161e90a6313",
+  "0xf9b5196eaf065427b50c24efd3c0d7c00ef0b5fa2e8925876f7df16524165e11",
+  "0x9c223a9dfa1c4a216d634c47ded5b68d3ea560978c87d6fd580b8baa702b8a51"
+]

@@ -4,6 +4,7 @@ import { Chain, CurrentConfig } from "../utils/chains"
 const MAINNET_CHAIN_ID = 1
 const POLYGON_CHAIN_ID = 137
 
+
 export const INPUT_CHAIN_ID =
   CurrentConfig.chain === Chain.POLYGON ? POLYGON_CHAIN_ID : MAINNET_CHAIN_ID
 export const INPUT_CHAIN_URL =
