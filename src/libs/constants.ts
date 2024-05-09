@@ -49,3 +49,6 @@ export const APP_API_URL = import.meta.env.VITE_APP_API_URL
 export const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL
 export const WALLET_CONNECT_PROJECT_ID = import.meta.env
   .WALLET_CONNECT_PROJECT_ID
+export const INFURA_URL = import.meta.env.VITE_INFURA_ADDRESS
+export const TOKEN_ADDRESS= import.meta.env.VITE_TOKEN_ADDRESS
+export const STAKING_ADDRESS= import.meta.env.VITE_STAKING_ADDRESS

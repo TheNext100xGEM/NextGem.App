@@ -3,7 +3,7 @@ import logoTokenSrc from "@assets/img/logo-token-next-gem.webp"
 import Scene from "@components/3D"
 import { Button, BuyNextGemButton, Corner } from "@components/ui"
 import { BigNumber } from "@ethersproject/bignumber"
-import {ROLE} from '@constants/index'
+import { ROLE } from "@constants/index"
 import {
   CHAT_NAME,
   COINMARKETCAP,
@@ -20,11 +20,10 @@ import { PropsOffer } from "@models/Offers"
 import { formatter } from "@utils/number"
 import classNames from "classnames"
 import gsap from "gsap"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
 import LazyLoad from "react-lazyload"
-import useTokenInfo from "@hooks/useContractInfo"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
@@ -32,6 +31,7 @@ import { useStakeContract, useTokenContract } from "../../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers"
 import Web3 from "web3"
+import { INFURA_URL, STAKING_ADDRESS } from "../../../libs/constants"
 
 type PropsCard = {
   children: ReactNode
@@ -63,42 +63,55 @@ const LogoToken = () => {
 function StakingPage() {
   const [prolonged, setProlonged] = useState(false)
   const handleProlonged = () => setProlonged(!prolonged)
-  const { totalSupply, holderCount } = useTokenInfo()
-  console.log(totalSupply, holderCount)
   const tokenContract = useTokenContract()
   const stakingContract = useStakeContract()
   const [premium, setPremium] = useState(false)
   const { account } = useWeb3React()
+ 
   const web3 = new Web3(
-    `https://mainnet.infura.io/v3/5982800e8b2940c689c2b7335f104c61`
+    INFURA_URL
   )
 
-  const handlePremium = (tokenAmt: Number, activeOffer: any) => {
-    ;(async () => {
-      if (account) {
-        const currentGasPrice = await web3.eth.getGasPrice()
-        const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-        const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-        const gasLimit = "50000"
-        const allowance = await tokenContract.methods
-          .allowance(account, "0x4dcD2a5E68638E0b64766f59C15C02ca11411D98")
-          .call()
-        if (
-          BigNumber.from(String(allowance)).lt(BigNumber.from(String(tokenAmt)))
-        ) {
-          await tokenContract.methods
-            .approve(
-              "0x4dcD2a5E68638E0b64766f59C15C02ca11411D98",
-              ethers.parseEther(String(tokenAmt))
-            )
-            .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-        }
-        await stakingContract.methods
-          .subscribe(ROLE[activeOffer])
-          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-        toast.success(`You have unlocked access to our services.`)
+  useEffect(()=>{
+    (async()=>{
+      const isSubscribe = await stakingContract.methods
+      .checkManyRoles(account, ROLE)
+      .call()
+      if(isSubscribe){
         setPremium(true)
         setProlonged(false)
+      }
+    })()
+  },[])
+
+  const handlePremium = (tokenAmt: Number, activeOffer: any) => {
+    (async () => {
+      if (account) {
+          const currentGasPrice = await web3.eth.getGasPrice()
+          const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
+          const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
+          const gasLimit = "50000"
+          const allowance = await tokenContract.methods
+            .allowance(account, STAKING_ADDRESS)
+            .call()
+          if (
+            BigNumber.from(String(allowance)).lt(
+              BigNumber.from(String(tokenAmt))
+            )
+          ) {
+            await tokenContract.methods
+              .approve(
+                STAKING_ADDRESS,
+                ethers.parseEther(String(tokenAmt))
+              )
+              .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+          }
+          await stakingContract.methods
+            .subscribe(ROLE[activeOffer])
+            .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+          toast.success(`You have unlocked access to our services.`)
+          setPremium(true)
+          setProlonged(false)
       } else {
         toast.success(`Please connect your wallet.`)
       }
