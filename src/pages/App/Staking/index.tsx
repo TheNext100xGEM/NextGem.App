@@ -32,6 +32,8 @@ import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers"
 import Web3 from "web3"
 import { INFURA_URL, STAKING_ADDRESS } from "../../../libs/constants"
+import useTokenInfo from "@hooks/useContractInfo"
+import getGemaiPriceUsd from "@utils/coingeko"
 
 type PropsCard = {
   children: ReactNode
@@ -65,53 +67,74 @@ function StakingPage() {
   const handleProlonged = () => setProlonged(!prolonged)
   const tokenContract = useTokenContract()
   const stakingContract = useStakeContract()
+  const { totalSupply } = useTokenInfo()
   const [premium, setPremium] = useState(false)
+  const [burnAmount, setBurnAmount] = useState(0)
+  const [usdPrice, setUsdPrice] = useState(0)
   const { account } = useWeb3React()
- 
-  const web3 = new Web3(
-    INFURA_URL
-  )
 
-  useEffect(()=>{
-    (async()=>{
+  const web3 = new Web3(INFURA_URL)
+
+  useEffect(() => {
+    ;(async () => {
       const isSubscribe = await stakingContract.methods
-      .checkManyRoles(account, ROLE)
-      .call()
-      if(isSubscribe){
+        .checkManyRoles(account, ROLE)
+        .call()
+      if (isSubscribe) {
         setPremium(true)
         setProlonged(false)
       }
     })()
-  },[])
+  }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      if (totalSupply) {
+        const price = await getGemaiPriceUsd()
+        setBurnAmount(
+          850000000 -
+            Number(
+              ethers
+                .formatUnits((totalSupply as string).toString(), 18)
+                .toString()
+            )
+        )
+        setUsdPrice(
+          price *
+            (850000000 -
+              Number(
+                ethers
+                  .formatUnits((totalSupply as string).toString(), 18)
+                  .toString()
+              ))
+        )
+      }
+    })()
+  }, [totalSupply])
 
   const handlePremium = (tokenAmt: Number, activeOffer: any) => {
-    (async () => {
+    ;(async () => {
       if (account) {
-          const currentGasPrice = await web3.eth.getGasPrice()
-          const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-          const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-          const gasLimit = "50000"
-          const allowance = await tokenContract.methods
-            .allowance(account, STAKING_ADDRESS)
-            .call()
-          if (
-            BigNumber.from(String(allowance)).lt(
-              BigNumber.from(String(tokenAmt))
-            )
-          ) {
-            await tokenContract.methods
-              .approve(
-                STAKING_ADDRESS,
-                ethers.parseEther(String(tokenAmt))
-              )
-              .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-          }
-          await stakingContract.methods
-            .subscribe(ROLE[activeOffer])
+        const currentGasPrice = await web3.eth.getGasPrice()
+        const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
+        const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
+        const gasLimit = "50000"
+        const allowance = await tokenContract.methods
+          .allowance(account, STAKING_ADDRESS)
+          .call()
+        if (
+          BigNumber.from(String(allowance)).lt(BigNumber.from(String(tokenAmt)))
+        ) {
+          await tokenContract.methods
+            .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
             .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-          toast.success(`You have unlocked access to our services.`)
-          setPremium(true)
-          setProlonged(false)
+        }
+        await stakingContract.methods
+          .subscribe(ROLE[activeOffer])
+          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+        toast.success(`You have unlocked access to our services.`)
+        setPremium(true)
+        setProlonged(false)
       } else {
         toast.success(`Please connect your wallet.`)
       }
@@ -148,8 +171,7 @@ function StakingPage() {
   const labelAccess = premium ? "Unlocked" : "Locked"
 
   const Total = () => {
-    const total = formatter(0)
-    const holders = formatter(0)
+    const total = formatter(burnAmount)
 
     const TotalInput = () => {
       return (
@@ -157,7 +179,7 @@ function StakingPage() {
           <LogoToken />
           <div className='total-input-content'>
             <strong>{total}</strong>
-            <small>0$</small>
+            <small>{usdPrice}$</small>
           </div>
           <Corner reverse />
         </div>
@@ -168,16 +190,16 @@ function StakingPage() {
       <Card className='total' reverse>
         <div className='total-heading'>
           <div className='total-heading-left'>
-            <div className='sub'>Staking & burn</div>
+            <div className='sub'>Premium</div>
             <h4>Total burn:</h4>
           </div>
           <BuyNextGemButton />
         </div>
         <TotalInput />
         <div className='total-bottom'>
-          <div className='sub'>
-            <Icon icon='carbon:user-multiple' /> {holders} Holders
-          </div>
+            <div className='sub'>
+              {/* <Icon icon='carbon:user-multiple' /> {holders} Holders */}
+            </div>
           <a
             href={COINMARKETCAP}
             target='_blank'
