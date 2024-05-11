@@ -134,7 +134,7 @@ function App() {
           element: <GemDetailPage />
         },
         {
-          path: "/staking",
+          path: "/premium",
           element: <StakingPage />
         },
         {
