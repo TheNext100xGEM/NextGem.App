@@ -71,12 +71,16 @@ function StakingPage() {
   const [premium, setPremium] = useState(false)
   const [burnAmount, setBurnAmount] = useState(0)
   const [usdPrice, setUsdPrice] = useState(0)
+  const [usd, setUsd] = useState(0)
+
   const { account } = useWeb3React()
 
   const web3 = new Web3(INFURA_URL)
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
+      const price = await getGemaiPriceUsd()
+      setUsd(price)
       const isSubscribe = await stakingContract.methods
         .checkManyRoles(account, ROLE)
         .call()
@@ -88,7 +92,7 @@ function StakingPage() {
   }, [])
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       if (totalSupply) {
         const price = await getGemaiPriceUsd()
         setBurnAmount(
@@ -227,7 +231,6 @@ function StakingPage() {
     duration,
     durationLabel,
     token,
-    price,
     percent,
     status
   }: PropsOffer) => {
@@ -237,6 +240,7 @@ function StakingPage() {
     const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
       volume: VOLUME_BUTTON_HOVER
     })
+
 
     return (
       <div className='offer' onMouseEnter={soundHover} onClick={soundClick}>
@@ -249,7 +253,7 @@ function StakingPage() {
             <LogoToken />
           </div>
           <div className='offer-token'>{formatter(token)} GEMAI</div>
-          <div className='sub'>~ {price} $</div>
+          <div className='sub'>~ {(token*usd).toFixed(0)} $</div>
         </div>
         <div className='hovered'>
           <Corner color='primary' />
@@ -297,7 +301,7 @@ function StakingPage() {
               </li>
               <li className='sub'>
                 <small>Total Price:</small>
-                <span>~ {info.price} $</span>
+                <span>~ {(info.token*usd).toFixed(0)} $</span>
               </li>
             </ul>
             <Corner />
@@ -380,7 +384,7 @@ function StakingPage() {
   return (
     <>
       <Helmet>
-        <title>{SITE_NAME} — Staking & burn</title>
+        <title>{SITE_NAME} — Premium</title>
       </Helmet>
       <div className='staking'>
         <div className='wrapper'>
