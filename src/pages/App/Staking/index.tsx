@@ -81,6 +81,7 @@ function StakingPage() {
     (async () => {
       const price = await getGemaiPriceUsd()
       setUsd(price)
+      if(account){
       const isSubscribe = await stakingContract.methods
         .checkManyRoles(account, ROLE)
         .call()
@@ -88,6 +89,7 @@ function StakingPage() {
         setPremium(true)
         setProlonged(false)
       }
+    }
     })()
   }, [])
 
