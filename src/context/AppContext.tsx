@@ -1,51 +1,68 @@
-import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
-import { useLocation } from "react-router-dom";
-import { useWeb3React } from "@web3-react/core";
-import Cookies from "js-cookie";
-import Web3Token from "web3-token";
+import { useWeb3React } from "@web3-react/core"
+import Cookies from "js-cookie"
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+  useRef
+} from "react"
+import { useLocation } from "react-router-dom"
+import Web3Token from "web3-token"
 
 interface AppContextProps {
-  isInApp: boolean;
-  setIsInApp: React.Dispatch<React.SetStateAction<boolean>>;
-  isInChat: boolean;
-  setIsInChat: React.Dispatch<React.SetStateAction<boolean>>;
-  isPremium: boolean | null;
-  setIsPremium: React.Dispatch<React.SetStateAction<boolean | null>>;
-  web3Token: string | null;
-  setWeb3Token: React.Dispatch<React.SetStateAction<string | null>>;
+  isInApp: boolean
+  setIsInApp: React.Dispatch<React.SetStateAction<boolean>>
+  isInChat: boolean
+  setIsInChat: React.Dispatch<React.SetStateAction<boolean>>
+  isPremium: boolean | null
+  setIsPremium: React.Dispatch<React.SetStateAction<boolean | null>>
+  web3Token: string | null
+  setWeb3Token: React.Dispatch<React.SetStateAction<string | null>>
 }
 
-const AppContext = createContext<AppContextProps | undefined>(undefined);
+const AppContext = createContext<AppContextProps | undefined>(undefined)
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [isInApp, setIsInApp] = useState(false);
-  const [isInChat, setIsInChat] = useState(false);
-  const [isPremium, setIsPremium] = useState<boolean | null>(null);
-  const [web3Token, setWeb3Token] = useState<string | null>(null);
-  const location = useLocation();
-  const { account, provider } = useWeb3React();
-  const hasCalledGetToken = useRef(false);
+  const [isInApp, setIsInApp] = useState<AppContextProps["isInApp"]>(false)
+  const [isInChat, setIsInChat] = useState<AppContextProps["isInChat"]>(false)
+  const [isPremium, setIsPremium] = useState<AppContextProps["isPremium"]>(null)
+  const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
+  const location = useLocation()
+
+  const { account, provider } = useWeb3React()
+  const hasCalledGetToken = useRef(false)
 
   useEffect(() => {
-    const storedToken = Cookies.get("web3TokenAuth");
+    const storedToken = Cookies.get("web3TokenAuth")
+
     if (storedToken) {
-      setWeb3Token(storedToken);
+      setWeb3Token(storedToken)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if(Cookies.get("web3TokenAuth")){
+    if (!provider || hasCalledGetToken.current || web3Token || !account) {
+      return
+    }
+
+    hasCalledGetToken.current = true
+    const signer = provider.getSigner()
+
     const getToken = async () => {
-      if (provider && !hasCalledGetToken.current && account) {
-        try {
-          const signer = provider.getSigner();
-          const token = await Web3Token.sign(async (msg: string) => {
+      try {
+        const token = await Web3Token.sign(
+          async (msg: string) => {
             try {
-              return await signer.signMessage(msg);
+              return signer.signMessage(msg)
+              // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
+              // return await signer.signMessage(hexMessage)
             } catch (err) {
-              console.log(err);
+              console.log(err)
             }
-          }, {
+          },
+          {
             domain: "thenextgem.ai",
             expires_in: "1 day",
             nonce: 12345678,
@@ -55,42 +72,45 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
             issued_at: new Date(),
             request_id: 12345,
             address: account
-          });
-          Cookies.set("web3TokenAuth", token, { expires: 1 });
-          setWeb3Token(token);
-        } catch (err) {
-          console.log(err);
-        }
-        hasCalledGetToken.current = true;
+          }
+        )
+        Cookies.set("web3TokenAuth", token, { expires: 1 })
+        setWeb3Token(token)
+        console.log("token", token)
+      } catch (err) {
+        console.log(err)
       }
-    };
-    
-    getToken().catch(console.error);
-  }
-  }, [provider, account]);
-
-  useEffect(() => {
-    if (provider) {
-      const removeTokenAndDisconnect = async (accounts: string[]) => {
-        if (accounts.length === 0) {
-          setWeb3Token(null);
-          Cookies.remove("web3TokenAuth");
-          console.log("disconnected");
-        }
-      };
-      provider.addListener("accountsChanged", removeTokenAndDisconnect);
-      return () => {
-        provider.removeListener("accountsChanged", removeTokenAndDisconnect);
-      };
     }
-  }, [provider]);
+
+    getToken().catch(console.error)
+  }, [account, provider, web3Token])
 
   useEffect(() => {
-    const allowedPages = ["/portal", "/gems", "/gem-ai", "/premium", "/analyze"];
-    const isInApp = allowedPages.some((page) => location.pathname.startsWith(page));
-    setIsInApp(isInApp);
-    setIsInChat(location.pathname.includes("/gem-ai"));
-  }, [location.pathname]);
+    if (!provider) {
+      return
+    }
+
+    provider.addListener("accountsChanged", async (accounts) => {
+
+      if (accounts.length !== 0) {
+        return
+      }
+
+      setWeb3Token(null)
+      console.log("disconnected")
+      Cookies.remove("web3TokenAuth")
+    })
+  }, [provider])
+
+  useEffect(() => {
+    const allowedPages = ["/portal", "/gems", "/gem-ai", "/premium", "/analyze"]
+    const isInApp = allowedPages.some((page) =>
+      location.pathname.startsWith(page)
+    )
+    setIsInApp(isInApp)
+
+    setIsInChat(location.pathname.includes("/gem-ai"))
+  }, [location.pathname])
 
   return (
     <AppContext.Provider
@@ -107,13 +127,16 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     >
       {children}
     </AppContext.Provider>
-  );
-};
+  )
+}
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAppContext = () => {
-  const context = useContext(AppContext);
+  const context = useContext(AppContext)
+
   if (!context) {
-    throw new Error("useAppContext must be used within an AppContextProvider");
+    throw new Error("useAppContext must be used within an AppContextProvider")
   }
-  return context;
-};
+
+  return context
+}
