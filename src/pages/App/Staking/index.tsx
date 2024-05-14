@@ -110,7 +110,7 @@ function StakingPage() {
         )
       }
     })()
-  }, [account])
+  }, [account, totalSupply])
 
   const handlePremium = (tokenAmt: Number, activeOffer: any) => {
     ;(async () => {
