@@ -90,33 +90,29 @@ function StakingPage() {
         setProlonged(false)
       }
     }
-    })()
-  }, [])
-
-  useEffect(() => {
-    (async () => {
-      if (totalSupply) {
-        const price = await getGemaiPriceUsd()
-        setBurnAmount(
-          850000000 -
+    if (totalSupply) {
+      const price = await getGemaiPriceUsd()
+      setBurnAmount(
+        850000000 -
+          Number(
+            ethers
+              .formatUnits((totalSupply as string).toString(), 18)
+              .toString()
+          )
+      )
+      setUsdPrice(
+        price *
+          (850000000 -
             Number(
               ethers
                 .formatUnits((totalSupply as string).toString(), 18)
                 .toString()
-            )
-        )
-        setUsdPrice(
-          price *
-            (850000000 -
-              Number(
-                ethers
-                  .formatUnits((totalSupply as string).toString(), 18)
-                  .toString()
-              ))
-        )
-      }
+            ))
+      )
+    }
     })()
-  }, [totalSupply])
+  }, [])
+
 
   const handlePremium = (tokenAmt: Number, activeOffer: any) => {
     ;(async () => {

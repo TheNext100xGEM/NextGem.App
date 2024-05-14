@@ -10,6 +10,7 @@ import { Icon } from "@iconify/react"
 import { truncateWalletAddress } from "@utils/wallet"
 import { useWeb3React } from "@web3-react/core"
 import { useState } from "react"
+import Cookies from "js-cookie";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
@@ -28,9 +29,10 @@ function Panel() {
   const handleLogged = () => {}
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
+  const storedToken = Cookies.get("web3TokenAuth");
 
   const ButtonPanel = () => {
-    if (account) {
+    if (account && storedToken) {
       return (
         <Button icon='logos:metamask-icon' onClick={handleLogged}>
           {truncateWalletAddress(account)}
