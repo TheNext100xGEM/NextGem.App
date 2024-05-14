@@ -120,6 +120,7 @@ function StakingPage() {
         const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
         const gasLimit = "130000"
         setPremiumText('Approving')
+        try{
         const allowance = await tokenContract.methods
           .allowance(account, STAKING_ADDRESS)
           .call()
@@ -138,6 +139,9 @@ function StakingPage() {
         toast.success(`You have unlocked access to our services.`)
         setPremium(true)
         setProlonged(false)
+      }catch(e){
+        setPremiumText('Get premium access')
+      }
       } else {
         toast.success(`Please connect your wallet.`)
       }
