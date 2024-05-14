@@ -27,6 +27,7 @@ export type PropsButton = {
   reverseCorner?: boolean
   loaded?: boolean
   disabled?: boolean
+  ref?: any
 }
 
 export function Button({ 
@@ -45,6 +46,7 @@ export function Button({
   blank,
   reverseCorner,
   loaded,
+  ref,
   disabled = false,
 }: PropsButton) {
 
@@ -68,6 +70,7 @@ export function Button({
     onMouseEnter: soundHover,
     className: classNames('btn', className, { minus: minus, loaded: loaded, disabled: disabled }),
     title: title,
+    ref: ref,
     'data-colors': color,
     'data-status': status,
   }

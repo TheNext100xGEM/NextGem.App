@@ -40,7 +40,6 @@ type PropsCard = {
   className?: string
   reverse?: boolean
 }
-
 const Card = ({ children, className, reverse = false }: PropsCard) => {
   return (
     <div className={classNames("card", className)}>
@@ -72,47 +71,46 @@ function StakingPage() {
   const [burnAmount, setBurnAmount] = useState(0)
   const [usdPrice, setUsdPrice] = useState(0)
   const [usd, setUsd] = useState(0)
-
   const { account } = useWeb3React()
+  const [premiumText, setPremiumText] = useState('Get premium access')
 
   const web3 = new Web3(INFURA_URL)
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const price = await getGemaiPriceUsd()
       setUsd(price)
-      if(account){
-      const isSubscribe = await stakingContract.methods
-        .checkManyRoles(account, ROLE)
-        .call()
-      if (isSubscribe) {
-        setPremium(true)
-        setProlonged(false)
+      if (account) {
+        const isSubscribe = await stakingContract.methods
+          .checkManyRoles(account, ROLE)
+          .call()
+        if (isSubscribe) {
+          setPremium(true)
+          setProlonged(false)
+        }
       }
-    }
-    if (totalSupply) {
-      const price = await getGemaiPriceUsd()
-      setBurnAmount(
-        850000000 -
-          Number(
-            ethers
-              .formatUnits((totalSupply as string).toString(), 18)
-              .toString()
-          )
-      )
-      setUsdPrice(
-        price *
-          (850000000 -
+      if (totalSupply) {
+        const price = await getGemaiPriceUsd()
+        setBurnAmount(
+          850000000 -
             Number(
               ethers
                 .formatUnits((totalSupply as string).toString(), 18)
                 .toString()
-            ))
-      )
-    }
+            )
+        )
+        setUsdPrice(
+          price *
+            (850000000 -
+              Number(
+                ethers
+                  .formatUnits((totalSupply as string).toString(), 18)
+                  .toString()
+              ))
+        )
+      }
     })()
   }, [])
-
 
   const handlePremium = (tokenAmt: Number, activeOffer: any) => {
     ;(async () => {
@@ -120,7 +118,8 @@ function StakingPage() {
         const currentGasPrice = await web3.eth.getGasPrice()
         const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
         const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-        const gasLimit = "50000"
+        const gasLimit = "130000"
+        setPremiumText('Approving')
         const allowance = await tokenContract.methods
           .allowance(account, STAKING_ADDRESS)
           .call()
@@ -131,9 +130,11 @@ function StakingPage() {
             .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
             .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
         }
+        setPremiumText('Buying')
         await stakingContract.methods
           .subscribe(ROLE[activeOffer])
           .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+        setPremiumText('Transaction Completed')
         toast.success(`You have unlocked access to our services.`)
         setPremium(true)
         setProlonged(false)
@@ -199,9 +200,9 @@ function StakingPage() {
         </div>
         <TotalInput />
         <div className='total-bottom'>
-            <div className='sub'>
-              {/* <Icon icon='carbon:user-multiple' /> {holders} Holders */}
-            </div>
+          <div className='sub'>
+            {/* <Icon icon='carbon:user-multiple' /> {holders} Holders */}
+          </div>
           <a
             href={COINMARKETCAP}
             target='_blank'
@@ -239,7 +240,6 @@ function StakingPage() {
       volume: VOLUME_BUTTON_HOVER
     })
 
-
     return (
       <div className='offer' onMouseEnter={soundHover} onClick={soundClick}>
         <div className='offer-content' data-status={status}>
@@ -251,7 +251,7 @@ function StakingPage() {
             <LogoToken />
           </div>
           <div className='offer-token'>{formatter(token)} GEMAI</div>
-          <div className='sub'>~ {(token*usd).toFixed(0)} $</div>
+          <div className='sub'>~ {(token * usd).toFixed(0)} $</div>
         </div>
         <div className='hovered'>
           <Corner color='primary' />
@@ -299,7 +299,7 @@ function StakingPage() {
               </li>
               <li className='sub'>
                 <small>Total Price:</small>
-                <span>~ {(info.token*usd).toFixed(0)} $</span>
+                <span>~ {(info.token * usd).toFixed(0)} $</span>
               </li>
             </ul>
             <Corner />
@@ -309,7 +309,7 @@ function StakingPage() {
             icon='carbon:unlocked'
             onClick={() => handlePremium(info.token, offerActive)}
           >
-            Get premium access
+            {premiumText}
           </Button>
         </>
       )
