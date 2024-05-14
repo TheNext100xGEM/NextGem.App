@@ -91,7 +91,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     }
 
     provider.addListener("accountsChanged", async (accounts) => {
-      console.log(accounts)
 
       if (accounts.length !== 0) {
         return
@@ -104,7 +103,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [provider])
 
   useEffect(() => {
-    const allowedPages = ["/portal", "/gems", "/gem-ai", "/staking", "/analyze"]
+    const allowedPages = ["/portal", "/gems", "/gem-ai", "/premium", "/analyze"]
     const isInApp = allowedPages.some((page) =>
       location.pathname.startsWith(page)
     )

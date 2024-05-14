@@ -93,7 +93,7 @@ const navLanding: NavItem[] = [
 const navApp: NavItem[] = [
   { component: <NavLink to='/' title='Home' /> },
   { component: <NavLink to='/gems' title='Gems' /> },
-  { component: <NavLink to='/staking' title='Staking' /> },
+  { component: <NavLink to='/premium' title='Premium' /> },
   { component: <NavLink to='/gem-ai' title={CHAT_NAME} /> },
   { component: <NavLink to='/analyze' title='Ai Analysis' /> },
   {

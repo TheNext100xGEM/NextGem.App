@@ -26,9 +26,9 @@ export const PDF_DATA = {
   tokenomics: {
     values: [10, 20, 30, 40],
     colors: ["#f43f5e", "#84cc16", "#3b82f6", "#f59e0b"],
-    labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4']
+    labels: ["Label 1", "Label 2", "Label 3", "Label 4"]
   },
-  swot: {
+  industry: {
     strengths:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at.",
     weaknesses:
@@ -38,22 +38,22 @@ export const PDF_DATA = {
     threats:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. id dui nec orci semper feugiat sit amet quis magna."
   },
-  team: [
-    {
-      name: "Adilovski",
-      role: "Lead Designer",
-      twitter: ""
-    },
-    {
-      name: "Adil DEVECI",
-      role: "Lead Marketer",
-      twitter: ""
-    },
-    {
-      name: "Deveciloper",
-      role: "Lead Developer",
-      twitter: ""
-    }
-  ],
-  conclusion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at."
+  team: {
+    members: [
+      {
+        name: "Adilovski",
+        position: "Lead Designer"
+      },
+      {
+        name: "Adil DEVECI",
+        position: "Lead Marketer"
+      },
+      {
+        name: "Deveciloper",
+        position: "Lead Developer"
+      }
+    ]
+  },
+  conclusion:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at. Integer metus mauris Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id dui nec orci semper feugiat sit amet quis magna. Nulla sagittis nibh est, quis sodales turpis posuere at."
 }

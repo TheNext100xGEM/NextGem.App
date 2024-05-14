@@ -90,6 +90,7 @@
     padding: var(--size-3) var(--size-4);
     transform: translateY(-30%);
     transition: all 0.2s ease-out;
+    word-break: break-all;
 
     ul {
       display: flex;
