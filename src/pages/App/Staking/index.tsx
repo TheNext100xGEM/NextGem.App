@@ -186,7 +186,7 @@ function StakingPage() {
           <LogoToken />
           <div className='total-input-content'>
             <strong>{total}</strong>
-            <small>{usdPrice}$</small>
+            <small>{usdPrice.toFixed(0)}$</small>
           </div>
           <Corner reverse />
         </div>
