@@ -3,22 +3,22 @@ import logoTokenSrc from "@assets/img/logo-token-next-gem.webp"
 import Scene from "@components/3D"
 import { Button, BuyNextGemButton, Corner, Input } from "@components/ui"
 import { BigNumber } from "@ethersproject/bignumber"
-import { COINMARKETCAP, SITE_NAME, TOKEN_NAME } from "@constants/index"
+import { SITE_NAME, TOKEN_NAME } from "@constants/index"
 import { useGSAP } from "@gsap/react"
 import { Icon } from "@iconify/react"
 import { formatter } from "@utils/number"
 import classNames from "classnames"
 import gsap from "gsap"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
+import { ethers } from "ethers"
 import LazyLoad from "react-lazyload"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
 import { useStakeContract, useTokenContract } from "../../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
-import { ethers } from "ethers"
 import Web3 from "web3"
 import { INFURA_URL, STAKING_ADDRESS } from "../../../libs/constants"
 
@@ -52,14 +52,35 @@ function StakingPage() {
   const tokenContract = useTokenContract()
   const stakingContract = useStakeContract()
   const [Staking, setStaking] = useState("")
+  const [staked, setStaked] = useState("0")
   const { account } = useWeb3React()
+  const [remainingBlock, setRemainingBlock] = useState(0)
+  const [apy, setApy] = useState(0)
   const [StakingText, setStakingText] = useState("Stake Gem AI")
 
   const web3 = new Web3(INFURA_URL)
 
-  const changeHandler = (e: any) => {
-    setStaking(e)
-  }
+  useEffect(() => {
+    ;(async () => {
+      if (account) {
+        const eventId = await stakingContract.methods.currentEventId().call()
+        const totalStaked: string = await stakingContract.methods
+          .getTotalStaked(eventId)
+          .call()
+        setStaked(
+          ethers.formatUnits((totalStaked as string).toString(), 18).toString()
+        )
+        const remainingBlocks: any = await stakingContract.methods
+          .getRemainingBlocks(eventId)
+          .call()
+        setRemainingBlock(Number(remainingBlocks))
+        const apyDeatils: any = await stakingContract.methods
+          .calculateAPY(eventId)
+          .call()
+        setApy(Number(apyDeatils))
+      }
+    })()
+  }, [account])
 
   const handleStaking = (tokenAmt: Number) => {
     ;(async () => {
@@ -91,7 +112,7 @@ function StakingPage() {
               .stake(Number(eventId), ethers.parseEther(String(tokenAmt)))
               .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
             setStakingText("Transaction Completed")
-            setStaking('')
+            setStaking("")
             toast.success(`Staking Completed`)
           } catch (e) {
             setStakingText("Get Staking access")
@@ -109,7 +130,7 @@ function StakingPage() {
   const iconAccess = Staking ? "carbon:unlocked" : "carbon:locked"
 
   const Total = () => {
-    const total = formatter(0)
+    const total = formatter(Number(staked))
 
     const TotalInput = () => {
       return (
@@ -136,15 +157,8 @@ function StakingPage() {
         <div className='total-bottom'>
           <div className='sub'>
             {/* <Icon icon='carbon:user-multiple' /> {holders} Holders */}
+            APY: {apy} %  Remaining Blocks: {remainingBlock}
           </div>
-          <a
-            href={COINMARKETCAP}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='sub'
-          >
-            <Icon icon='simple-icons:coinmarketcap' /> CoinMarketCap
-          </a>
         </div>
       </Card>
     )
@@ -162,14 +176,25 @@ function StakingPage() {
 
   const Unlock = () => {
     const Locked = () => {
+      const [data, setData] = useState("")
       return (
         <>
           <Input
-            value={Staking}
+            sprite={
+              <img
+                src={logoTokenSrc}
+                alt={TOKEN_NAME}
+                width='30'
+                height='30'
+                loading='lazy'
+              />
+            }
+            value={data}
             placeholder='Staking Amount'
             className='input-staking'
-            onChange={changeHandler}
+            onChange={(e) => setData(e)}
             type={"number"}
+            key={"amount"}
           />
           <div className='unlock-order'>
             <Corner />
@@ -177,7 +202,7 @@ function StakingPage() {
           <Button
             status='success'
             icon='carbon:unlocked'
-            onClick={() => handleStaking(Number(Staking))}
+            onClick={() => handleStaking(Number(data))}
           >
             {StakingText}
           </Button>
