@@ -11,10 +11,6 @@
   );
 }
 
-.input-staking {
-  padding: 5px
-}
-
 .staking {
   --margin: calc(40px + 40 * (100vw - 320px) / 1080);
   margin-bottom: calc(var(--main-padding) * -1);

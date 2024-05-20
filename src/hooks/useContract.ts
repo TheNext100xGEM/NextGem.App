@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import stakingContractJson from '@constants/ABI/NextGemStaking.json';
+import premiumContractJson from '@constants/ABI/NextGemStaking.json';
+import stakingContractJson from '@constants/ABI/NextGemStaking.json'
 import tokenContractJson from '@constants/ABI/NextGemToken.json'
 import Web3 from 'web3';
-import { INFURA_URL, STAKING_ADDRESS, TOKEN_ADDRESS } from '../libs/constants';
+import { INFURA_URL, PREMIUM_ADDRESS, STAKING_ADDRESS, TOKEN_ADDRESS } from '../libs/constants';
 
 const httpProvider = INFURA_URL;
 
@@ -26,7 +27,11 @@ const useContract = (abi: any, address: string) => {
  * Helper hooks to get specific contracts (by ABI)
  */
 
-export const useStakeContract = () => {
+export const usePremiumContract = () => {
+    return useContract(premiumContractJson as any, PREMIUM_ADDRESS);
+  };
+
+  export const useStakeContract = () => {
     return useContract(stakingContractJson as any, STAKING_ADDRESS);
   };
   

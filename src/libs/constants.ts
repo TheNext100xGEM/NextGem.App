@@ -52,3 +52,4 @@ export const WALLET_CONNECT_PROJECT_ID = import.meta.env
 export const INFURA_URL = import.meta.env.VITE_INFURA_ADDRESS
 export const TOKEN_ADDRESS= import.meta.env.VITE_TOKEN_ADDRESS
 export const STAKING_ADDRESS= import.meta.env.VITE_STAKING_ADDRESS
+export const PREMIUM_ADDRESS = import.meta.env.VITE_PREMIUM_ADDRESS

@@ -1,15 +1,26 @@
 import "./_staking.scss"
 import logoTokenSrc from "@assets/img/logo-token-next-gem.webp"
 import Scene from "@components/3D"
-import { Button, BuyNextGemButton, Corner, Input } from "@components/ui"
+import { Button, BuyNextGemButton, Corner } from "@components/ui"
 import { BigNumber } from "@ethersproject/bignumber"
-import { COINMARKETCAP, SITE_NAME, TOKEN_NAME } from "@constants/index"
+import { ROLE } from "@constants/index"
+import {
+  CHAT_NAME,
+  COINMARKETCAP,
+  SITE_NAME,
+  SOUND_BUTTON_CLICK,
+  SOUND_BUTTON_HOVER,
+  TOKEN_NAME,
+  VOLUME_BUTTON_CLICK,
+  VOLUME_BUTTON_HOVER
+} from "@constants/index"
 import { useGSAP } from "@gsap/react"
 import { Icon } from "@iconify/react"
+import { PropsOffer } from "@models/Offers"
 import { formatter } from "@utils/number"
 import classNames from "classnames"
 import gsap from "gsap"
-import { ReactNode, useRef, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
 import LazyLoad from "react-lazyload"
@@ -20,7 +31,9 @@ import { useStakeContract, useTokenContract } from "../../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers"
 import Web3 from "web3"
-import { INFURA_URL, STAKING_ADDRESS } from "../../../libs/constants"
+import { INFURA_URL, PREMIUM_ADDRESS } from "../../../libs/constants"
+import useTokenInfo from "@hooks/useContractInfo"
+import getGemaiPriceUsd from "@utils/coingeko"
 
 type PropsCard = {
   children: ReactNode
@@ -48,68 +61,124 @@ const LogoToken = () => {
   )
 }
 
-function StakingPage() {
+function PremiumPage() {
+  const [prolonged, setProlonged] = useState(false)
+  const handleProlonged = () => setProlonged(!prolonged)
   const tokenContract = useTokenContract()
   const stakingContract = useStakeContract()
-  const [Staking, setStaking] = useState("")
+  const { totalSupply } = useTokenInfo()
+  const [premium, setPremium] = useState(false)
+  const [burnAmount, setBurnAmount] = useState(0)
+  const [usdPrice, setUsdPrice] = useState(0)
+  const [usd, setUsd] = useState(0)
   const { account } = useWeb3React()
-  const [StakingText, setStakingText] = useState("Stake Gem AI")
+  const [premiumText, setPremiumText] = useState('Get premium access')
 
   const web3 = new Web3(INFURA_URL)
 
-  const changeHandler = (e: any) => {
-    setStaking(e)
-  }
+  useEffect(() => {
+    ;(async () => {
+      const price = await getGemaiPriceUsd()
+      setUsd(price)
+      if (account) {
+        const isSubscribe = await stakingContract.methods
+          .checkManyRoles(account, ROLE)
+          .call()
+        if (isSubscribe) {
+          setPremium(true)
+          setProlonged(false)
+        }
+      }
+      if (totalSupply) {
+        const price = await getGemaiPriceUsd()
+        setBurnAmount(
+          850000000 -
+            Number(
+              ethers
+                .formatUnits((totalSupply as string).toString(), 18)
+                .toString()
+            )
+        )
+        setUsdPrice(
+          price *
+            (850000000 -
+              Number(
+                ethers
+                  .formatUnits((totalSupply as string).toString(), 18)
+                  .toString()
+              ))
+        )
+      }
+    })()
+  }, [account, totalSupply])
 
-  const handleStaking = (tokenAmt: Number) => {
+  const handlePremium = (tokenAmt: Number, activeOffer: any) => {
     ;(async () => {
       if (account) {
-        if (Number(tokenAmt) > 0) {
-          const currentGasPrice = await web3.eth.getGasPrice()
-          const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-          const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-          const gasLimit = "130000"
-          setStakingText("Approving")
-          try {
-            const allowance = await tokenContract.methods
-              .allowance(account, STAKING_ADDRESS)
-              .call()
-            if (
-              BigNumber.from(String(allowance)).lt(
-                BigNumber.from(String(tokenAmt))
-              )
-            ) {
-              await tokenContract.methods
-                .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
-                .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-            }
-            setStakingText("Staking Initaiated")
-            const eventId = await stakingContract.methods
-              .currentEventId()
-              .call()
-            await stakingContract.methods
-              .stake(Number(eventId), ethers.parseEther(String(tokenAmt)))
-              .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-            setStakingText("Transaction Completed")
-            setStaking('')
-            toast.success(`Staking Completed`)
-          } catch (e) {
-            setStakingText("Get Staking access")
-          }
-        } else {
-          toast.success(`Please enter valid amount.`)
+        const currentGasPrice = await web3.eth.getGasPrice()
+        const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
+        const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
+        const gasLimit = "130000"
+        setPremiumText('Approving')
+        try{
+        const allowance = await tokenContract.methods
+          .allowance(account, PREMIUM_ADDRESS)
+          .call()
+        if (
+          BigNumber.from(String(allowance)).lt(BigNumber.from(String(tokenAmt)))
+        ) {
+          await tokenContract.methods
+            .approve(PREMIUM_ADDRESS, ethers.parseEther(String(tokenAmt)))
+            .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
         }
+        setPremiumText('Buying')
+        await stakingContract.methods
+          .subscribe(ROLE[activeOffer])
+          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+        setPremiumText('Transaction Completed')
+        toast.success(`You have unlocked access to our services.`)
+        setPremium(true)
+        setProlonged(false)
+      }catch(e){
+        setPremiumText('Get premium access')
+      }
       } else {
         toast.success(`Please connect your wallet.`)
       }
     })()
   }
 
-  const statusAccess = Staking ? "success" : "warning"
-  const iconAccess = Staking ? "carbon:unlocked" : "carbon:locked"
+  const offers: PropsOffer[] = [
+    {
+      duration: 1,
+      durationLabel: "month",
+      token: 15000,
+      price: 76
+    },
+    {
+      duration: 6,
+      durationLabel: "months",
+      token: 75000,
+      price: 380,
+      percent: 17,
+      status: "info"
+    },
+    {
+      duration: 1,
+      durationLabel: "year",
+      token: 120000,
+      price: 610,
+      percent: 34,
+      status: "custom"
+    }
+  ]
+
+  const statusAccess = premium ? "success" : "warning"
+  const iconAccess = premium ? "carbon:unlocked" : "carbon:locked"
+  const labelAccess = premium ? "Unlocked" : "Locked"
 
   const Total = () => {
-    const total = formatter(0)
+    const total = formatter(burnAmount)
 
     const TotalInput = () => {
       return (
@@ -117,6 +186,7 @@ function StakingPage() {
           <LogoToken />
           <div className='total-input-content'>
             <strong>{total}</strong>
+            <small>{usdPrice.toFixed(0)}$</small>
           </div>
           <Corner reverse />
         </div>
@@ -127,8 +197,8 @@ function StakingPage() {
       <Card className='total' reverse>
         <div className='total-heading'>
           <div className='total-heading-left'>
-            <div className='sub'>Staking</div>
-            <h4>Total Staked:</h4>
+            <div className='sub'>Premium</div>
+            <h4>Total burn:</h4>
           </div>
           <BuyNextGemButton />
         </div>
@@ -160,27 +230,114 @@ function StakingPage() {
     )
   }
 
+  const OfferItem = ({
+    duration,
+    durationLabel,
+    token,
+    percent,
+    status
+  }: PropsOffer) => {
+    const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
+      volume: VOLUME_BUTTON_CLICK
+    })
+    const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
+      volume: VOLUME_BUTTON_HOVER
+    })
+
+    return (
+      <div className='offer' onMouseEnter={soundHover} onClick={soundClick}>
+        <div className='offer-content' data-status={status}>
+          {percent && <div className='offer-percent'>-{percent}%</div>}
+          <div className='offer-duration'>
+            <strong>{duration}</strong> <span>{durationLabel}</span>
+          </div>
+          <div className='offer-img'>
+            <LogoToken />
+          </div>
+          <div className='offer-token'>{formatter(token)} GEMAI</div>
+          <div className='sub'>~ {(token * usd).toFixed(0)} $</div>
+        </div>
+        <div className='hovered'>
+          <Corner color='primary' />
+        </div>
+        <Corner />
+      </div>
+    )
+  }
+
   const Unlock = () => {
+    const [offerActive, setOfferActive] = useState(1)
+    const info = offers[offerActive]
+
     const Locked = () => {
       return (
         <>
-          <Input
-            value={Staking}
-            placeholder='Staking Amount'
-            className='input-staking'
-            onChange={changeHandler}
-            type={"number"}
-          />
+          <div className='p'>
+            <p>
+              Select the subscription period for NextGem services. Please note
+              that the required token amount may vary, and costs could increase
+              accordingly.
+            </p>
+          </div>
+          <ul className='unlock-list'>
+            {offers.map((item, id) => (
+              <li
+                key={id}
+                onClick={() => setOfferActive(id)}
+                className={id === offerActive ? "active" : ""}
+              >
+                <OfferItem {...item} />
+              </li>
+            ))}
+          </ul>
           <div className='unlock-order'>
+            <ul data-status={info.status}>
+              <li className='sub'>
+                <small>Order:</small>
+                <span>
+                  <strong>
+                    {info.duration} {info.durationLabel}
+                  </strong>{" "}
+                  - {formatter(info.token)}
+                </span>
+              </li>
+              <li className='sub'>
+                <small>Total Price:</small>
+                <span>~ {(info.token * usd).toFixed(0)} $</span>
+              </li>
+            </ul>
             <Corner />
           </div>
           <Button
             status='success'
             icon='carbon:unlocked'
-            onClick={() => handleStaking(Number(Staking))}
+            onClick={() => handlePremium(info.token, offerActive)}
           >
-            {StakingText}
+            {premiumText}
           </Button>
+        </>
+      )
+    }
+
+    const Unlocked = () => {
+      return (
+        <>
+          <div className='p'>
+            <p>Your premium access to {CHAT_NAME} is available until:</p>
+          </div>
+          <h5>15 February, 2023 08:00PM</h5>
+          <div className='unlock-button'>
+            <Button
+              icon='carbon:time'
+              color='tertiary'
+              onClick={handleProlonged}
+            >
+              Prolong my access
+            </Button>
+            <Button href='/gem-ai' icon='carbon:text-mining-applier'>
+              Access to {CHAT_NAME}
+            </Button>
+          </div>
         </>
       )
     }
@@ -188,9 +345,13 @@ function StakingPage() {
     return (
       <Card className='unlock'>
         <div className='unlock-title'>
-          <h5>{"Your Staking details"}</h5>
+          <Button status={statusAccess}>{labelAccess}</Button>
+          <h5>
+            {premium ? "Your Premium access" : "Unlock your Premium access"}
+          </h5>
         </div>
-        <Locked />
+        {premium && <Unlocked />}
+        {(!premium || prolonged) && <Locked />}
       </Card>
     )
   }
@@ -225,7 +386,7 @@ function StakingPage() {
   return (
     <>
       <Helmet>
-        <title>{SITE_NAME} — Staking</title>
+        <title>{SITE_NAME} — Premium</title>
       </Helmet>
       <div className='staking'>
         <div className='wrapper'>
@@ -252,7 +413,7 @@ function StakingPage() {
           <div className='staking-bottom-overflow'>
             <div className='wrapper'>
               <div className='staking-bottom-content'>
-                <h3>Understanding the NextGem Service and Staking Benefits</h3>
+                <h3>Understanding the NextGem Service and Premium Benefits</h3>
                 <div className='intro'>
                   <p>
                     The NextGem service incorporates a burn mechanism to reduce
@@ -265,7 +426,7 @@ function StakingPage() {
                 </div>
                 <div className='p'>
                   <p>
-                    Subscribing to the Staking NextGem service offers
+                    Subscribing to the Premium NextGem service offers
                     significant advantages. You can choose from three
                     subscription periods: 1 month, 6 months, or one year, with
                     discounts applied based on duration. This is facilitated by
@@ -273,7 +434,7 @@ function StakingPage() {
                     the Ethereum chain, recorded on our deployed smart contract.
                   </p>
                   <div>
-                    Here are some key features of our Staking service:
+                    Here are some key features of our Premium service:
                     <ul>
                       <li>
                         Access to GEMAI for querying specific data from our
@@ -321,4 +482,4 @@ function StakingPage() {
   )
 }
 
-export default StakingPage
+export default PremiumPage
