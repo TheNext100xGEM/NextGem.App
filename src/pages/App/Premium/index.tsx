@@ -27,7 +27,10 @@ import LazyLoad from "react-lazyload"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
-import { useStakeContract, useTokenContract } from "../../../hooks/useContract"
+import {
+  usePremiumContract,
+  useTokenContract
+} from "../../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers"
 import Web3 from "web3"
@@ -65,14 +68,14 @@ function PremiumPage() {
   const [prolonged, setProlonged] = useState(false)
   const handleProlonged = () => setProlonged(!prolonged)
   const tokenContract = useTokenContract()
-  const stakingContract = useStakeContract()
+  const stakingContract = usePremiumContract()
   const { totalSupply } = useTokenInfo()
   const [premium, setPremium] = useState(false)
   const [burnAmount, setBurnAmount] = useState(0)
   const [usdPrice, setUsdPrice] = useState(0)
   const [usd, setUsd] = useState(0)
   const { account } = useWeb3React()
-  const [premiumText, setPremiumText] = useState('Get premium access')
+  const [premiumText, setPremiumText] = useState("Get premium access")
 
   const web3 = new Web3(INFURA_URL)
 
@@ -119,29 +122,31 @@ function PremiumPage() {
         const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
         const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
         const gasLimit = "130000"
-        setPremiumText('Approving')
-        try{
-        const allowance = await tokenContract.methods
-          .allowance(account, PREMIUM_ADDRESS)
-          .call()
-        if (
-          BigNumber.from(String(allowance)).lt(BigNumber.from(String(tokenAmt)))
-        ) {
-          await tokenContract.methods
-            .approve(PREMIUM_ADDRESS, ethers.parseEther(String(tokenAmt)))
+        setPremiumText("Approving")
+        try {
+          const allowance = await tokenContract.methods
+            .allowance(account, PREMIUM_ADDRESS)
+            .call()
+          if (
+            BigNumber.from(String(allowance)).lt(
+              BigNumber.from(String(tokenAmt))
+            )
+          ) {
+            await tokenContract.methods
+              .approve(PREMIUM_ADDRESS, ethers.parseEther(String(tokenAmt)))
+              .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+          }
+          setPremiumText("Buying")
+          await stakingContract.methods
+            .subscribe(ROLE[activeOffer])
             .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+          setPremiumText("Transaction Completed")
+          toast.success(`You have unlocked access to our services.`)
+          setPremium(true)
+          setProlonged(false)
+        } catch (e) {
+          setPremiumText("Get premium access")
         }
-        setPremiumText('Buying')
-        await stakingContract.methods
-          .subscribe(ROLE[activeOffer])
-          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-        setPremiumText('Transaction Completed')
-        toast.success(`You have unlocked access to our services.`)
-        setPremium(true)
-        setProlonged(false)
-      }catch(e){
-        setPremiumText('Get premium access')
-      }
       } else {
         toast.success(`Please connect your wallet.`)
       }

@@ -231,6 +231,12 @@
 				"internalType": "bool",
 				"name": "requiresRoleCheck",
 				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "maxPerWallet",
+				"type": "uint256"
 			}
 		],
 		"name": "StakingEventCreated",
@@ -369,6 +375,11 @@
 				"internalType": "bool",
 				"name": "requiresRoleCheck",
 				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "maxPerWallet",
+				"type": "uint256"
 			}
 		],
 		"name": "createStakingEvent",
@@ -772,6 +783,11 @@
 				"internalType": "bool",
 				"name": "requiresRoleCheck",
 				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "maxPerWallet",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

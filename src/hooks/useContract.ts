@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import premiumContractJson from '@constants/ABI/NextGemStaking.json';
+import premiumContractJson from '@constants/ABI/NextGemSubscription.json';
 import stakingContractJson from '@constants/ABI/NextGemStaking.json'
 import tokenContractJson from '@constants/ABI/NextGemToken.json'
 import Web3 from 'web3';
