@@ -17,7 +17,11 @@ import LazyLoad from "react-lazyload"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
-import { useStakeContract, useTokenContract } from "../../../hooks/useContract"
+import {
+  usePremiumContract,
+  useStakeContract,
+  useTokenContract
+} from "../../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
 import Web3 from "web3"
 import { INFURA_URL, STAKING_ADDRESS } from "../../../libs/constants"
@@ -52,6 +56,7 @@ const LogoToken = () => {
 function StakingPage() {
   const tokenContract = useTokenContract()
   const stakingContract = useStakeContract()
+  const premiumContract = usePremiumContract()
   const [Staking, setStaking] = useState("")
   const [staked, setStaked] = useState("0")
   const { account } = useWeb3React()
@@ -67,42 +72,56 @@ function StakingPage() {
 
   useEffect(() => {
     ;(async () => {
+      const eventId = await stakingContract.methods.currentEventId().call()
+      console.log(eventId)
       if (account) {
-        const isSubscribe: boolean = await stakingContract.methods
-        .checkManyRoles(account, ROLE)
-        .call()
-       setIsPremium(isSubscribe)
-        const eventId = await stakingContract.methods.currentEventId().call()
-        const totalStaked: string = await stakingContract.methods
-          .getTotalStaked(eventId)
+        const isSubscribe: boolean = await premiumContract.methods
+          .checkManyRoles(account, ROLE)
           .call()
-        setStaked(
-          ethers.formatUnits((totalStaked as string).toString(), 18).toString()
-        )
-        const remainingBlocks: any = await stakingContract.methods
-          .getRemainingBlocks(eventId)
-          .call()
-        setRemainingBlock(Number(remainingBlocks))
-        const apyDeatils: any = await stakingContract.methods
-          .calculateAPY(eventId)
-          .call()
-        setApy(Number(apyDeatils))
-        const eventDetails: any = await stakingContract.methods
-          .stakingEvents(eventId)
-          .call()
-        setAmmountAllocated(
-          Number(ethers.formatUnits((eventDetails.totalGEMAI as string).toString(), 18).toString())
-        )
+        setIsPremium(isSubscribe)
         const rewardAmount: any = await stakingContract.methods
           .calculateReward(eventId, account)
           .call()
-          setReward(
-            Number(ethers.formatUnits((rewardAmount as string).toString(), 18).toString())
+        setReward(
+          Number(
+            ethers
+              .formatUnits((rewardAmount as string).toString(), 18)
+              .toString()
           )
-          setMaxPerWallet(
-            Number(ethers.formatUnits((eventDetails.maxPerWallet as string).toString(), 18).toString())
-          )
+        )
       }
+      const totalStaked: string = await stakingContract.methods
+        .getTotalStaked(eventId)
+        .call()
+      setStaked(
+        ethers.formatUnits((totalStaked as string).toString(), 18).toString()
+      )
+
+      const remainingBlocks: any = await stakingContract.methods
+        .getRemainingBlocks(eventId)
+        .call()
+      setRemainingBlock(Number(remainingBlocks))
+      const apyDeatils: any = await stakingContract.methods
+        .calculateAPY(eventId)
+        .call()
+      setApy(Number(apyDeatils))
+      const eventDetails: any = await stakingContract.methods
+        .stakingEvents(eventId)
+        .call()
+      setAmmountAllocated(
+        Number(
+          ethers
+            .formatUnits((eventDetails.totalGEMAI as string).toString(), 18)
+            .toString()
+        )
+      )
+      setMaxPerWallet(
+        Number(
+          ethers
+            .formatUnits((eventDetails.maxPerWallet as string).toString(), 18)
+            .toString()
+        )
+      )
     })()
   }, [account])
 
@@ -110,42 +129,42 @@ function StakingPage() {
     ;(async () => {
       if (account) {
         if (Number(tokenAmt) > 0) {
-          if(Number(tokenAmt) <= maxPerWallet){
-          const currentGasPrice = await web3.eth.getGasPrice()
-          const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-          const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-          const gasLimit = "170000"
-          setStakingText("Approving")
-          try {
-            const allowance = await tokenContract.methods
-              .allowance(account, STAKING_ADDRESS)
-              .call()
-            if (
-              BigNumber.from(String(allowance)).lt(
-                BigNumber.from(String(tokenAmt))
-              )
-            ) {
-              await tokenContract.methods
-                .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
+          if (Number(tokenAmt) <= maxPerWallet) {
+            const currentGasPrice = await web3.eth.getGasPrice()
+            const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
+            const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
+            const gasLimit = "170000"
+            setStakingText("Approving")
+            try {
+              const allowance = await tokenContract.methods
+                .allowance(account, STAKING_ADDRESS)
+                .call()
+              if (
+                BigNumber.from(String(allowance)).lt(
+                  BigNumber.from(String(tokenAmt))
+                )
+              ) {
+                await tokenContract.methods
+                  .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
+                  .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+              }
+              setStakingText("Staking Initaiated")
+              const eventId = await stakingContract.methods
+                .currentEventId()
+                .call()
+              await stakingContract.methods
+                .stake(Number(eventId), ethers.parseEther(String(tokenAmt)))
                 .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+              setStakingText("Transaction Completed")
+              setStaking("")
+              toast.success(`Staking Completed`)
+              setStakingText("Stake Gem AI")
+            } catch (e) {
+              setStakingText("Stake Gem AI")
             }
-            setStakingText("Staking Initaiated")
-            const eventId = await stakingContract.methods
-              .currentEventId()
-              .call()
-            await stakingContract.methods
-              .stake(Number(eventId), ethers.parseEther(String(tokenAmt)))
-              .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-            setStakingText("Transaction Completed")
-            setStaking("")
-            toast.success(`Staking Completed`)
-            setStakingText("Stake Gem AI")
-          } catch (e) {
-            setStakingText("Stake Gem AI")
+          } else {
+            toast.success(`Please enter amount less than ${maxPerWallet}.`)
           }
-        }else{
-          toast.success(`Please enter amount less than ${maxPerWallet}.`)
-        }
         } else {
           toast.success(`Please enter valid amount.`)
         }
@@ -158,21 +177,19 @@ function StakingPage() {
   const handleClaim = () => {
     ;(async () => {
       if (account) {
-          const currentGasPrice = await web3.eth.getGasPrice()
-          const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-          const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-          const gasLimit = "170000"
-          try {
-            const eventId = await stakingContract.methods
-              .currentEventId()
-              .call()
-            await stakingContract.methods
-              .claim(Number(eventId))
-              .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-            toast.success(`Claim Successfull`)
-          } catch (e) {
-            setStakingText("Claim")
-          }
+        const currentGasPrice = await web3.eth.getGasPrice()
+        const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
+        const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
+        const gasLimit = "170000"
+        try {
+          const eventId = await stakingContract.methods.currentEventId().call()
+          await stakingContract.methods
+            .claim(Number(eventId))
+            .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+          toast.success(`Claim Successfull`)
+        } catch (e) {
+          setStakingText("Claim")
+        }
       } else {
         toast.success(`Please connect your wallet.`)
       }
@@ -249,24 +266,25 @@ function StakingPage() {
 
     return (
       <Card className='total' reverse>
-        <div className='total-heading'>
-          <div className='total-heading-left'>
-            <div className='sub'>Staking</div>
-            <h4>Total Staked:</h4>
-          </div>
-          <BuyNextGemButton />
-        </div>
-        <TotalInput />
-        <div>
-          <div className='total-heading-left'>
-            <h4 style={{ marginBottom: "20px" }}>Staking Event Details:</h4>
-          </div>
-          <APYInput />
-          <BlockRemainingInput />
-          <AmountAllocatedInput />
-          {reward>0 && <RewardInput />}
-          {/* <TimeRemainingInput /> */}
-        </div>
+            <div className='total-heading'>
+              <div className='total-heading-left'>
+                <div className='sub'>Staking</div>
+                <h5>Total Staked:</h5>
+              </div>
+              <BuyNextGemButton />
+            </div>
+            <TotalInput />
+            <div>
+              <div className='total-heading-left'>
+                <h5 style={{ marginBottom: "20px" }}>Staking Event Details:</h5>
+              </div>
+              <APYInput />
+              <BlockRemainingInput />
+              <AmountAllocatedInput />
+              {(reward > 0  && account) && <RewardInput />}
+              {/* <TimeRemainingInput /> */}
+              {!account && <h5 style={{marginTop:'20px'}}>Login to participate in staking.</h5>}
+            </div>
       </Card>
     )
   }
@@ -286,7 +304,7 @@ function StakingPage() {
       const [data, setData] = useState("")
       return (
         <>
-          <Input
+         {remainingBlock >0 ? <> <Input
             sprite={
               <img
                 src={logoTokenSrc}
@@ -304,24 +322,22 @@ function StakingPage() {
             key={"amount"}
           />
           Maxium Amount Per Wallet : {maxPerWallet}
-          <div className='unlock-order'>
-            <Corner />
-          </div>
           <Button
             status='success'
             icon='carbon:unlocked'
             onClick={() => handleStaking(Number(data))}
           >
             {StakingText}
-          </Button>
-
-          {(remainingBlock===0 && reward >0)  &&<Button
-            status='success'
-            icon='carbon:unlocked'
-            onClick={() => handleClaim()}
-          >
-            {'Claim'}
-          </Button>}
+          </Button></>: <><h5>No staking event available </h5></>}
+          {remainingBlock === 0 && reward > 0 && (
+            <Button
+              status='success'
+              icon='carbon:unlocked'
+              onClick={() => handleClaim()}
+            >
+              {"Claim"}
+            </Button>
+          )}
         </>
       )
     }
@@ -329,16 +345,14 @@ function StakingPage() {
     return (
       <Card className='unlock'>
         <div className='unlock-title'>
-          <h5>{"Your Staking details"}</h5>
-          
+          <h5>{"Your Staking details:"}</h5>
         </div>
-        {!isPremium && (<Button
-      onClick={()=>navigate('/premium')}
-      blank={true}
-    >
-      Subscribe {TOKEN_NAME}
-    </Button>)}
-        <Locked />
+        {!isPremium && (
+          <Button onClick={() => navigate("/premium")} blank={true}>
+            Subcribe to premium
+          </Button>
+        )}
+        {isPremium && <Locked />}
       </Card>
     )
   }
@@ -383,8 +397,12 @@ function StakingPage() {
             </div>
             <div className='staking-right'>
               <Total />
-              <Separator />
-              <Unlock />
+              {account && (
+                <>
+                  <Separator />
+                  <Unlock />{" "}
+                </>
+              )}
               <div className='more'>
                 <div className='more-arrow'>
                   <div className='more-arrow-shape'></div>
