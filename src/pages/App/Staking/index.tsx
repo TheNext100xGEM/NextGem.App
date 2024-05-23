@@ -349,9 +349,9 @@ function StakingPage() {
         </div>
         {!isPremium && (<div className='unlock-title'>
         <Button status={statusAccess}>{'Locked'}</Button>
-          <h5>
+          <span>
             {"You need premium to use staking"}
-          </h5>
+          </span>
           </div>)}
         {!isPremium && (
           <Button onClick={() => navigate("/premium")} blank={true}>
