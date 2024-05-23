@@ -230,7 +230,7 @@ function StakingPage() {
     }
     const BlockRemainingInput = () => {
       return (
-        <div style={{ marginTop: "10px" }} className='total-input'>
+        <div style={{ marginTop: "1.2em" }} className='total-input'>
           Block Remaining
           <div className='total-input-content'>
             <strong>{block}</strong>
@@ -242,7 +242,7 @@ function StakingPage() {
 
     const AmountAllocatedInput = () => {
       return (
-        <div style={{ marginTop: "10px" }} className='total-input'>
+        <div style={{ marginTop: "1.2em" }} className='total-input'>
           Amount Allocated
           <div className='total-input-content'>
             <strong>{amount}</strong>
@@ -254,7 +254,7 @@ function StakingPage() {
 
     const RewardInput = () => {
       return (
-        <div style={{ marginTop: "10px" }} className='total-input'>
+        <div style={{ marginTop: "1.2em" }} className='total-input'>
           Reward Allocated
           <div className='total-input-content'>
             <strong>{rewardAmount}</strong>
@@ -347,6 +347,12 @@ function StakingPage() {
         <div className='unlock-title'>
           <h5>{"Your Staking details:"}</h5>
         </div>
+        {!isPremium && (<div className='unlock-title'>
+        <Button status={statusAccess}>{'Locked'}</Button>
+          <h5>
+            {"You need premium to use staking"}
+          </h5>
+          </div>)}
         {!isPremium && (
           <Button onClick={() => navigate("/premium")} blank={true}>
             Subcribe to premium
