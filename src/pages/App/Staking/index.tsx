@@ -73,7 +73,6 @@ function StakingPage() {
   useEffect(() => {
     ;(async () => {
       const eventId = await stakingContract.methods.currentEventId().call()
-      console.log(eventId)
       if (account) {
         const isSubscribe: boolean = await premiumContract.methods
           .checkManyRoles(account, ROLE)
@@ -93,6 +92,7 @@ function StakingPage() {
       const totalStaked: string = await stakingContract.methods
         .getTotalStaked(eventId)
         .call()
+
       setStaked(
         ethers.formatUnits((totalStaked as string).toString(), 18).toString()
       )
