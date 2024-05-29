@@ -37,6 +37,7 @@ import Web3 from "web3"
 import { INFURA_URL, PREMIUM_ADDRESS } from "../../../libs/constants"
 import useTokenInfo from "@hooks/useContractInfo"
 import getGemaiPriceUsd from "@utils/coingeko"
+import { formatLocalTimestamp } from "@utils/date"
 
 type PropsCard = {
   children: ReactNode
@@ -76,6 +77,7 @@ function PremiumPage() {
   const [usd, setUsd] = useState(0)
   const { account } = useWeb3React()
   const [premiumText, setPremiumText] = useState("Get premium access")
+  const [expirationDate, setExpirationDate] = useState('')
 
   const web3 = new Web3(INFURA_URL)
 
@@ -88,6 +90,17 @@ function PremiumPage() {
           .checkManyRoles(account, ROLE)
           .call()
         if (isSubscribe) {
+          const role1: number = await stakingContract.methods
+          .roleExpirations(account, ROLE[0])
+          .call()
+          const role2: number  = await stakingContract.methods
+          .roleExpirations(account, ROLE[1])
+          .call()
+          const role3: number  = await stakingContract.methods
+          .roleExpirations(account, ROLE[2])
+          .call()
+          const data = formatLocalTimestamp(Math.max(role1, role2, role3))
+          setExpirationDate(data)
           setPremium(true)
           setProlonged(false)
         }
@@ -330,7 +343,7 @@ function PremiumPage() {
           <div className='p'>
             <p>Your premium access to {CHAT_NAME} is available until:</p>
           </div>
-          <h5>15 February, 2023 08:00PM</h5>
+          <h5>{expirationDate}</h5>
           <div className='unlock-button'>
             <Button
               icon='carbon:time'
