@@ -190,7 +190,7 @@ function StakingPage() {
             const currentGasPrice = await web3.eth.getGasPrice()
             const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
             const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-            const gasLimit = "170000"
+            const gasLimit = "250000"
             setStakingText("Approving")
             try {
               const allowance = await tokenContract.methods
@@ -237,7 +237,7 @@ function StakingPage() {
       const currentGasPrice = await web3.eth.getGasPrice()
       const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
       const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-      const gasLimit = "170000"
+      const gasLimit = "250000"
       try {
         const eventId = await stakingContract.methods.currentEventId().call()
         await stakingContract.methods
