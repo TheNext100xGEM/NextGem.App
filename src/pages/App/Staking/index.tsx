@@ -9,7 +9,7 @@ import { Icon } from "@iconify/react"
 import { formatter } from "@utils/number"
 import classNames from "classnames"
 import gsap from "gsap"
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useEffect, useState, useCallback } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
 import { ethers } from "ethers"
@@ -32,7 +32,12 @@ type PropsCard = {
   className?: string
   reverse?: boolean
 }
-const Card = ({ children, className, reverse = false }: PropsCard) => {
+
+type TypeInputProps = {
+  value: string
+}
+
+const Card: React.FC<PropsCard> = ({ children, className, reverse = false }) => {
   return (
     <div className={classNames("card", className)}>
       {children}
@@ -41,7 +46,7 @@ const Card = ({ children, className, reverse = false }: PropsCard) => {
   )
 }
 
-const LogoToken = () => {
+const LogoToken: React.FC = () => {
   return (
     <img
       src={logoTokenSrc}
@@ -52,6 +57,56 @@ const LogoToken = () => {
     />
   )
 }
+
+const TotalInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div className='total-input'>
+    <LogoToken />
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const APYInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div className='total-input'>
+    APY
+    <div className='total-input-content'>
+      <strong>{value} %</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const BlockRemainingInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div style={{ marginTop: "1.2em" }} className='total-input'>
+    Block Remaining
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const AmountAllocatedInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div style={{ marginTop: "1.2em" }} className='total-input'>
+    Amount Allocated
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const RewardInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div style={{ marginTop: "1.2em" }} className='total-input'>
+    Reward Allocated
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
 
 function StakingPage() {
   const tokenContract = useTokenContract()
@@ -70,63 +125,65 @@ function StakingPage() {
   const web3 = new Web3(INFURA_URL)
   const navigate = useNavigate()
 
+  const fetchData = useCallback(async () => {
+    const eventId = await stakingContract.methods.currentEventId().call()
+    if (account) {
+      const isSubscribe: boolean = await premiumContract.methods
+        .checkManyRoles(account, ROLE)
+        .call()
+      setIsPremium(isSubscribe)
+      const rewardAmount: any = await stakingContract.methods
+        .calculateReward(eventId, account)
+        .call()
+      setReward(
+        Number(
+          ethers
+            .formatUnits((rewardAmount as string).toString(), 18)
+            .toString()
+        )
+      )
+    }
+    const totalStaked: string = await stakingContract.methods
+      .getTotalStaked(eventId)
+      .call()
+
+    setStaked(
+      ethers.formatUnits((totalStaked as string).toString(), 18).toString()
+    )
+
+    const remainingBlocks: any = await stakingContract.methods
+      .getRemainingBlocks(eventId)
+      .call()
+    setRemainingBlock(Number(remainingBlocks))
+    const apyDeatils: any = await stakingContract.methods
+      .calculateAPY(eventId)
+      .call()
+    setApy(Number(apyDeatils))
+    const eventDetails: any = await stakingContract.methods
+      .stakingEvents(eventId)
+      .call()
+    setAmmountAllocated(
+      Number(
+        ethers
+          .formatUnits((eventDetails.totalGEMAI as string).toString(), 18)
+          .toString()
+      )
+    )
+    setMaxPerWallet(
+      Number(
+        ethers
+          .formatUnits((eventDetails.maxPerWallet as string).toString(), 18)
+          .toString()
+      )
+    )
+  }, [account, premiumContract.methods, stakingContract.methods])
+
   useEffect(() => {
-    ;(async () => {
-      const eventId = await stakingContract.methods.currentEventId().call()
-      if (account) {
-        const isSubscribe: boolean = await premiumContract.methods
-          .checkManyRoles(account, ROLE)
-          .call()
-        setIsPremium(isSubscribe)
-        const rewardAmount: any = await stakingContract.methods
-          .calculateReward(eventId, account)
-          .call()
-        setReward(
-          Number(
-            ethers
-              .formatUnits((rewardAmount as string).toString(), 18)
-              .toString()
-          )
-        )
-      }
-      const totalStaked: string = await stakingContract.methods
-        .getTotalStaked(eventId)
-        .call()
+    fetchData()
+  }, [fetchData])
 
-      setStaked(
-        ethers.formatUnits((totalStaked as string).toString(), 18).toString()
-      )
-
-      const remainingBlocks: any = await stakingContract.methods
-        .getRemainingBlocks(eventId)
-        .call()
-      setRemainingBlock(Number(remainingBlocks))
-      const apyDeatils: any = await stakingContract.methods
-        .calculateAPY(eventId)
-        .call()
-      setApy(Number(apyDeatils))
-      const eventDetails: any = await stakingContract.methods
-        .stakingEvents(eventId)
-        .call()
-      setAmmountAllocated(
-        Number(
-          ethers
-            .formatUnits((eventDetails.totalGEMAI as string).toString(), 18)
-            .toString()
-        )
-      )
-      setMaxPerWallet(
-        Number(
-          ethers
-            .formatUnits((eventDetails.maxPerWallet as string).toString(), 18)
-            .toString()
-        )
-      )
-    })()
-  }, [account])
-
-  const handleStaking = (tokenAmt: Number) => {
-    ;(async () => {
+  const handleStaking = useCallback(
+    async (tokenAmt: Number) => {
       if (account) {
         if (Number(tokenAmt) > 0) {
           if (Number(tokenAmt) <= maxPerWallet) {
@@ -148,7 +205,7 @@ function StakingPage() {
                   .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
                   .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
               }
-              setStakingText("Staking Initaiated")
+              setStakingText("Staking Initiated")
               const eventId = await stakingContract.methods
                 .currentEventId()
                 .call()
@@ -171,30 +228,29 @@ function StakingPage() {
       } else {
         toast.success(`Please connect your wallet.`)
       }
-    })()
-  }
+    },
+    [account, maxPerWallet, stakingContract.methods, tokenContract.methods, web3.eth, web3.utils]
+  )
 
-  const handleClaim = () => {
-    ;(async () => {
-      if (account) {
-        const currentGasPrice = await web3.eth.getGasPrice()
-        const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-        const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-        const gasLimit = "170000"
-        try {
-          const eventId = await stakingContract.methods.currentEventId().call()
-          await stakingContract.methods
-            .claim(Number(eventId))
-            .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-          toast.success(`Claim Successfull`)
-        } catch (e) {
-          setStakingText("Claim")
-        }
-      } else {
-        toast.success(`Please connect your wallet.`)
+  const handleClaim = useCallback(async () => {
+    if (account) {
+      const currentGasPrice = await web3.eth.getGasPrice()
+      const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
+      const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
+      const gasLimit = "170000"
+      try {
+        const eventId = await stakingContract.methods.currentEventId().call()
+        await stakingContract.methods
+          .claim(Number(eventId))
+          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+        toast.success(`Claim Successful`)
+      } catch (e) {
+        setStakingText("Claim")
       }
-    })()
-  }
+    } else {
+      toast.success(`Please connect your wallet.`)
+    }
+  }, [account, stakingContract.methods, web3.eth, web3.utils])
 
   const statusAccess = Staking ? "success" : "warning"
   const iconAccess = Staking ? "carbon:unlocked" : "carbon:locked"
@@ -205,86 +261,27 @@ function StakingPage() {
     const apyData = formatter(Number(apy))
     const amount = formatter(Number(amountAllocated))
     const rewardAmount = formatter(Number(reward))
-    const TotalInput = () => {
-      return (
-        <div className='total-input'>
-          <LogoToken />
-          <div className='total-input-content'>
-            <strong>{total}</strong>
-          </div>
-          <Corner reverse />
-        </div>
-      )
-    }
-
-    const APYInput = () => {
-      return (
-        <div className='total-input'>
-          APY
-          <div className='total-input-content'>
-            <strong>{apyData} %</strong>
-          </div>
-          <Corner reverse />
-        </div>
-      )
-    }
-    const BlockRemainingInput = () => {
-      return (
-        <div style={{ marginTop: "1.2em" }} className='total-input'>
-          Block Remaining
-          <div className='total-input-content'>
-            <strong>{block}</strong>
-          </div>
-          <Corner reverse />
-        </div>
-      )
-    }
-
-    const AmountAllocatedInput = () => {
-      return (
-        <div style={{ marginTop: "1.2em" }} className='total-input'>
-          Amount Allocated
-          <div className='total-input-content'>
-            <strong>{amount}</strong>
-          </div>
-          <Corner reverse />
-        </div>
-      )
-    }
-
-    const RewardInput = () => {
-      return (
-        <div style={{ marginTop: "1.2em" }} className='total-input'>
-          Reward Allocated
-          <div className='total-input-content'>
-            <strong>{rewardAmount}</strong>
-          </div>
-          <Corner reverse />
-        </div>
-      )
-    }
 
     return (
       <Card className='total' reverse>
-            <div className='total-heading'>
-              <div className='total-heading-left'>
-                <div className='sub'>Staking</div>
-                <h5>Total Staked:</h5>
-              </div>
-              <BuyNextGemButton />
-            </div>
-            <TotalInput />
-            <div>
-              <div className='total-heading-left'>
-                <h5 style={{ marginBottom: "20px" }}>Staking Event Details:</h5>
-              </div>
-              <APYInput />
-              <BlockRemainingInput />
-              <AmountAllocatedInput />
-              {(reward > 0  && account) && <RewardInput />}
-              {/* <TimeRemainingInput /> */}
-              {!account && <h5 style={{marginTop:'20px'}}>Login to participate in staking.</h5>}
-            </div>
+        <div className='total-heading'>
+          <div className='total-heading-left'>
+            <div className='sub'>Staking</div>
+            <h5>Total Staked:</h5>
+          </div>
+          <BuyNextGemButton />
+        </div>
+        <TotalInput value={total} />
+        <div>
+          <div className='total-heading-left'>
+            <h5 style={{ marginBottom: "20px" }}>Staking Event Details:</h5>
+          </div>
+          <APYInput value={apyData} />
+          <BlockRemainingInput value={block} />
+          <AmountAllocatedInput value={amount} />
+          {(reward > 0 && account) && <RewardInput value={rewardAmount} />}
+          {!account && <h5 style={{ marginTop: '20px' }}>Login to participate in staking.</h5>}
+        </div>
       </Card>
     )
   }
@@ -304,31 +301,32 @@ function StakingPage() {
       const [data, setData] = useState("")
       return (
         <>
-         {remainingBlock >0 ? <> <Input
-            sprite={
-              <img
-                src={logoTokenSrc}
-                alt={TOKEN_NAME}
-                width='30'
-                height='30'
-                loading='lazy'
-              />
-            }
-            value={data}
-            placeholder='Staking Amount'
-            className='input-staking'
-            onChange={(e) => setData(e)}
-            type={"number"}
-            key={"amount"}
-          />
-          Maxium Amount Per Wallet : {maxPerWallet}
-          <Button
-            status='success'
-            icon='carbon:unlocked'
-            onClick={() => handleStaking(Number(data))}
-          >
-            {StakingText}
-          </Button></>: <><h5>No staking event available </h5></>}
+          {remainingBlock > 0 ? <>
+            <Input
+              sprite={
+                <img
+                  src={logoTokenSrc}
+                  alt={TOKEN_NAME}
+                  width='30'
+                  height='30'
+                  loading='lazy'
+                />
+              }
+              value={data}
+              placeholder='Staking Amount'
+              className='input-staking'
+              onChange={(e) => setData(e)}
+              type={"number"}
+              key={"amount"}
+            />
+            Maxium Amount Per Wallet : {maxPerWallet}
+            <Button
+              status='success'
+              icon='carbon:unlocked'
+              onClick={() => handleStaking(Number(data))}
+            >
+              {StakingText}
+            </Button></> : <><h5>No staking event available </h5></>}
           {remainingBlock === 0 && reward > 0 && (
             <Button
               status='success'
@@ -347,11 +345,12 @@ function StakingPage() {
         <div className='unlock-title'>
           <h5>{"Your Staking details:"}</h5>
         </div>
-        {!isPremium && (<div className='unlock-title'>
-        <Button status={statusAccess}>{'Locked'}</Button>
-          <span>
-            {"You need premium to use staking"}
-          </span>
+        {!isPremium && (
+          <div className='unlock-title'>
+            <Button status={statusAccess}>{'Locked'}</Button>
+            <span>
+              {"You need premium to use staking"}
+            </span>
           </div>)}
         {!isPremium && (
           <Button onClick={() => navigate("/premium")} blank={true}>
@@ -406,7 +405,7 @@ function StakingPage() {
               {account && (
                 <>
                   <Separator />
-                  <Unlock />{" "}
+                  <Unlock />
                 </>
               )}
               <div className='more'>
