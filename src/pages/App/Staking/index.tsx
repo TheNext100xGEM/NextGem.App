@@ -37,7 +37,11 @@ type TypeInputProps = {
   value: string
 }
 
-const Card: React.FC<PropsCard> = ({ children, className, reverse = false }) => {
+const Card: React.FC<PropsCard> = ({
+  children,
+  className,
+  reverse = false
+}) => {
   return (
     <div className={classNames("card", className)}>
       {children}
@@ -89,8 +93,11 @@ const BlockRemainingInput: React.FC<TypeInputProps> = ({ value }) => (
 )
 
 const AmountAllocatedInput: React.FC<TypeInputProps> = ({ value }) => (
-  <div style={{ marginTop: "1.2em" }} className='total-input'>
-    Amount Allocated
+  <div
+    style={{ marginTop: "1.2em", marginBottom: "1.2em" }}
+    className='total-input'
+  >
+    Amount Allocated to event
     <div className='total-input-content'>
       <strong>{value}</strong>
     </div>
@@ -99,10 +106,38 @@ const AmountAllocatedInput: React.FC<TypeInputProps> = ({ value }) => (
 )
 
 const RewardInput: React.FC<TypeInputProps> = ({ value }) => (
-  <div style={{ marginTop: "1.2em" }} className='total-input'>
-    Reward Allocated
+  <div
+    style={{ marginTop: "1.2em", marginBottom: "1.2em" }}
+    className='total-input'
+  >
+    Your reward at end of event
     <div className='total-input-content'>
       <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const StakedInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div
+    style={{ marginTop: "1.2em" }}
+    className='total-input'
+  >
+    Your staked amount
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const YourAPYInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div
+    className='total-input'
+  >
+    Your APY
+    <div className='total-input-content'>
+      <strong>{value} %</strong>
     </div>
     <Corner reverse />
   </div>
@@ -122,6 +157,7 @@ function StakingPage() {
   const [StakingText, setStakingText] = useState("Stake Gem AI")
   const [maxPerWallet, setMaxPerWallet] = useState(0)
   const [isPremium, setIsPremium] = useState(false)
+  const [stakeAmount, setStakeAmount] = useState(0)
   const web3 = new Web3(INFURA_URL)
   const navigate = useNavigate()
 
@@ -137,8 +173,17 @@ function StakingPage() {
         .call()
       setReward(
         Number(
+          ethers.formatUnits((rewardAmount as string).toString(), 18).toString()
+        )
+      )
+      const stakes: any = await stakingContract.methods
+        .stakes(eventId, account)
+        .call()
+
+      setStakeAmount(
+        Number(
           ethers
-            .formatUnits((rewardAmount as string).toString(), 18)
+            .formatUnits((stakes.amount as string).toString(), 18)
             .toString()
         )
       )
@@ -190,7 +235,7 @@ function StakingPage() {
             const currentGasPrice = await web3.eth.getGasPrice()
             const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
             const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-            const gasLimit = "250000"
+            const gasLimit = "320000"
             setStakingText("Approving")
             try {
               const allowance = await tokenContract.methods
@@ -229,7 +274,14 @@ function StakingPage() {
         toast.success(`Please connect your wallet.`)
       }
     },
-    [account, maxPerWallet, stakingContract.methods, tokenContract.methods, web3.eth, web3.utils]
+    [
+      account,
+      maxPerWallet,
+      stakingContract.methods,
+      tokenContract.methods,
+      web3.eth,
+      web3.utils
+    ]
   )
 
   const handleClaim = useCallback(async () => {
@@ -237,7 +289,7 @@ function StakingPage() {
       const currentGasPrice = await web3.eth.getGasPrice()
       const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
       const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-      const gasLimit = "250000"
+      const gasLimit = "320000"
       try {
         const eventId = await stakingContract.methods.currentEventId().call()
         await stakingContract.methods
@@ -259,8 +311,8 @@ function StakingPage() {
     const total = formatter(Number(staked))
     const block = formatter(Number(remainingBlock))
     const apyData = formatter(Number(apy))
-    const amount = formatter(Number(amountAllocated))
-    const rewardAmount = formatter(Number(reward))
+    const amount = formatter(parseFloat(amountAllocated.toFixed(2)))
+    const rewardAmount = formatter(parseFloat(reward.toFixed(2)))
 
     return (
       <Card className='total' reverse>
@@ -279,8 +331,12 @@ function StakingPage() {
           <APYInput value={apyData} />
           <BlockRemainingInput value={block} />
           <AmountAllocatedInput value={amount} />
-          {(reward > 0 && account) && <RewardInput value={rewardAmount} />}
-          {!account && <h5 style={{ marginTop: '20px' }}>Login to participate in staking.</h5>}
+          {reward > 0 && account && <RewardInput value={rewardAmount} />}
+          {!account && (
+            <h5 style={{ marginTop: "20px" }}>
+              Login to participate in staking.
+            </h5>
+          )}
         </div>
       </Card>
     )
@@ -301,32 +357,41 @@ function StakingPage() {
       const [data, setData] = useState("")
       return (
         <>
-          {remainingBlock > 0 ? <>
-            <Input
-              sprite={
-                <img
-                  src={logoTokenSrc}
-                  alt={TOKEN_NAME}
-                  width='30'
-                  height='30'
-                  loading='lazy'
-                />
-              }
-              value={data}
-              placeholder='Staking Amount'
-              className='input-staking'
-              onChange={(e) => setData(e)}
-              type={"number"}
-              key={"amount"}
-            />
-            Maxium Amount Per Wallet : {maxPerWallet}
-            <Button
-              status='success'
-              icon='carbon:unlocked'
-              onClick={() => handleStaking(Number(data))}
-            >
-              {StakingText}
-            </Button></> : <><h5>No staking event available </h5></>}
+         {reward>0 && <StakedInput value={formatter(Number(stakeAmount.toFixed(2)))} />}
+         {reward>0 && <YourAPYInput value={formatter(Number(apy))} />}
+          {remainingBlock > 0 ? (
+            <>
+              <Input
+                sprite={
+                  <img
+                    src={logoTokenSrc}
+                    alt={TOKEN_NAME}
+                    width='30'
+                    height='30'
+                    loading='lazy'
+                  />
+                }
+                value={data}
+                placeholder='Staking Amount'
+                className='input-staking'
+                onChange={(e) => setData(e)}
+                type={"number"}
+                key={"amount"}
+              />
+              Maxium Amount Per Wallet : {maxPerWallet}
+              <Button
+                status='success'
+                icon='carbon:unlocked'
+                onClick={() => handleStaking(Number(data))}
+              >
+                {StakingText}
+              </Button>
+            </>
+          ) : (
+            <>
+              <h5>No staking event available </h5>
+            </>
+          )}
           {remainingBlock === 0 && reward > 0 && (
             <Button
               status='success'
@@ -347,11 +412,10 @@ function StakingPage() {
         </div>
         {!isPremium && (
           <div className='unlock-title'>
-            <Button status={statusAccess}>{'Locked'}</Button>
-            <span>
-              {"You need premium to use staking"}
-            </span>
-          </div>)}
+            <Button status={statusAccess}>{"Locked"}</Button>
+            <span>{"You need premium to use staking"}</span>
+          </div>
+        )}
         {!isPremium && (
           <Button onClick={() => navigate("/premium")} blank={true}>
             Subcribe to premium
