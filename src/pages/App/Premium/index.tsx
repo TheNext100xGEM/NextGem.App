@@ -17,7 +17,7 @@ import {
 import { useGSAP } from "@gsap/react"
 import { Icon } from "@iconify/react"
 import { PropsOffer } from "@models/Offers"
-import { formatter } from "@utils/number"
+import { formatter, maxOfThree } from "@utils/number"
 import classNames from "classnames"
 import gsap from "gsap"
 import { ReactNode, useEffect, useState } from "react"
@@ -78,6 +78,7 @@ function PremiumPage() {
   const { account } = useWeb3React()
   const [premiumText, setPremiumText] = useState("Get premium access")
   const [expirationDate, setExpirationDate] = useState('')
+  const E18 = BigNumber.from(10).pow(18);
 
   const web3 = new Web3(INFURA_URL)
 
@@ -90,16 +91,18 @@ function PremiumPage() {
           .checkManyRoles(account, ROLE)
           .call()
         if (isSubscribe) {
-          const role1: number = await stakingContract.methods
-          .roleExpirations(account, ROLE[0])
+          const role1: BigInt = await stakingContract.methods
+          .getRoleExpiration(account, ROLE[0])
           .call()
-          const role2: number  = await stakingContract.methods
-          .roleExpirations(account, ROLE[1])
+          console.log(role1)
+          const role2: BigInt  = await stakingContract.methods
+          .getRoleExpiration(account, ROLE[1])
           .call()
-          const role3: number  = await stakingContract.methods
-          .roleExpirations(account, ROLE[2])
+          const role3: BigInt  = await stakingContract.methods
+          .getRoleExpiration(account, ROLE[2])
           .call()
-          const data = formatLocalTimestamp(Math.max(role1, role2, role3))
+          console.log(role1, role2, role3)
+          const data = formatLocalTimestamp(Number(maxOfThree(role1, role2, role3)))
           setExpirationDate(data)
           setPremium(true)
           setProlonged(false)
@@ -141,12 +144,12 @@ function PremiumPage() {
             .allowance(account, PREMIUM_ADDRESS)
             .call()
           if (
-            BigNumber.from(String(allowance)).lt(
-              BigNumber.from(String(tokenAmt))
-            )
+              BigNumber.from(Number(tokenAmt) * 1000000000)
+                .div(1000000000)
+                .gt(BigNumber.from(allowance).div(E18))
           ) {
             await tokenContract.methods
-              .approve(PREMIUM_ADDRESS, ethers.parseEther(String(tokenAmt)))
+              .approve(PREMIUM_ADDRESS, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
               .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
           }
           setPremiumText("Buying")

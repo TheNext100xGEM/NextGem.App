@@ -106,10 +106,7 @@ const AmountAllocatedInput: React.FC<TypeInputProps> = ({ value }) => (
 )
 
 const RewardInput: React.FC<TypeInputProps> = ({ value }) => (
-  <div
-    style={{ marginTop: "1.2em", marginBottom: "1.2em" }}
-    className='total-input'
-  >
+  <div style={{ marginTop: "1.2em" }} className='total-input'>
     Your reward at end of event
     <div className='total-input-content'>
       <strong>{value}</strong>
@@ -119,10 +116,7 @@ const RewardInput: React.FC<TypeInputProps> = ({ value }) => (
 )
 
 const StakedInput: React.FC<TypeInputProps> = ({ value }) => (
-  <div
-    style={{ marginTop: "1.2em" }}
-    className='total-input'
-  >
+  <div className='total-input'>
     Your staked amount
     <div className='total-input-content'>
       <strong>{value}</strong>
@@ -132,9 +126,7 @@ const StakedInput: React.FC<TypeInputProps> = ({ value }) => (
 )
 
 const YourAPYInput: React.FC<TypeInputProps> = ({ value }) => (
-  <div
-    className='total-input'
-  >
+  <div className='total-input'>
     Your APY
     <div className='total-input-content'>
       <strong>{value} %</strong>
@@ -152,6 +144,7 @@ function StakingPage() {
   const { account } = useWeb3React()
   const [remainingBlock, setRemainingBlock] = useState(0)
   const [apy, setApy] = useState(0)
+  const [ownApy, setOwnApy] = useState(0)
   const [amountAllocated, setAmmountAllocated] = useState(0)
   const [reward, setReward] = useState(0)
   const [StakingText, setStakingText] = useState("Stake Gem AI")
@@ -160,6 +153,7 @@ function StakingPage() {
   const [stakeAmount, setStakeAmount] = useState(0)
   const web3 = new Web3(INFURA_URL)
   const navigate = useNavigate()
+  const E18 = BigNumber.from(10).pow(18)
 
   const fetchData = useCallback(async () => {
     const eventId = await stakingContract.methods.currentEventId().call()
@@ -176,6 +170,10 @@ function StakingPage() {
           ethers.formatUnits((rewardAmount as string).toString(), 18).toString()
         )
       )
+      const ownApyDeatils: any = await stakingContract.methods
+        .calculatePersonalAPY(1, account)
+        .call()
+      setOwnApy(Number(ownApyDeatils))
       const stakes: any = await stakingContract.methods
         .stakes(eventId, account)
         .call()
@@ -201,9 +199,10 @@ function StakingPage() {
       .call()
     setRemainingBlock(Number(remainingBlocks))
     const apyDeatils: any = await stakingContract.methods
-      .calculateAPY(eventId)
+      .calculateGlobalAPY(eventId)
       .call()
     setApy(Number(apyDeatils))
+
     const eventDetails: any = await stakingContract.methods
       .stakingEvents(eventId)
       .call()
@@ -231,76 +230,125 @@ function StakingPage() {
     async (tokenAmt: Number) => {
       if (account) {
         if (Number(tokenAmt) > 0) {
+          console.log(maxPerWallet)
           if (Number(tokenAmt) <= maxPerWallet) {
-            const currentGasPrice = await web3.eth.getGasPrice()
-            const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-            const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-            const gasLimit = "320000"
             setStakingText("Approving")
+
             try {
               const allowance = await tokenContract.methods
                 .allowance(account, STAKING_ADDRESS)
                 .call()
-              if (
-                BigNumber.from(String(allowance)).lt(
-                  BigNumber.from(String(tokenAmt))
+
+              const tokenAmtInWei = BigNumber.from(tokenAmt).mul(E18)
+
+              if (tokenAmtInWei.gt(BigNumber.from(allowance))) {
+                const approveTx = tokenContract.methods.approve(
+                  STAKING_ADDRESS,
+                  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                 )
-              ) {
-                await tokenContract.methods
-                  .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
-                  .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
+
+                const gasLimitApprove = await approveTx.estimateGas({
+                  from: account
+                })
+                const gasPrice = await web3.eth.getGasPrice()
+
+                await approveTx.send({
+                  from: account,
+                  gas: gasLimitApprove.toString(),
+                  gasPrice: gasPrice.toString()
+                })
+
+                setStakingText("Staking Initiated")
+
+                const eventId = await stakingContract.methods
+                  .currentEventId()
+                  .call()
+                const stakeTx = stakingContract.methods.stake(
+                  eventId,
+                  tokenAmtInWei.toString()
+                )
+
+                const gasLimitStake = await stakeTx.estimateGas({
+                  from: account
+                })
+
+                await stakeTx.send({
+                  from: account,
+                  gas: gasLimitStake.toString(),
+                  gasPrice: gasPrice.toString()
+                })
+
+                setStakingText("Transaction Completed")
+                setStaking("")
+                toast.success("Staking Completed")
+                setStakingText("Stake Gem AI")
+              } else {
+                const eventId = await stakingContract.methods
+                  .currentEventId()
+                  .call()
+                const stakeTx = stakingContract.methods.stake(
+                  eventId,
+                  tokenAmtInWei.toString()
+                )
+
+                const gasLimitStake = await stakeTx.estimateGas({
+                  from: account
+                })
+                const gasPrice = await web3.eth.getGasPrice()
+
+                await stakeTx.send({
+                  from: account,
+                  gas: gasLimitStake.toString(),
+                  gasPrice: gasPrice.toString()
+                })
+
+                setStakingText("Transaction Completed")
+                setStaking("")
+                toast.success("Staking Completed")
+                setStakingText("Stake Gem AI")
               }
-              setStakingText("Staking Initiated")
-              const eventId = await stakingContract.methods
-                .currentEventId()
-                .call()
-              await stakingContract.methods
-                .stake(Number(eventId), ethers.parseEther(String(tokenAmt)))
-                .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-              setStakingText("Transaction Completed")
-              setStaking("")
-              toast.success(`Staking Completed`)
-              setStakingText("Stake Gem AI")
             } catch (e) {
+              console.error("Staking error:", e)
+              toast.error("Staking failed. Please try again.")
               setStakingText("Stake Gem AI")
             }
           } else {
-            toast.success(`Please enter amount less than ${maxPerWallet}.`)
+            toast.error(`Please enter an amount less than ${maxPerWallet}.`)
           }
         } else {
-          toast.success(`Please enter valid amount.`)
+          toast.error("Please enter a valid amount.")
         }
       } else {
-        toast.success(`Please connect your wallet.`)
+        toast.error("Please connect your wallet.")
       }
     },
-    [
-      account,
-      maxPerWallet,
-      stakingContract.methods,
-      tokenContract.methods,
-      web3.eth,
-      web3.utils
-    ]
+    [account, stakingContract.methods, tokenContract.methods, maxPerWallet]
   )
 
   const handleClaim = useCallback(async () => {
     if (account) {
-      const currentGasPrice = await web3.eth.getGasPrice()
-      const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-      const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-      const gasLimit = "320000"
       try {
         const eventId = await stakingContract.methods.currentEventId().call()
-        await stakingContract.methods
-          .claim(Number(eventId))
-          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-        toast.success(`Claim Successful`)
+        const claimTx = stakingContract.methods.claim(eventId)
+
+        const gasLimitClaim = await claimTx.estimateGas({ from: account })
+        const gasPrice = await web3.eth.getGasPrice()
+
+        await claimTx.send({
+          from: account,
+          gas: gasLimitClaim.toString(),
+          gasPrice: gasPrice.toString()
+        })
+
+        toast.success("Claim Successful")
+        setStakingText("Claim")
       } catch (e) {
+        console.error("Claim error:", e)
+        toast.error("Claim failed. Please try again.")
         setStakingText("Claim")
       }
     } else {
-      toast.success(`Please connect your wallet.`)
+      toast.error("Please connect your wallet.")
     }
   }, [account, stakingContract.methods, web3.eth, web3.utils])
 
@@ -312,7 +360,6 @@ function StakingPage() {
     const block = formatter(Number(remainingBlock))
     const apyData = formatter(Number(apy))
     const amount = formatter(parseFloat(amountAllocated.toFixed(2)))
-    const rewardAmount = formatter(parseFloat(reward.toFixed(2)))
 
     return (
       <Card className='total' reverse>
@@ -331,7 +378,6 @@ function StakingPage() {
           <APYInput value={apyData} />
           <BlockRemainingInput value={block} />
           <AmountAllocatedInput value={amount} />
-          {reward > 0 && account && <RewardInput value={rewardAmount} />}
           {!account && (
             <h5 style={{ marginTop: "20px" }}>
               Login to participate in staking.
@@ -357,8 +403,13 @@ function StakingPage() {
       const [data, setData] = useState("")
       return (
         <>
-         {reward>0 && <StakedInput value={formatter(Number(stakeAmount.toFixed(2)))} />}
-         {reward>0 && <YourAPYInput value={formatter(Number(apy))} />}
+          {reward > 0 && account && (
+            <RewardInput value={formatter(parseFloat(reward.toFixed(2)))} />
+          )}
+          {reward > 0 && (
+            <StakedInput value={formatter(Number(stakeAmount.toFixed(2)))} />
+          )}
+          {reward > 0 && <YourAPYInput value={formatter(Number(ownApy))} />}
           {remainingBlock > 0 ? (
             <>
               <Input
