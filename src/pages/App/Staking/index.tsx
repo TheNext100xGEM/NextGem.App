@@ -97,7 +97,7 @@ const AmountAllocatedInput: React.FC<TypeInputProps> = ({ value }) => (
     style={{ marginTop: "1.2em", marginBottom: "1.2em" }}
     className='total-input'
   >
-    Amount Allocated to event
+    Amount Allocated To Event
     <div className='total-input-content'>
       <strong>{value}</strong>
     </div>
@@ -429,7 +429,7 @@ function StakingPage() {
                 type={"number"}
                 key={"amount"}
               />
-              Maxium Amount Per Wallet : {maxPerWallet}
+              Maximum Amount Per Wallet : {maxPerWallet}
               <Button
                 status='success'
                 icon='carbon:unlocked'
