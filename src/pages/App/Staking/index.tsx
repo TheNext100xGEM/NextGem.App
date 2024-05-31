@@ -1,46 +1,47 @@
 import "./_staking.scss"
 import logoTokenSrc from "@assets/img/logo-token-next-gem.webp"
 import Scene from "@components/3D"
-import { Button, BuyNextGemButton, Corner } from "@components/ui"
+import { Button, BuyNextGemButton, Corner, Input } from "@components/ui"
 import { BigNumber } from "@ethersproject/bignumber"
-import { ROLE } from "@constants/index"
-import {
-  CHAT_NAME,
-  COINMARKETCAP,
-  SITE_NAME,
-  SOUND_BUTTON_CLICK,
-  SOUND_BUTTON_HOVER,
-  TOKEN_NAME,
-  VOLUME_BUTTON_CLICK,
-  VOLUME_BUTTON_HOVER
-} from "@constants/index"
+import { ROLE, SITE_NAME, TOKEN_NAME } from "@constants/index"
 import { useGSAP } from "@gsap/react"
 import { Icon } from "@iconify/react"
-import { PropsOffer } from "@models/Offers"
 import { formatter } from "@utils/number"
 import classNames from "classnames"
 import gsap from "gsap"
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useEffect, useState, useCallback } from "react"
 import { Helmet } from "react-helmet-async"
 import toast from "react-hot-toast"
+import { ethers } from "ethers"
 import LazyLoad from "react-lazyload"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
-import { useStakeContract, useTokenContract } from "../../../hooks/useContract"
+import {
+  usePremiumContract,
+  useStakeContract,
+  useTokenContract
+} from "../../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
-import { ethers } from "ethers"
 import Web3 from "web3"
 import { INFURA_URL, STAKING_ADDRESS } from "../../../libs/constants"
-import useTokenInfo from "@hooks/useContractInfo"
-import getGemaiPriceUsd from "@utils/coingeko"
+import { useNavigate } from "react-router-dom"
 
 type PropsCard = {
   children: ReactNode
   className?: string
   reverse?: boolean
 }
-const Card = ({ children, className, reverse = false }: PropsCard) => {
+
+type TypeInputProps = {
+  value: string
+}
+
+const Card: React.FC<PropsCard> = ({
+  children,
+  className,
+  reverse = false
+}) => {
   return (
     <div className={classNames("card", className)}>
       {children}
@@ -49,7 +50,7 @@ const Card = ({ children, className, reverse = false }: PropsCard) => {
   )
 }
 
-const LogoToken = () => {
+const LogoToken: React.FC = () => {
   return (
     <img
       src={logoTokenSrc}
@@ -61,160 +62,327 @@ const LogoToken = () => {
   )
 }
 
+const TotalInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div className='total-input'>
+    <LogoToken />
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const APYInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div className='total-input'>
+    APY
+    <div className='total-input-content'>
+      <strong>{value} %</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const BlockRemainingInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div style={{ marginTop: "1.2em" }} className='total-input'>
+    Block Remaining
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const AmountAllocatedInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div
+    style={{ marginTop: "1.2em", marginBottom: "1.2em" }}
+    className='total-input'
+  >
+    Amount Allocated To Event
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const RewardInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div style={{ marginTop: "1.2em" }} className='total-input'>
+    Your reward at end of event
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const StakedInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div className='total-input'>
+    Your staked amount
+    <div className='total-input-content'>
+      <strong>{value}</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
+const YourAPYInput: React.FC<TypeInputProps> = ({ value }) => (
+  <div className='total-input'>
+    Your APY
+    <div className='total-input-content'>
+      <strong>{value} %</strong>
+    </div>
+    <Corner reverse />
+  </div>
+)
+
 function StakingPage() {
-  const [prolonged, setProlonged] = useState(false)
-  const handleProlonged = () => setProlonged(!prolonged)
   const tokenContract = useTokenContract()
   const stakingContract = useStakeContract()
-  const { totalSupply } = useTokenInfo()
-  const [premium, setPremium] = useState(false)
-  const [burnAmount, setBurnAmount] = useState(0)
-  const [usdPrice, setUsdPrice] = useState(0)
-  const [usd, setUsd] = useState(0)
+  const premiumContract = usePremiumContract()
+  const [Staking, setStaking] = useState("")
+  const [staked, setStaked] = useState("0")
   const { account } = useWeb3React()
-  const [premiumText, setPremiumText] = useState('Get premium access')
-
+  const [remainingBlock, setRemainingBlock] = useState(0)
+  const [apy, setApy] = useState(0)
+  const [ownApy, setOwnApy] = useState(0)
+  const [amountAllocated, setAmmountAllocated] = useState(0)
+  const [reward, setReward] = useState(0)
+  const [StakingText, setStakingText] = useState("Stake Gem AI")
+  const [maxPerWallet, setMaxPerWallet] = useState(0)
+  const [isPremium, setIsPremium] = useState(false)
+  const [stakeAmount, setStakeAmount] = useState(0)
   const web3 = new Web3(INFURA_URL)
+  const navigate = useNavigate()
+  const E18 = BigNumber.from(10).pow(18)
 
-  useEffect(() => {
-    ;(async () => {
-      const price = await getGemaiPriceUsd()
-      setUsd(price)
-      if (account) {
-        const isSubscribe = await stakingContract.methods
-          .checkManyRoles(account, ROLE)
-          .call()
-        if (isSubscribe) {
-          setPremium(true)
-          setProlonged(false)
-        }
-      }
-      if (totalSupply) {
-        const price = await getGemaiPriceUsd()
-        setBurnAmount(
-          850000000 -
-            Number(
-              ethers
-                .formatUnits((totalSupply as string).toString(), 18)
-                .toString()
-            )
+  const fetchData = useCallback(async () => {
+    const eventId = await stakingContract.methods.currentEventId().call()
+    if (account) {
+      const isSubscribe: boolean = await premiumContract.methods
+        .checkManyRoles(account, ROLE)
+        .call()
+      setIsPremium(isSubscribe)
+      const rewardAmount: any = await stakingContract.methods
+        .calculateReward(eventId, account)
+        .call()
+      setReward(
+        Number(
+          ethers.formatUnits((rewardAmount as string).toString(), 18).toString()
         )
-        setUsdPrice(
-          price *
-            (850000000 -
-              Number(
-                ethers
-                  .formatUnits((totalSupply as string).toString(), 18)
-                  .toString()
-              ))
+      )
+      const ownApyDeatils: any = await stakingContract.methods
+        .calculatePersonalAPY(1, account)
+        .call()
+      setOwnApy(Number(ownApyDeatils))
+      const stakes: any = await stakingContract.methods
+        .stakes(eventId, account)
+        .call()
+
+      setStakeAmount(
+        Number(
+          ethers
+            .formatUnits((stakes.amount as string).toString(), 18)
+            .toString()
         )
-      }
-    })()
-  }, [account, totalSupply])
-
-  const handlePremium = (tokenAmt: Number, activeOffer: any) => {
-    ;(async () => {
-      if (account) {
-        const currentGasPrice = await web3.eth.getGasPrice()
-        const gasPrice = web3.utils.fromWei(currentGasPrice, "gwei")
-        const gasPriceWei = web3.utils.toWei(gasPrice, "gwei")
-        const gasLimit = "130000"
-        setPremiumText('Approving')
-        try{
-        const allowance = await tokenContract.methods
-          .allowance(account, STAKING_ADDRESS)
-          .call()
-        if (
-          BigNumber.from(String(allowance)).lt(BigNumber.from(String(tokenAmt)))
-        ) {
-          await tokenContract.methods
-            .approve(STAKING_ADDRESS, ethers.parseEther(String(tokenAmt)))
-            .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-        }
-        setPremiumText('Buying')
-        await stakingContract.methods
-          .subscribe(ROLE[activeOffer])
-          .send({ from: account, gas: gasLimit, gasPrice: gasPriceWei })
-        setPremiumText('Transaction Completed')
-        toast.success(`You have unlocked access to our services.`)
-        setPremium(true)
-        setProlonged(false)
-      }catch(e){
-        setPremiumText('Get premium access')
-      }
-      } else {
-        toast.success(`Please connect your wallet.`)
-      }
-    })()
-  }
-
-  const offers: PropsOffer[] = [
-    {
-      duration: 1,
-      durationLabel: "month",
-      token: 15000,
-      price: 76
-    },
-    {
-      duration: 6,
-      durationLabel: "months",
-      token: 75000,
-      price: 380,
-      percent: 17,
-      status: "info"
-    },
-    {
-      duration: 1,
-      durationLabel: "year",
-      token: 120000,
-      price: 610,
-      percent: 34,
-      status: "custom"
-    }
-  ]
-
-  const statusAccess = premium ? "success" : "warning"
-  const iconAccess = premium ? "carbon:unlocked" : "carbon:locked"
-  const labelAccess = premium ? "Unlocked" : "Locked"
-
-  const Total = () => {
-    const total = formatter(burnAmount)
-
-    const TotalInput = () => {
-      return (
-        <div className='total-input'>
-          <LogoToken />
-          <div className='total-input-content'>
-            <strong>{total}</strong>
-            <small>{usdPrice.toFixed(0)}$</small>
-          </div>
-          <Corner reverse />
-        </div>
       )
     }
+    const totalStaked: string = await stakingContract.methods
+      .getTotalStaked(eventId)
+      .call()
+
+    setStaked(
+      ethers.formatUnits((totalStaked as string).toString(), 18).toString()
+    )
+
+    const remainingBlocks: any = await stakingContract.methods
+      .getRemainingBlocks(eventId)
+      .call()
+    setRemainingBlock(Number(remainingBlocks))
+    const apyDeatils: any = await stakingContract.methods
+      .calculateGlobalAPY(eventId)
+      .call()
+    setApy(Number(apyDeatils))
+
+    const eventDetails: any = await stakingContract.methods
+      .stakingEvents(eventId)
+      .call()
+    setAmmountAllocated(
+      Number(
+        ethers
+          .formatUnits((eventDetails.totalGEMAI as string).toString(), 18)
+          .toString()
+      )
+    )
+    setMaxPerWallet(
+      Number(
+        ethers
+          .formatUnits((eventDetails.maxPerWallet as string).toString(), 18)
+          .toString()
+      )
+    )
+  }, [account, premiumContract.methods, stakingContract.methods])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  const handleStaking = useCallback(
+    async (tokenAmt: Number) => {
+      if (account) {
+        if (Number(tokenAmt) > 0) {
+          console.log(maxPerWallet)
+          if (Number(tokenAmt) <= maxPerWallet) {
+            setStakingText("Approving")
+
+            try {
+              const allowance = await tokenContract.methods
+                .allowance(account, STAKING_ADDRESS)
+                .call()
+
+              const tokenAmtInWei = BigNumber.from(tokenAmt).mul(E18)
+
+              if (tokenAmtInWei.gt(BigNumber.from(allowance))) {
+                const approveTx = tokenContract.methods.approve(
+                  STAKING_ADDRESS,
+                  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+                )
+
+                const gasLimitApprove = await approveTx.estimateGas({
+                  from: account
+                })
+                const gasPrice = await web3.eth.getGasPrice()
+
+                await approveTx.send({
+                  from: account,
+                  gas: gasLimitApprove.toString(),
+                  gasPrice: gasPrice.toString()
+                })
+
+                setStakingText("Staking Initiated")
+
+                const eventId = await stakingContract.methods
+                  .currentEventId()
+                  .call()
+                const stakeTx = stakingContract.methods.stake(
+                  eventId,
+                  tokenAmtInWei.toString()
+                )
+
+                const gasLimitStake = await stakeTx.estimateGas({
+                  from: account
+                })
+
+                await stakeTx.send({
+                  from: account,
+                  gas: gasLimitStake.toString(),
+                  gasPrice: gasPrice.toString()
+                })
+
+                setStakingText("Transaction Completed")
+                setStaking("")
+                toast.success("Staking Completed")
+                setStakingText("Stake Gem AI")
+              } else {
+                const eventId = await stakingContract.methods
+                  .currentEventId()
+                  .call()
+                const stakeTx = stakingContract.methods.stake(
+                  eventId,
+                  tokenAmtInWei.toString()
+                )
+
+                const gasLimitStake = await stakeTx.estimateGas({
+                  from: account
+                })
+                const gasPrice = await web3.eth.getGasPrice()
+
+                await stakeTx.send({
+                  from: account,
+                  gas: gasLimitStake.toString(),
+                  gasPrice: gasPrice.toString()
+                })
+
+                setStakingText("Transaction Completed")
+                setStaking("")
+                toast.success("Staking Completed")
+                setStakingText("Stake Gem AI")
+              }
+            } catch (e) {
+              console.error("Staking error:", e)
+              toast.error("Staking failed. Please try again.")
+              setStakingText("Stake Gem AI")
+            }
+          } else {
+            toast.error(`Please enter an amount less than ${maxPerWallet}.`)
+          }
+        } else {
+          toast.error("Please enter a valid amount.")
+        }
+      } else {
+        toast.error("Please connect your wallet.")
+      }
+    },
+    [account, stakingContract.methods, tokenContract.methods, maxPerWallet]
+  )
+
+  const handleClaim = useCallback(async () => {
+    if (account) {
+      try {
+        const eventId = await stakingContract.methods.currentEventId().call()
+        const claimTx = stakingContract.methods.claim(eventId)
+
+        const gasLimitClaim = await claimTx.estimateGas({ from: account })
+        const gasPrice = await web3.eth.getGasPrice()
+
+        await claimTx.send({
+          from: account,
+          gas: gasLimitClaim.toString(),
+          gasPrice: gasPrice.toString()
+        })
+
+        toast.success("Claim Successful")
+        setStakingText("Claim")
+      } catch (e) {
+        console.error("Claim error:", e)
+        toast.error("Claim failed. Please try again.")
+        setStakingText("Claim")
+      }
+    } else {
+      toast.error("Please connect your wallet.")
+    }
+  }, [account, stakingContract.methods, web3.eth, web3.utils])
+
+  const statusAccess = Staking ? "success" : "warning"
+  const iconAccess = Staking ? "carbon:unlocked" : "carbon:locked"
+
+  const Total = () => {
+    const total = formatter(Number(staked))
+    const block = formatter(Number(remainingBlock))
+    const apyData = formatter(Number(apy))
+    const amount = formatter(parseFloat(amountAllocated.toFixed(2)))
 
     return (
       <Card className='total' reverse>
         <div className='total-heading'>
           <div className='total-heading-left'>
-            <div className='sub'>Premium</div>
-            <h4>Total burn:</h4>
+            <div className='sub'>Staking</div>
+            <h5>Total Staked:</h5>
           </div>
           <BuyNextGemButton />
         </div>
-        <TotalInput />
-        <div className='total-bottom'>
-          <div className='sub'>
-            {/* <Icon icon='carbon:user-multiple' /> {holders} Holders */}
+        <TotalInput value={total} />
+        <div>
+          <div className='total-heading-left'>
+            <h5 style={{ marginBottom: "20px" }}>Staking Event Details:</h5>
           </div>
-          <a
-            href={COINMARKETCAP}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='sub'
-          >
-            <Icon icon='simple-icons:coinmarketcap' /> CoinMarketCap
-          </a>
+          <APYInput value={apyData} />
+          <BlockRemainingInput value={block} />
+          <AmountAllocatedInput value={amount} />
+          {!account && (
+            <h5 style={{ marginTop: "20px" }}>
+              Login to participate in staking.
+            </h5>
+          )}
         </div>
       </Card>
     )
@@ -230,114 +398,60 @@ function StakingPage() {
     )
   }
 
-  const OfferItem = ({
-    duration,
-    durationLabel,
-    token,
-    percent,
-    status
-  }: PropsOffer) => {
-    const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
-      volume: VOLUME_BUTTON_CLICK
-    })
-    const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
-      volume: VOLUME_BUTTON_HOVER
-    })
-
-    return (
-      <div className='offer' onMouseEnter={soundHover} onClick={soundClick}>
-        <div className='offer-content' data-status={status}>
-          {percent && <div className='offer-percent'>-{percent}%</div>}
-          <div className='offer-duration'>
-            <strong>{duration}</strong> <span>{durationLabel}</span>
-          </div>
-          <div className='offer-img'>
-            <LogoToken />
-          </div>
-          <div className='offer-token'>{formatter(token)} GEMAI</div>
-          <div className='sub'>~ {(token * usd).toFixed(0)} $</div>
-        </div>
-        <div className='hovered'>
-          <Corner color='primary' />
-        </div>
-        <Corner />
-      </div>
-    )
-  }
-
   const Unlock = () => {
-    const [offerActive, setOfferActive] = useState(1)
-    const info = offers[offerActive]
-
     const Locked = () => {
+      const [data, setData] = useState("")
       return (
         <>
-          <div className='p'>
-            <p>
-              Select the subscription period for NextGem services. Please note
-              that the required token amount may vary, and costs could increase
-              accordingly.
-            </p>
-          </div>
-          <ul className='unlock-list'>
-            {offers.map((item, id) => (
-              <li
-                key={id}
-                onClick={() => setOfferActive(id)}
-                className={id === offerActive ? "active" : ""}
+          {reward > 0 && account && (
+            <RewardInput value={formatter(parseFloat(reward.toFixed(2)))} />
+          )}
+          {reward > 0 && (
+            <StakedInput value={formatter(Number(stakeAmount.toFixed(2)))} />
+          )}
+          {reward > 0 && <YourAPYInput value={formatter(Number(ownApy))} />}
+          {remainingBlock > 0 ? (
+            <>
+              <Input
+                sprite={
+                  <img
+                    src={logoTokenSrc}
+                    alt={TOKEN_NAME}
+                    width='30'
+                    height='30'
+                    loading='lazy'
+                  />
+                }
+                value={data}
+                placeholder='Staking Amount'
+                className='input-staking'
+                onChange={(e) => setData(e)}
+                type={"number"}
+                key={"amount"}
+              />
+              Maximum Amount Per Wallet : {maxPerWallet}
+              <Button
+                status='success'
+                icon='carbon:unlocked'
+                onClick={() => handleStaking(Number(data))}
               >
-                <OfferItem {...item} />
-              </li>
-            ))}
-          </ul>
-          <div className='unlock-order'>
-            <ul data-status={info.status}>
-              <li className='sub'>
-                <small>Order:</small>
-                <span>
-                  <strong>
-                    {info.duration} {info.durationLabel}
-                  </strong>{" "}
-                  - {formatter(info.token)}
-                </span>
-              </li>
-              <li className='sub'>
-                <small>Total Price:</small>
-                <span>~ {(info.token * usd).toFixed(0)} $</span>
-              </li>
-            </ul>
-            <Corner />
-          </div>
-          <Button
-            status='success'
-            icon='carbon:unlocked'
-            onClick={() => handlePremium(info.token, offerActive)}
-          >
-            {premiumText}
-          </Button>
-        </>
-      )
-    }
-
-    const Unlocked = () => {
-      return (
-        <>
-          <div className='p'>
-            <p>Your premium access to {CHAT_NAME} is available until:</p>
-          </div>
-          <h5>15 February, 2023 08:00PM</h5>
-          <div className='unlock-button'>
+                {StakingText}
+              </Button>
+            </>
+          ) : (
+            <>
+              <h5>No staking event available </h5>
+            </>
+          )}
+          {remainingBlock === 0 && reward > 0 && (
             <Button
-              icon='carbon:time'
-              color='tertiary'
-              onClick={handleProlonged}
+              status='success'
+              icon='carbon:unlocked'
+              onClick={() => handleClaim()}
             >
-              Prolong my access
+              {"Claim"}
             </Button>
-            <Button href='/gem-ai' icon='carbon:text-mining-applier'>
-              Access to {CHAT_NAME}
-            </Button>
-          </div>
+          )}
         </>
       )
     }
@@ -345,13 +459,20 @@ function StakingPage() {
     return (
       <Card className='unlock'>
         <div className='unlock-title'>
-          <Button status={statusAccess}>{labelAccess}</Button>
-          <h5>
-            {premium ? "Your Premium access" : "Unlock your Premium access"}
-          </h5>
+          <h5>{"Your Staking details:"}</h5>
         </div>
-        {premium && <Unlocked />}
-        {(!premium || prolonged) && <Locked />}
+        {!isPremium && (
+          <div className='unlock-title'>
+            <Button status={statusAccess}>{"Locked"}</Button>
+            <span>{"You need premium to use staking"}</span>
+          </div>
+        )}
+        {!isPremium && (
+          <Button onClick={() => navigate("/premium")} blank={true}>
+            Subcribe to premium
+          </Button>
+        )}
+        {isPremium && <Locked />}
       </Card>
     )
   }
@@ -386,7 +507,7 @@ function StakingPage() {
   return (
     <>
       <Helmet>
-        <title>{SITE_NAME} — Premium</title>
+        <title>{SITE_NAME} — Staking</title>
       </Helmet>
       <div className='staking'>
         <div className='wrapper'>
@@ -396,8 +517,12 @@ function StakingPage() {
             </div>
             <div className='staking-right'>
               <Total />
-              <Separator />
-              <Unlock />
+              {account && (
+                <>
+                  <Separator />
+                  <Unlock />
+                </>
+              )}
               <div className='more'>
                 <div className='more-arrow'>
                   <div className='more-arrow-shape'></div>
@@ -413,7 +538,7 @@ function StakingPage() {
           <div className='staking-bottom-overflow'>
             <div className='wrapper'>
               <div className='staking-bottom-content'>
-                <h3>Understanding the NextGem Service and Premium Benefits</h3>
+                <h3>Understanding the NextGem Service and Staking Benefits</h3>
                 <div className='intro'>
                   <p>
                     The NextGem service incorporates a burn mechanism to reduce
@@ -426,7 +551,7 @@ function StakingPage() {
                 </div>
                 <div className='p'>
                   <p>
-                    Subscribing to the Premium NextGem service offers
+                    Subscribing to the Staking NextGem service offers
                     significant advantages. You can choose from three
                     subscription periods: 1 month, 6 months, or one year, with
                     discounts applied based on duration. This is facilitated by
@@ -434,7 +559,7 @@ function StakingPage() {
                     the Ethereum chain, recorded on our deployed smart contract.
                   </p>
                   <div>
-                    Here are some key features of our Premium service:
+                    Here are some key features of our Staking service:
                     <ul>
                       <li>
                         Access to GEMAI for querying specific data from our

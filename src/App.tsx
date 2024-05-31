@@ -8,7 +8,7 @@ import { GemsContextProvider } from "@context/GemsContext"
 import { SeoContextProvider } from "@context/SeoContext"
 import useWindowHeight from "@hooks/useWindowHeight"
 import AiAnalysisPage from "@pages/AiAnalysis"
-import { GemsPage, StakingPage, GemAiPage } from "@pages/App"
+import { GemsPage, GemAiPage, StakingPage, PremiumPage } from "@pages/App"
 import GemAiSinglePage from "@pages/App/GemAiSingle"
 import GemDetailPage from "@pages/App/GemDetail"
 import GemsPortal from "@pages/App/GemsPortal"
@@ -135,7 +135,11 @@ function App() {
         },
         {
           path: "/premium",
-          element: <StakingPage />
+          element: <PremiumPage/>
+        },
+        {
+          path: "/staking",
+          element: <StakingPage/>
         },
         {
           path: "/analyze",
