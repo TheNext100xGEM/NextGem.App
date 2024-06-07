@@ -217,10 +217,11 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
       z-index: 10;
       padding: 0.5em 0;
-      z-index: 9999; /* Ensure the dropdown is above other elements */
-      background-color: "rgba(var(--bg-body-rgb))";
+      z-index: 9999;
       border: var(--stroke-primary);
-      @include backdrop;
+      margin-top: 5px;
+      background-color: rgba(var(--bg-body-rgb) / 1);
+
   
       .dropdown-item {
         padding: 0.5em 1em;

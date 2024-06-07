@@ -7,6 +7,7 @@ import {
   Logotype,
   OpenAppButton
 } from "@components/ui";
+import { Icon } from '@iconify/react'
 import {
   CHAT_NAME,
   SOUND_BUTTON_CLICK,
@@ -18,6 +19,8 @@ import classNames from "classnames";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./_header.scss";
+import arrow_up from '@assets/img/home/projects/arrowup.svg'
+import arrow_down from '@assets/img/home/projects/arrowdown.svg'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound";
@@ -70,7 +73,7 @@ const Dropdown = ({ title, items }: DropdownProps) => {
       <button onMouseOver={() => setIsOpen(true)}
         onMouseOut={() => setIsOpen(false)} className="dropdown-button">
         {title}
-        <span className="dropdown-arrow">{isOpen ? '▲' : '▼'}</span>
+        <span className="dropdown-arrow">{isOpen ? <Icon icon={'oui:arrow-down'} />: <Icon icon={'oui:arrow-up'} />}</span>
       </button>
       {isOpen && (
         <div onMouseOver={() => setIsOpen(true)}
