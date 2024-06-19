@@ -19,8 +19,6 @@ import classNames from "classnames";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./_header.scss";
-import arrow_up from '@assets/img/home/projects/arrowup.svg'
-import arrow_down from '@assets/img/home/projects/arrowdown.svg'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound";
