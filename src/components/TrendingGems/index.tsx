@@ -30,24 +30,3 @@ export const TrendingGems: React.FC<TrendingGemsProps> = ({ gems }) => {
     </Marquee>
   )
 }
-
-export const Announcement: React.FC = () => {
-  return (
-    <Marquee
-      speed={50}
-      gradient={false}
-      className='scroller'
-      pauseOnHover={true}
-      style={{zIndex:5000}}
-    >
-       
-        <Link
-          to={`/staking`}
-          className='card'
-          title={'Staking'}
-        >
-          <span>{'Staking is live'}</span>
-        </Link>
-    </Marquee>
-  )
-}

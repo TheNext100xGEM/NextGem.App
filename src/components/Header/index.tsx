@@ -232,7 +232,7 @@ function Header() {
   return (
     <header className={headerClass}>
       <div className="top-bar">
-        <a href="/staking" className="top-bar-link">Staking is live</a>
+        <a href="/staking" className="top-bar-link">Staking is <u>live</u></a>
       </div>
       <div className="header-bottom">
         <Link to="/" className="header-logo" onClick={soundClick}>
