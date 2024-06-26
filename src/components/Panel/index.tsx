@@ -27,7 +27,10 @@ function Panel() {
   const [modalIsOpen, setIsOpen] = useState(false)
 
   const handleLogged = () => {}
-  const openModal = () => setIsOpen(true)
+  const openModal = (e: any) => {
+    e.stopPropagation();
+    setIsOpen(true)
+  }  
   const closeModal = () => setIsOpen(false)
   const storedToken = Cookies.get("web3TokenAuth");
 
@@ -111,7 +114,7 @@ function Panel() {
 
         closeModal()
       }
-
+    
       return (
         <div
           className='wallet'
@@ -127,7 +130,6 @@ function Panel() {
         </div>
       )
     }
-
     return (
       <Modal
         title='Connect your wallet'

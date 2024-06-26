@@ -239,4 +239,21 @@
       display: none;
     }
   }
+
+  .top-bar {
+    background-color: #333; // Adjust the color as needed
+    text-align: center;
+    padding: 10px 0;
+
+    .top-bar-link {
+      color: #fff; // Text color
+      font-weight: bold;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--primary-1); // Hover color (gold in this example)
+      }
+    }
+  }
 }

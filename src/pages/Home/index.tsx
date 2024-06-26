@@ -7,7 +7,6 @@ import { useEffect } from "react"
 import { Helmet } from "react-helmet-async"
 import { useLocation, useNavigate } from "react-router-dom"
 import "./_home.scss"
-import { Announcement } from '../../components/TrendingGems/index';
 
 function HomePage() {
   const navigate = useNavigate()
@@ -52,7 +51,6 @@ function HomePage() {
         </title>
       </Helmet>
       <div className='home'>
-      <Announcement/>
         <Hero />
         <Features />
         <Scoring />
