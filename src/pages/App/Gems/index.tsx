@@ -68,6 +68,10 @@ const FilterBySort = () => {
     {
       id: "date",
       label: "Date"
+    },
+    {
+      id: "last24hrs",
+      label: "Last 24 hrs"
     }
 
   ]
