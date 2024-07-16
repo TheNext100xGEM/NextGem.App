@@ -80,7 +80,7 @@ const parse = (params: URLSearchParams) => {
     noteMax: Number(params.get("noteMax")) || 10,
     chains: params.get("chains")?.split(",") || [],
     searchQuery: params.get("searchQuery") || undefined,
-    sortBy: params.get("sortBy")?.split(",") || [],
+    sortBy: params.get("sortBy")?.split(",") || ['date'],
     viewMode: (params.get("viewMode") as GemFilterState["viewMode"]) || "grid"
   }
 }

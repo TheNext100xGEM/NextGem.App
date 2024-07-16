@@ -64,7 +64,16 @@ const FilterBySort = () => {
     {
       id: "tokens",
       label: "Tokens"
+    },
+    {
+      id: "date",
+      label: "Date"
+    },
+    {
+      id: "last24hrs",
+      label: "Last 24 hrs"
     }
+
   ]
   const { sortBy, setSortBy } = useGemsContext()
 
@@ -249,6 +258,13 @@ const Filter = () => {
   const [open, setOpen] = useState(false)
   const { viewMode, setViewMode } = useGemsContext()
 
+  useEffect(() => {
+    const items = localStorage.getItem("viewMode");
+    if (items) {
+      setViewMode(items as 'grid' | 'list');
+    }
+  }, []);
+
   return (
     <div className={classNames("filter", open && "open")}>
       <Button
@@ -259,7 +275,13 @@ const Filter = () => {
             ? "clarity:view-cards-line"
             : "carbon:show-data-cards"
         }
-        onClick={() => setViewMode(viewMode === "list" ? "grid" : "list")}
+        onClick={() => {
+          setViewMode(viewMode === "list" ? "grid" : "list")
+          localStorage.setItem(
+            "viewMode",
+            viewMode === "list" ? "grid" : "list"
+          )
+        }}
       />
       <FilterSearchQuery />
       <div className='filter-actions'>

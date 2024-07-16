@@ -230,10 +230,8 @@ function StakingPage() {
     async (tokenAmt: Number) => {
       if (account) {
         if (Number(tokenAmt) > 0) {
-          console.log(maxPerWallet)
           if (Number(tokenAmt) <= maxPerWallet) {
             setStakingText("Approving")
-
             try {
               const allowance = await tokenContract.methods
                 .allowance(account, STAKING_ADDRESS)
@@ -472,7 +470,7 @@ function StakingPage() {
             Subcribe to premium
           </Button>
         )}
-        {isPremium && <Locked />}
+        {(isPremium || reward > 0)  && <Locked />}
       </Card>
     )
   }
