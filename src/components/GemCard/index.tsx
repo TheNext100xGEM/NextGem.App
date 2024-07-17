@@ -87,7 +87,8 @@ function GemCard({
   status,
   socials,
   slug,
-  isFavorite
+  isFavorite,
+  updatedAgo
 }: Gem) {
   const urlTransform = removeUrlPrefix(href)
 
@@ -212,6 +213,9 @@ function GemCard({
             </Row>
             <Row title='Analyser'>
               <List>{llmList.map((item) => item)}</List>
+            </Row>
+            <Row title='Updated'>
+              <List>{updatedAgo}</List>
             </Row>
           </tbody>
         </table>

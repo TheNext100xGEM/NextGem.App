@@ -21,6 +21,7 @@ export interface Gem {
   isFavorite: boolean
   isTrending: boolean
   socials: PropsSocialLink[]
+  updatedAgo: string
 }
 
 export interface ApiGem {
@@ -33,6 +34,7 @@ export interface ApiGem {
   chains: string[]
   launchpad: string
   tokenSymbol: string
+  updatedAgo: string
   llmList: string[]
   weightedScore: number | "none"
   status?: number
@@ -78,6 +80,7 @@ export const mapGem = (data: ApiGem): Gem => {
     weightedScore:
       typeof data.weightedScore === "number" ? data.weightedScore : undefined,
     status: data.status,
-    socials
+    socials,
+    updatedAgo: data.updatedAgo
   }
 }
