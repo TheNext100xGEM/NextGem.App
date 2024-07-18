@@ -29,7 +29,7 @@ const trendingCategories = [
     link: "/gems?categories=5&noteMin=1&noteMax=10&chains=ethereum&viewMode=grid",
     color: "#a855f7",
     backgroundImageUrl:
-      "/public/eth.avif"
+      "/eth.avif"
   },
   {
     name: "AI",
@@ -38,7 +38,7 @@ const trendingCategories = [
     link: "/gems?categories=22&noteMin=1&noteMax=10&viewMode=grid",
     color: "#22d3ee",
     backgroundImageUrl:
-      "/public/robot_1f916.png"
+      "/robot_1f916.png"
   },
   {
     name: "Zero-Knowledge (ZK)",
@@ -47,7 +47,7 @@ const trendingCategories = [
     link: "/gems?categories=14&noteMin=1&noteMax=10&viewMode=grid",
     color: "#3b82f6",
     backgroundImageUrl:
-      "/public/books_1f4da.png"
+      "/books_1f4da.png"
   },
   {
     name: "To Be Launched",
@@ -56,7 +56,7 @@ const trendingCategories = [
     link: "/gems?launchStatus=0%2C1&noteMin=1&noteMax=10&viewMode=grid",
     color: "#f97316",
     backgroundImageUrl:
-      "/public/rocket_1f680.png"
+      "/rocket_1f680.png"
   },
   {
     name: "Metaverse",
@@ -65,7 +65,7 @@ const trendingCategories = [
     link: "/gems?categories=16&noteMin=1&noteMax=10&viewMode=grid",
     color: "deeppink",
     backgroundImageUrl:
-      "/public/alien-monster_1f47e.png"
+      "/alien-monster_1f47e.png"
   },
   {
     name: "Meme",
@@ -74,7 +74,7 @@ const trendingCategories = [
     link: "/gems?categories=11&noteMin=1&noteMax=10&viewMode=grid",
     color: "deeppink",
     backgroundImageUrl:
-      "/public/BASED.png"
+      "/BASED.png"
   }
 ]
 
