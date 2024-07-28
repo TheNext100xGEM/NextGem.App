@@ -90,6 +90,7 @@
       .header-landing {
         transform: translateY(-100%);
         opacity: 0;
+        visibility: hidden;
       }
       .header-app {
         transform: translateY(0%);

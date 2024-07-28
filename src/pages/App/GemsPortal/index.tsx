@@ -28,8 +28,7 @@ const trendingCategories = [
       "A playground for financial enthusiasts where banks are as necessary as a landline. Your wallet, your rules.",
     link: "/gems?categories=5&noteMin=1&noteMax=10&chains=ethereum&viewMode=grid",
     color: "#a855f7",
-    backgroundImageUrl:
-      "/eth.avif"
+    backgroundImageUrl: "/eth.avif"
   },
   {
     name: "AI",
@@ -37,8 +36,7 @@ const trendingCategories = [
       "Where silicon brains meet digital gold. The future where AI does more than just answer your emails—it grows your portfolio.",
     link: "/gems?categories=22&noteMin=1&noteMax=10&viewMode=grid",
     color: "#22d3ee",
-    backgroundImageUrl:
-      "/robot_1f916.png"
+    backgroundImageUrl: "/robot_1f916.png"
   },
   {
     name: "Zero-Knowledge (ZK)",
@@ -46,8 +44,7 @@ const trendingCategories = [
       "Dive into the shadow realm of blockchain, where transactions whisper secrets without ever raising their voice. Privacy meets progress, no compromises.",
     link: "/gems?categories=14&noteMin=1&noteMax=10&viewMode=grid",
     color: "#3b82f6",
-    backgroundImageUrl:
-      "/books_1f4da.png"
+    backgroundImageUrl: "/books_1f4da.png"
   },
   {
     name: "To Be Launched",
@@ -55,8 +52,7 @@ const trendingCategories = [
       "Your passport to tomorrow's blockchain marvels. Uncharted tech territories await, with each token a potential revolution in your pocket.",
     link: "/gems?launchStatus=0%2C1&noteMin=1&noteMax=10&viewMode=grid",
     color: "#f97316",
-    backgroundImageUrl:
-      "/rocket_1f680.png"
+    backgroundImageUrl: "/rocket_1f680.png"
   },
   {
     name: "Metaverse",
@@ -64,8 +60,7 @@ const trendingCategories = [
       "Where your portfolio goes beyond the blockchain — it enters realms of virtual reality, gaming, and digital frontiers untapped and unexplored.",
     link: "/gems?categories=16&noteMin=1&noteMax=10&viewMode=grid",
     color: "deeppink",
-    backgroundImageUrl:
-      "/alien-monster_1f47e.png"
+    backgroundImageUrl: "/alien-monster_1f47e.png"
   },
   {
     name: "Meme",
@@ -73,10 +68,25 @@ const trendingCategories = [
       "Where cryptocurrency meets comedy club. Invest in chuckles and watch your portfolio do stand-up on the blockchain.",
     link: "/gems?categories=11&noteMin=1&noteMax=10&viewMode=grid",
     color: "deeppink",
-    backgroundImageUrl:
-      "/BASED.png"
+    backgroundImageUrl: "/BASED.png"
+  },
+  {
+    name: "24hrs",
+    description:
+      "Track the latest movements in the crypto market over the past 24 hours. Stay informed with real-time data.",
+    link: "/gems?launchStatus=0%2C1%2C2&noteMin=1&noteMax=10&sortBy=last24hrs&viewMode=grid",
+    color: "#1e3a8a",
+    backgroundImageUrl: "/last24hrs.webp"
+  },
+  {
+    name: "Last 10 Days",
+    description:
+      "Analyze trends and performance over the last 10 days to make informed investment decisions.",
+    link: "/gems?launchStatus=0%2C1%2C2&noteMin=1&noteMax=10&sortBy=last10days&viewMode=grid",
+    color: "#059669",
+    backgroundImageUrl: "/last10days.webp"
   }
-]
+];
 
 const GemsPortal = () => {
   const [soundHover] = useSound(SOUND_BUTTON_HOVER, {
