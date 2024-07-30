@@ -85,6 +85,17 @@ export const getGemSingle = async ({
     "GET"
   )
 
+  export const getGemDetails = async ({
+    id
+  }: {
+    id: string
+  }) =>
+    request<ApiGemFull>(
+      `${APP_API_URL}/projects/details/${id}`,
+      "getGemDetail",
+      "GET"
+    )
+
 export const getSentimentScoringsComments = async ({ url }: { url: string }) =>
   request<SentimentScoringsComments>(url, "getSentimentScoringsComments", "GET")
 
