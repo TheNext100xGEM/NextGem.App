@@ -58,7 +58,8 @@
     "sort-by": "^0.0.2",
     "use-sound": "^4.0.1",
     "web3": "^4.8.0",
-    "web3-token": "^1.0.6"
+    "web3-token": "^1.0.6",
+    "xml2js": "^0.4.23" 
   },
   "devDependencies": {
     "@iconify/react": "^4.1.1",
