@@ -1,6 +1,6 @@
 import "./_AiAnalysis.scss"
 import { Input, Button } from "@components/ui"
-import { SITE_NAME } from "@constants/index"
+import { ROLE, SITE_NAME } from "@constants/index"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import Cookies from "js-cookie"
 import { useState, ReactNode } from "react"
@@ -9,6 +9,8 @@ import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom"
 
 import { postAnalysis } from "../../queries/api"
+import { usePremiumContract } from "@hooks/useContract"
+import { useWeb3React } from "@web3-react/core"
 
 type PropsSection = {
   children: ReactNode[] | ReactNode
@@ -26,6 +28,8 @@ const Section = ({ children }: PropsSection): ReactNode => {
 function AnalysisPage() {
   const [websiteUrl, setWebsiteUrl] = useState<string>("")
   const navigate = useNavigate()
+  const premiumContract = usePremiumContract()
+  const { account } = useWeb3React()
 
   const handleAnalysis = async () => {
     if (websiteUrl === "") {
@@ -34,6 +38,18 @@ function AnalysisPage() {
     }
     if (!Cookies.get("web3TokenAuth")) {
       toast.error("Wallet connection required to proceed.")
+      return
+    }
+    if (!account) {
+      toast.error("Wallet connection required to proceed.")
+      return
+    }
+    const isSubscribe: boolean = await premiumContract.methods
+      .checkManyRoles(account, ROLE)
+      .call()
+
+    if (!isSubscribe) {
+      toast.error("Get a valid subscription.")
       return
     }
     const analyze = await postAnalysis({ websiteUrl })
@@ -53,7 +69,11 @@ function AnalysisPage() {
     <>
       <Helmet>
         <title>{`${SITE_NAME} — Ai Analysis`}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" data-rh="true" />
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1.0'
+          data-rh='true'
+        />
         <meta
           name='description'
           content='Analyze any crypto project with a website/dextools or coinmarketcap link.'
