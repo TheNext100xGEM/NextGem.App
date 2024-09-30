@@ -1,5 +1,5 @@
 import "./_panel.scss"
-import { Button, Corner, Grid, Item, Modal } from "@components/ui"
+import { Button, Corner, Grid, Item, Modal, Input } from "@components/ui"
 import {
   SOUND_BUTTON_CLICK,
   SOUND_BUTTON_HOVER,
@@ -9,8 +9,8 @@ import {
 import { Icon } from "@iconify/react"
 import { truncateWalletAddress } from "@utils/wallet"
 import { useWeb3React } from "@web3-react/core"
-import { useState } from "react"
-import Cookies from "js-cookie";
+import { useState, useCallback, useMemo } from "react"
+import Cookies from "js-cookie"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
@@ -24,31 +24,35 @@ import {
 function Panel() {
   const { account } = useWeb3React()
 
+  // Modal state separated from other states
   const [modalIsOpen, setIsOpen] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleLogged = () => {}
   const openModal = (e: any) => {
-    e.stopPropagation();
+    e.stopPropagation()
     setIsOpen(true)
-  }  
+  }
   const closeModal = () => setIsOpen(false)
-  const storedToken = Cookies.get("web3TokenAuth");
+  const storedToken = Cookies.get("web3TokenAuth")
 
-  const ButtonPanel = () => {
+  // Memoize ButtonPanel to avoid unnecessary re-renders
+  const ButtonPanel = useMemo(() => {
     if (account && storedToken) {
       return (
-        <Button icon='logos:metamask-icon' onClick={handleLogged}>
+        <Button icon="logos:metamask-icon" onClick={handleLogged}>
           {truncateWalletAddress(account)}
         </Button>
       )
     } else {
       return (
-        <Button icon='carbon:wallet' onClick={openModal}>
+        <Button icon="carbon:wallet" onClick={openModal}>
           Connect your wallet
         </Button>
       )
     }
-  }
+  }, [account, storedToken])
 
   type PropsWallet = {
     name: string
@@ -86,7 +90,8 @@ function Panel() {
     }
   ]
 
-  const ModalConnect = () => {
+  // Memoize ModalConnect to avoid re-renders when modalIsOpen state doesn’t change
+  const ModalConnect = useMemo(() => {
     const Wallet = ({
       name,
       icon,
@@ -114,10 +119,10 @@ function Panel() {
 
         closeModal()
       }
-    
+
       return (
         <div
-          className='wallet'
+          className="wallet"
           onClick={!disabled ? () => handleConnect() : undefined}
           onMouseEnter={!disabled ? () => soundHover() : undefined}
           data-disabled={disabled}
@@ -126,17 +131,35 @@ function Panel() {
           <h6>{name}</h6>
           <p>{desc}</p>
           <Corner />
-          <Corner color='primary' className='corner-hover' />
+          <Corner color="primary" className="corner-hover" />
         </div>
       )
     }
+
     return (
       <Modal
-        title='Connect your wallet'
+        title="Connect your wallet"
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
       >
-        <Grid className='grid-wallet'>
+        <div className="email-password-form">
+          <Input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e)}
+            type="email"
+            className="input-email"
+          />
+          <Input
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e)}
+            type="password"
+            className="input-password"
+          />
+        </div>
+
+        <Grid className="grid-wallet">
           {listWallet.map((wallet, id) => (
             <Item key={id}>
               <Wallet {...wallet} />
@@ -145,15 +168,14 @@ function Panel() {
         </Grid>
       </Modal>
     )
-  }
+  }, [modalIsOpen, email, password])
 
   return (
     <>
-      <ButtonPanel />
-      <ModalConnect />
+      {ButtonPanel}
+      {ModalConnect}
     </>
   )
 }
 
 export default Panel
-
