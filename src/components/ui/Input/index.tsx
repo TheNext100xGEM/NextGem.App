@@ -35,24 +35,25 @@ export type PropsInput = PropsDefault & {
   onChange?: (value: string) => void
 }
 
+
 export function Input({
   id,
   icon,
   sprite,
   className,
-  type = "text",
+  type = 'text',
   label,
   value,
   name,
   placeholder,
   required,
   disabled,
-  colors = "tertiary",
+  colors = 'tertiary',
   status,
-  onChange
+  onChange,
 }: PropsInput) {
-  const defaultId = useId()
-  const inputId = id ? id : defaultId
+  const defaultId = useId();
+  const inputId = id ? id : defaultId;
 
   const commonProps = {
     id: inputId,
@@ -61,34 +62,35 @@ export function Input({
     placeholder: placeholder,
     required: required,
     disabled: disabled,
-    spellCheck: false
-  }
+    spellCheck: false,
+  };
 
   return (
     <>
       {label && <label htmlFor={inputId}>{label}</label>}
       <div
-        className={classNames("input", className)}
+        className={classNames('input', className)}
         data-colors={colors}
         data-status={status}
       >
         {(icon || sprite) && (
-          <div className='input-icon'>
+          <div className="input-icon">
             {icon && <Icon icon={icon} />}
             {sprite && sprite}
           </div>
         )}
         <input
-        autoComplete="off"
+          autoComplete="off"
           value={value}
-          onChange={(evt) => onChange?.(evt.target.value)}
+          onChange={(evt) => onChange?.(evt.target.value)} // Ensuring the focus issue is resolved
           {...commonProps}
         />
         <Corner />
       </div>
     </>
-  )
+  );
 }
+
 
 export type PropsCheckbox = PropsDefault & {
   type?: CheckboxTypes

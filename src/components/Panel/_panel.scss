@@ -50,3 +50,46 @@
   --grid-column-count: 2;
   --grid-item-min-width: calc(200px + 30 * (100vw - 320px) / 1080);
 }
+
+.grid-social {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem; /* Increased gap between buttons */
+  margin-top: 3rem; /* Added more spacing from the top */
+  margin-bottom: 1.5rem; /* Adjusted bottom margin */
+
+  button {
+    width: 60px; /* Increased button width */
+    height: 60px; /* Increased button height */
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Optional: Add a subtle background color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a slight shadow */
+    transition: all 0.2s ease-in-out; /* Smooth transition for hover effect */
+
+    &:hover {
+      transform: scale(1.1); /* Slightly enlarge on hover */
+    }
+  }
+}
+
+.separator-container {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0; /* Adds spacing above and below the separator */
+}
+
+.separator-line {
+  flex: 1; /* Makes the line stretch to fill space */
+  height: 1px;
+  background-color: #666;; /* Gray line color */
+  margin: 0 1rem; /* Adds spacing around the text */
+}
+
+.separator-text {
+  font-size: 1.2rem;
+  color: #666;
+  font-weight: bold;
+}

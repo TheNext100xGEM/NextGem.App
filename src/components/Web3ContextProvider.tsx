@@ -8,6 +8,7 @@ import {
   getConnection
 } from "../libs/connections"
 
+// Function to handle the connection with a specific connector
 async function connect(connector: Connector) {
   try {
     if (connector.connectEagerly) {
@@ -20,15 +21,25 @@ async function connect(connector: Connector) {
   }
 }
 
+// Connect eagerly to available connectors
 const connectEagerly = async () => {
-  await connect(getConnection(ConnectionType.INJECTED).connector)
-  // await connect(getConnection(ConnectionType.NETWORK).connector)
-  // await connect(getConnection(ConnectionType.COINBASE_WALLET).connector)
-  await connect(getConnection(ConnectionType.WALLET_CONNECT).connector)
+  const connectorsToTry = [
+    ConnectionType.INJECTED,
+    ConnectionType.WALLET_CONNECT,
+    ConnectionType.COINBASE_WALLET,
+    ConnectionType.NETWORK // Add any other connectors as needed
+  ]
+
+  for (const connectionType of connectorsToTry) {
+    const connector = getConnection(connectionType).connector
+    await connect(connector)
+  }
 }
 
+// Web3 context provider component
 export const Web3ContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
+    // Attempt to connect eagerly on component mount
     connectEagerly()
   }, [])
 
