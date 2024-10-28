@@ -1,5 +1,5 @@
 import "./_panel.scss"
-import { Button, Corner, Grid, Item, Modal, Input } from "@components/ui"
+import { Button, Corner, Grid, Item, Modal } from "@components/ui"
 import {
   SOUND_BUTTON_CLICK,
   SOUND_BUTTON_HOVER,
@@ -9,8 +9,11 @@ import {
 import { Icon } from "@iconify/react"
 import { truncateWalletAddress } from "@utils/wallet"
 import { useWeb3React } from "@web3-react/core"
-import { useState, useCallback, useMemo } from "react"
+import { useState, useMemo } from "react"
 import Cookies from "js-cookie"
+import axios from "axios"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import useSound from "use-sound"
@@ -20,39 +23,67 @@ import {
   getConnection,
   tryActivateConnector
 } from "../../libs/connections"
+import { APP_API_URL } from "../../libs/constants"
 
 function Panel() {
-  const { account } = useWeb3React()
+  const { account, provider } = useWeb3React()
 
-  // Modal state separated from other states
   const [modalIsOpen, setIsOpen] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [web3Token, setWeb3Token] = useState<string | null>(Cookies.get("web3AuthToken") || null)
 
-  const handleLogged = () => {}
+  // Open and close modal
   const openModal = (e: any) => {
     e.stopPropagation()
     setIsOpen(true)
   }
   const closeModal = () => setIsOpen(false)
-  const storedToken = Cookies.get("web3TokenAuth")
 
-  // Memoize ButtonPanel to avoid unnecessary re-renders
+  // Handle wallet login, sign a message, and send to backend
+  const handleLoginWithWallet = async () => {
+    if (!provider || !account) return
+
+    try {
+      const signer = provider.getSigner()
+      const message = "Please sign this message to log in to Next Gem."
+      const signature = await signer.signMessage(message)
+
+      // Send the wallet address and signature to the API
+      const response = await axios.post(`${APP_API_URL}/auth/wallet`, {
+        address: account,
+        signature
+      })
+
+      // If successful, store the received token in cookies and update state
+      if (response.data.token) {
+        Cookies.set("web3AuthToken", response.data.token, { expires: 1 })
+        setWeb3Token(response.data.token)
+        toast.success("Login successful!")  // Show success toast
+        closeModal()
+      } else {
+        toast.error("Login failed. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error during login with wallet:", error)
+      toast.error("Error signing the message. Please try again.")
+    }
+  }
+
+  // Memoize the ButtonPanel to avoid unnecessary re-renders
   const ButtonPanel = useMemo(() => {
-    if (account && storedToken) {
+    if (account && web3Token) {
       return (
-        <Button icon="logos:metamask-icon" onClick={handleLogged}>
+        <Button icon="logos:metamask-icon" onClick={handleLoginWithWallet}>
           {truncateWalletAddress(account)}
         </Button>
       )
     } else {
       return (
         <Button icon="carbon:wallet" onClick={openModal}>
-          Connect your wallet
+          Login
         </Button>
       )
     }
-  }, [account, storedToken])
+  }, [account, web3Token])
 
   type PropsWallet = {
     name: string
@@ -117,7 +148,8 @@ function Panel() {
           return
         }
 
-        closeModal()
+        // After successful activation, trigger login flow
+        handleLoginWithWallet()
       }
 
       return (
@@ -138,27 +170,23 @@ function Panel() {
 
     return (
       <Modal
-        title="Connect your wallet"
+        title="Login to Next Gem"
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
       >
-        <div className="email-password-form">
-          <Input
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e)}
-            type="email"
-            className="input-email"
-          />
-          <Input
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e)}
-            type="password"
-            className="input-password"
-          />
+        {/* Social Login Buttons */}
+        <Grid className="grid-social">
+          <Button icon="flat-color-icons:google" onClick={openModal} />
+          <Button icon="logos:telegram" onClick={openModal} />
+          <Button icon="logos:twitter" onClick={openModal} />
+        </Grid>
+    
+        <div className="separator-container">
+          <hr className="separator-line" />
+          <span className="separator-text">or</span>
+          <hr className="separator-line" />
         </div>
-
+    
         <Grid className="grid-wallet">
           {listWallet.map((wallet, id) => (
             <Item key={id}>
@@ -168,12 +196,13 @@ function Panel() {
         </Grid>
       </Modal>
     )
-  }, [modalIsOpen, email, password])
+  }, [modalIsOpen])
 
   return (
     <>
       {ButtonPanel}
       {ModalConnect}
+      <ToastContainer />  {/* Toast container for displaying toasts */}
     </>
   )
 }

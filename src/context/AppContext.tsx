@@ -5,11 +5,12 @@ import React, {
   useContext,
   useState,
   ReactNode,
-  useEffect,
-  useRef
+  useEffect
 } from "react"
 import { useLocation } from "react-router-dom"
-import Web3Token from "web3-token"
+import { Web3Provider } from "@ethersproject/providers"
+import axios from "axios"
+import { APP_API_URL } from "../libs/constants"
 
 interface AppContextProps {
   isInApp: boolean
@@ -20,90 +21,88 @@ interface AppContextProps {
   setIsPremium: React.Dispatch<React.SetStateAction<boolean | null>>
   web3Token: string | null
   setWeb3Token: React.Dispatch<React.SetStateAction<string | null>>
+  loginWithWallet: () => Promise<void>
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined)
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [isInApp, setIsInApp] = useState<AppContextProps["isInApp"]>(false)
-  const [isInChat, setIsInChat] = useState<AppContextProps["isInChat"]>(false)
-  const [isPremium, setIsPremium] = useState<AppContextProps["isPremium"]>(null)
-  const [web3Token, setWeb3Token] = useState<AppContextProps["web3Token"]>(null)
+  const [isInApp, setIsInApp] = useState(false)
+  const [isInChat, setIsInChat] = useState(false)
+  const [isPremium, setIsPremium] = useState<boolean | null>(null)
+  const [web3Token, setWeb3Token] = useState<string | null>(null)
   const location = useLocation()
 
-  const { account, provider } = useWeb3React()
-  const hasCalledGetToken = useRef(false)
+  // Use the Web3Provider type in useWeb3React
+  const { account, provider } = useWeb3React<Web3Provider>()
 
+  // Load stored token from cookies on component mount
   useEffect(() => {
-    const storedToken = Cookies.get("web3TokenAuth")
-
+    const storedToken = Cookies.get("web3AuthToken")
     if (storedToken) {
       setWeb3Token(storedToken)
     }
   }, [])
 
-  useEffect(() => {
-    if (!provider || hasCalledGetToken.current || web3Token || !account) {
-      return
+  // Login with wallet and send request to backend
+  const loginWithWallet = async () => {
+    if (!provider || !account) return
+
+    try {
+      const signer = provider.getSigner()
+      const message = "Please sign this message to log in to NextGem."
+
+      // Sign the message
+      const signature = await signer.signMessage(message)
+
+      // Send login request to backend
+      const response = await axios.post(`${APP_API_URL}/auth/wallet`, {
+        address: account,
+        signature
+      })
+
+      // If login is successful, store the token and update state
+      if (response.data.token) {
+        Cookies.set("web3AuthToken", response.data.token, { expires: 1 })
+        setWeb3Token(response.data.token)
+        console.log("Login successful, token received:", response.data.token)
+      } else {
+        console.error("Login failed, no token received.")
+      }
+    } catch (error) {
+      console.error("Error during login with wallet:", error)
     }
+  }
 
-    hasCalledGetToken.current = true
-    const signer = provider.getSigner()
+  // Handle account disconnection
+  useEffect(() => {
+    if (!provider) return
 
-    const getToken = async () => {
-      try {
-        const token = await Web3Token.sign(
-          async (msg: string) => {
-            try {
-              return signer.signMessage(msg)
-              // const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(msg))
-              // return await signer.signMessage(hexMessage)
-            } catch (err) {
-              console.log(err)
-            }
-          },
-          {
-            domain: "thenextgem.ai",
-            expires_in: "1 day",
-            nonce: 12345678,
-            uri: "https://thenextgem.ai/",
-            web3_token_version: 1,
-            chain_id: 1,
-            issued_at: new Date(),
-            request_id: 12345,
-            address: account
-          }
-        )
-        Cookies.set("web3TokenAuth", token, { expires: 1 })
-        setWeb3Token(token)
-        console.log("token", token)
-      } catch (err) {
-        console.log(err)
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length === 0) {
+        setWeb3Token(null)
+        Cookies.remove("web3AuthToken")
+        console.log("Disconnected from wallet")
       }
     }
 
-    getToken().catch(console.error)
-  }, [account, provider, web3Token])
+    provider.on("accountsChanged", handleAccountsChanged)
 
-  useEffect(() => {
-    if (!provider) {
-      return
+    return () => {
+      provider.removeListener("accountsChanged", handleAccountsChanged)
     }
-
-    provider.addListener("accountsChanged", async (accounts) => {
-
-      if (accounts.length !== 0) {
-        return
-      }
-
-      setWeb3Token(null)
-      console.log("disconnected")
-      Cookies.remove("web3TokenAuth")
-    })
   }, [provider])
 
+  // Detect location changes and update in-app and chat states
   useEffect(() => {
-    const allowedPages = ["/portal", "/gems", "/gem-ai", "/premium", "/analyze", "/staking"]
+    const allowedPages = [
+      "/portal",
+      "/gems",
+      "/gem-ai",
+      "/premium",
+      "/analyze",
+      "/staking"
+    ]
     const isInApp = allowedPages.some((page) =>
       location.pathname.startsWith(page)
     )
@@ -122,7 +121,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         web3Token,
         setWeb3Token,
         isPremium,
-        setIsPremium
+        setIsPremium,
+        loginWithWallet
       }}
     >
       {children}
