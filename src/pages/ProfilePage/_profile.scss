@@ -1,0 +1,98 @@
+.edit-account-page {
+    display: flex;
+    flex-direction: column;
+    
+    color: #ffffff;
+  
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+  
+    .main-content {
+      flex: 1;
+      overflow: hidden;
+      height: auto;
+      margin-left: 300px;
+    }
+  
+    // Added media query for responsiveness
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0; // Remove left margin on smaller screens
+      }
+      
+      .account-form-container {
+        padding: 1rem; // Adjust padding for smaller screens
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr; // Stack columns on smaller screens
+      }
+    }
+  
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+  
+    .account-form-container {
+      border-radius: 0.5rem;
+      padding: 0.5rem 1.5rem ;
+    }
+  
+    .profile-picture-container {
+      display: flex;
+    
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+  
+    .profile-picture {
+      width: 6rem;
+      height: 6rem;
+      background-color: #333333;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .camera-icon {
+      position: absolute;
+      bottom: -0.75rem;
+      left: calc(5% - 0.75rem);
+      border-radius: 50%;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .account-form {
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+  
+      .form-group {
+        margin-bottom: 1rem;
+        label {
+          padding: 10px 0;
+          color: #6D6E70; // Added padding to labels
+        }
+        input {
+          padding: 8px; // Added padding to input placeholders
+        }
+      }
+  
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+  
+    }
+  }
