@@ -1,0 +1,143 @@
+.sidebar {
+    position: fixed;
+    top: 170px; // Adjust as needed to fit under the header
+    bottom: 50px; // Adjust as needed to align above the footer
+    height: 58%;
+    width: 300px;
+    
+    border-right: 1px solid #333;
+    color: #ffffff;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    
+    &.open {
+      transform: translateX(0);
+    }
+  
+    @media (min-width: 1024px) {
+      transform: translateX(0);
+    }
+  
+    @media (max-width: 768px) { // Adjust for smaller screens
+      width: 100%; // Full width on smaller screens
+      height: auto; // Allow height to adjust based on content
+      position: relative; // Change position to relative
+      transform: translateX(0); // Ensure it's visible
+    }
+  }
+  
+  .sidebar-trigger {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+  
+    @media (min-width: 1024px) {
+      display: none;
+    }
+  
+    @media (max-width: 768px) { // Adjust for smaller screens
+      display: flex; // Show trigger button on smaller screens
+    }
+  }
+  
+  .sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto; 
+  }
+  
+  .sidebar-header {
+    padding: 1rem;
+    
+  
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  }
+  
+  .sidebar-nav {
+    flex-grow: 1;
+    padding: 1rem;
+  }
+  
+  .nav-section {
+    margin-bottom: 1.5rem;
+  
+    &-title {
+      font-size: 0.875rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+  
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+  
+    li {
+      margin-bottom: 0.5rem;
+    }
+  
+    a {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+  
+      &:hover {
+        background-color: #333;
+      }
+  
+      svg {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+      }
+  
+      .chevron {
+        margin-left: auto;
+      }
+    }
+  }
+  
+  .sidebar-footer {
+    padding: 1rem;
+    
+  }
+  
+  .sign-out-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    
+    background-color: transparent;
+    color: #fff;
+    
+    cursor: pointer;
+    transition: background-color 0.2s;
+  
+    
+  
+    svg {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 0.5rem;
+    }
+  }

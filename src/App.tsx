@@ -14,6 +14,7 @@ import GemDetailPage from "@pages/App/GemDetail"
 import GemsPortal from "@pages/App/GemsPortal"
 import { PresalePortal } from "@pages/App/PresalePortal"
 import { HomePage, DefaultPage, NotFoundPage } from "@pages/index"
+import EditAccount from "@pages/ProfilePage"
 import { PDFViewer } from "@react-pdf/renderer"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
@@ -152,6 +153,10 @@ function App() {
         {
           path: "/gem-ai",
           element: <GemAiPage />
+        },
+        {
+          path: "/profile",
+          element: <EditAccount />
         },
         {
           path: "/default",

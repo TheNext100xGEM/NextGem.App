@@ -38,6 +38,11 @@ function Panel() {
   }
   const closeModal = () => setIsOpen(false)
 
+  const handleGoogleLogin = () => {
+    // Replace with your backend route that initiates Google OAuth
+    window.location.href = `${APP_API_URL}/auth/google`
+  }
+
   // Handle wallet login, sign a message, and send to backend
   const handleLoginWithWallet = async () => {
     if (!provider || !account) return
@@ -176,7 +181,7 @@ function Panel() {
       >
         {/* Social Login Buttons */}
         <Grid className="grid-social">
-          <Button icon="flat-color-icons:google" onClick={openModal} />
+          <Button icon="flat-color-icons:google" onClick={handleGoogleLogin} />
           <Button icon="logos:telegram" onClick={openModal} />
           <Button icon="logos:twitter" onClick={openModal} />
         </Grid>
