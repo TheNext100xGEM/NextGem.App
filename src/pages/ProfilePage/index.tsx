@@ -6,7 +6,7 @@ import { Button, Input } from "@components/ui"
 import { useState, useEffect } from "react"
 import Cookies from "js-cookie"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+// import { useNavigate } from "react-router-dom"
 
 function EditAccount() {
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ function EditAccount() {
     profilePicture: null as File | null
   })
 
-  const navigate = useNavigate()
+//   const navigate = useNavigate()
 
   useEffect(() => {
     // Extract token from URL parameters
