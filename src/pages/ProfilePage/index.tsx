@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async"
 import AccountSidebar from "@components/Sidebar"
-import { User, Camera } from "lucide-react"
+import { User } from "lucide-react"
 import "./_profile.scss"
 import { Button, Input } from "@components/ui"
 import { useState, useEffect } from "react"
@@ -45,10 +45,6 @@ function EditAccount() {
   }
 
   // Handle profile picture change
-  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null
-    setFormData((prev) => ({ ...prev, profilePicture: file }))
-  }
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {

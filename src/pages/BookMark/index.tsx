@@ -11,7 +11,6 @@ import { useState } from "react"
 import toast from "react-hot-toast"
 import { getUserFavorite } from "../../queries/api"
 import { NoteCard } from "@components/Note"
-import { PropsSociaList } from "@models/Socials"
 
 // Consolidating GemList directly inside the BookmarksPage component
 
@@ -41,7 +40,6 @@ function BookmarksPage() {
 
   // GemList Component inside the same file
   const GemList = ({
-    id,
     name,
     description,
     category,

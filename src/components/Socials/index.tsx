@@ -11,7 +11,6 @@ import {
 } from "@constants/index"
 import { Icon } from "@iconify/react"
 import {
-  PropsSociaList,
   PropsSocialLink,
   SocialId,
   SocialInfo,

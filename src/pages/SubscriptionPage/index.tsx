@@ -57,8 +57,8 @@ const LogoToken = () => {
 
 
 function SubscriptionPage() {
-  const [activeTab, setActiveTab] = useState<'plan' | 'history'>('plan');
-  const [offerActive, setOfferActive] = useState(1)
+  const [activeTab, _setActiveTab] = useState<'plan' | 'history'>('plan');
+  const [offerActive, _setOfferActive] = useState(1)
   const [usd, setUsd] = useState(0)
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React from "react"
-import { ChevronRight,LogOut ,User, Lock, Bookmark, CreditCard } from "lucide-react"
+import { ChevronRight,LogOut ,User, Bookmark, CreditCard } from "lucide-react"
 import './_sidebar.scss'
 import { Button } from "@components/ui"
 import { useNavigate } from "react-router-dom"
