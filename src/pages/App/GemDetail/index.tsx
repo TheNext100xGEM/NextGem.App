@@ -19,7 +19,8 @@ import {
   deleteUserFavorite,
   getGemSingle,
   postUserFavorite,
-  postReloadAnalysis
+  postReloadAnalysis,
+  getGemDetails
 } from "../../../queries/api"
 
 function GemDetailPage() {
@@ -47,6 +48,12 @@ function GemDetailPage() {
         ? 10000
         : false,
     refetchIntervalInBackground: true
+  })
+
+  const qGemDetails: any = useQuery({
+    queryKey: ["gemDetail", id],
+    queryFn: () => getGemDetails({ id: id! }),
+    enabled: !!id
   })
 
   const qPostUserFavorite = useMutation({
@@ -165,6 +172,30 @@ function GemDetailPage() {
 
   const pageTitle = `${qGemSingle.data?.name} AI Analysis — The Next Gem`
   const pageDesc = qGemSingle.data?.description
+
+  let whitepaperDetails: any = {}
+  if (qGemDetails.data && qGemDetails.data.whitepaper_and_roadmap) {
+    try {
+      whitepaperDetails = JSON.parse(qGemDetails.data.whitepaper_and_roadmap)
+    } catch (error) {
+      console.error("Error parsing whitepaper and roadmap data:", error)
+    }
+  }
+
+  const whitepaperProblemStatement =
+    whitepaperDetails.whitepaperProblemStatement ||
+    "No problem statement provided."
+  const whitepaperSolutionOverview =
+    whitepaperDetails.whitepaperSolutionOverview ||
+    "No solution overview provided."
+  const roadmapMilestones =
+    whitepaperDetails.roadmapMilestones || "No milestones provided."
+  const roadmapStatus = whitepaperDetails.roadmapStatus || "No status provided."
+  const clarity =
+    whitepaperDetails.clarity || "No clarity information provided."
+  const detail = whitepaperDetails.detail || "No detail information provided."
+  const feasibility =
+    whitepaperDetails.feasibility || "No feasibility information provided."
 
   useEffect(() => {
     if (!qGemSingle.data) return
@@ -392,6 +423,49 @@ function GemDetailPage() {
                       </div>
                     </Card>
                   ) : null}
+                  {qGemDetails.data && (
+                    <Card>
+                      <div className='gemDetail-block'>
+                        <div className='gemDetail-block-header'>
+                          <h2>Whitepaper & Roadmap</h2>
+                        </div>
+                        <div className='gemDetail-block-content'>
+                        <Markdown>Problem Statement:</Markdown>
+                        <Markdown>{whitepaperProblemStatement}</Markdown>
+
+                        <div style={{ margin: "15px 0" }} />
+
+                        <Markdown>Solution Overview:</Markdown>
+                        <Markdown>{whitepaperSolutionOverview}</Markdown>
+
+                        <div style={{ margin: "15px 0" }} />
+
+                        <Markdown>Roadmap Milestones:</Markdown>
+                        <Markdown>{roadmapMilestones}</Markdown>
+
+                        <div style={{ margin: "15px 0" }} />
+
+                        <Markdown>Roadmap Status:</Markdown>
+                        <Markdown>{roadmapStatus}</Markdown>
+
+                        <div style={{ margin: "15px 0" }} />
+
+                        <Markdown>Clarity:</Markdown>
+                        <Markdown>{clarity}</Markdown>
+
+                        <div style={{ margin: "15px 0" }} />
+
+                        <Markdown>Detail:</Markdown>
+                        <Markdown>{detail}</Markdown>
+
+                        <div style={{ margin: "15px 0" }} />
+
+                        <Markdown>Feasibility:</Markdown>
+                        <Markdown>{feasibility}</Markdown>
+                      </div>
+                      </div>
+                    </Card>
+                  )}
                 </div>
               ) : (
                 <div className='gemDetail-content'>

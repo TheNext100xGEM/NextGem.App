@@ -11,7 +11,6 @@ import {
 } from "@constants/index"
 import { Icon } from "@iconify/react"
 import {
-  PropsSociaList,
   PropsSocialLink,
   SocialId,
   SocialInfo,
@@ -47,14 +46,14 @@ export const SocialLink: FC<PropsSocialLink> = ({ id, href }) => {
   )
 }
 
-export const SocialList = ({ items }: PropsSociaList) => {
+export const SocialList = ({ items }: any) => {
   const [soundClick] = useSound(SOUND_BUTTON_CLICK, {
     volume: VOLUME_BUTTON_CLICK
   })
 
   return (
     <ul className='socials'>
-      {items.map((item) => (
+      {items.map((item: any) => (
         <li key={item.id} onClick={soundClick}>
           <SocialLink id={item.id} href={item.href} />
         </li>
