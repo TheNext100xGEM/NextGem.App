@@ -61,9 +61,6 @@ function EditAccount() {
     updatedData.append("email", formData.email)
     updatedData.append("phone", formData.phone)
 
-    if (formData.profilePicture) {
-      updatedData.append("profilePicture", formData.profilePicture)
-    }
 
     try {
       // Make the request to update the account details with the token in the headers
@@ -107,17 +104,6 @@ function EditAccount() {
                   <User size={48} />
                 )}
               </div>
-              <label htmlFor="profilePicture" className="camera-icon">
-                <Camera size={20} />
-                <input
-                  type="file"
-                  id="profilePicture"
-                  accept="image/*"
-                  onChange={handleProfilePictureChange}
-                  className="file-input"
-                  style={{visibility: 'hidden'}}
-                />
-              </label>
             </div>
 
             <form className="account-form" onSubmit={handleSubmit}>
@@ -155,18 +141,6 @@ function EditAccount() {
                   placeholder="johnsmith123@xyz.com"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phone">Phone No.</label>
-                <Input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="+012345678"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e)}
                 />
               </div>
 

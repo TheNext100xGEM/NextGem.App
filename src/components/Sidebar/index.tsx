@@ -2,9 +2,11 @@ import React from "react"
 import { ChevronRight,LogOut ,User, Lock, Bookmark, CreditCard } from "lucide-react"
 import './_sidebar.scss'
 import { Button } from "@components/ui"
+import { useNavigate } from "react-router-dom"
 
 export default function AccountSidebar() {
   const [isOpen, setIsOpen] = React.useState(false)
+  const navigate = useNavigate()
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
@@ -21,16 +23,9 @@ export default function AccountSidebar() {
             <h3 className="nav-section-title">Personal Info</h3>
             <ul>
               <li>
-                <a href="#edit-account">
+                <a onClick={()=> navigate('/profile')}>
                   <User />
                   <span>Edit Account Info</span>
-                </a>
-              </li>
-              <li>
-                <a href="#password">
-                  <Lock />
-                  <span>Password</span>
-                  <ChevronRight className="chevron" />
                 </a>
               </li>
             </ul>
@@ -39,14 +34,14 @@ export default function AccountSidebar() {
             <h3 className="nav-section-title">General</h3>
             <ul>
               <li>
-                <a href="#bookmarks">
+                <a onClick={()=> navigate('/profile/bookmarks')}>
                   <Bookmark />
                   <span>Bookmarks</span>
                   <ChevronRight className="chevron" />
                 </a>
               </li>
               <li>
-                <a href="#subscription">
+                <a onClick={()=> navigate('/profile/subscription')}>
                   <CreditCard />
                   <span>My Subscription</span>
                   <ChevronRight className="chevron" />
@@ -56,10 +51,10 @@ export default function AccountSidebar() {
           </div>
         </nav>
         <footer className="sidebar-footer">
-          <button className="sign-out-button">
+          
             
-            <Button> <LogOut/>Sign Out</Button>
-          </button>
+            <Button className="sign-out-button"> <LogOut/>Sign Out</Button>
+          
         </footer>
       </div>
     </div>

@@ -36,10 +36,6 @@ function AnalysisPage() {
       toast.error("Enter a website link to proceed with the analysis")
       return
     }
-    if (!Cookies.get("web3TokenAuth")) {
-      toast.error("Wallet connection required to proceed.")
-      return
-    }
     if (!account) {
       toast.error("Wallet connection required to proceed.")
       return

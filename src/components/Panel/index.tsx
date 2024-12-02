@@ -59,8 +59,10 @@ function Panel() {
       })
 
       // If successful, store the received token in cookies and update state
+      console.log(response.data)
       if (response.data.token) {
-        Cookies.set("web3AuthToken", response.data.token, { expires: 1 })
+        console.log(response.data.token)
+        Cookies.set("web3AuthToken", response.data.token, { expires:  1})
         setWeb3Token(response.data.token)
         toast.success("Login successful!")  // Show success toast
         closeModal()

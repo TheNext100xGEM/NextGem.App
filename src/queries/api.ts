@@ -134,6 +134,13 @@ export const postUserFavorite = async (body: { projectId: string }) =>
     body
   )
 
+  export const getUserFavorite = async () =>
+  request<ApiStatusReponse>(
+    `${APP_API_URL}/user/favorites`,
+    "getUserFavorite",
+    "GET"
+  )
+
 export const postReloadAnalysis = async (body: { projectId: string }) =>
   request<ApiStatusReponse>(
     `${APP_API_URL}/projects/reload`,
@@ -166,13 +173,15 @@ async function request<T, B = Record<string, unknown>>(
   body?: B
 ) {
   // Récupérer le token depuis les cookies
-  const token = Cookies.get("web3TokenAuth")
+  const token = Cookies.get("web3AuthToken")
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json"
   }
 
   // Ajouter le token à l'en-tête Authorization s'il existe
+
+  console.log(token)
   if (token) {
     headers["Authorization"] = token
   }

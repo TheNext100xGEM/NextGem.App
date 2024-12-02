@@ -101,7 +101,10 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       "/gem-ai",
       "/premium",
       "/analyze",
-      "/staking"
+      "/staking",
+      "/profile",
+      "/profile/bookmarks",
+      "/profile/staking"
     ]
     const isInApp = allowedPages.some((page) =>
       location.pathname.startsWith(page)

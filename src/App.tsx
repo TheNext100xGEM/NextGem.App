@@ -13,8 +13,10 @@ import GemAiSinglePage from "@pages/App/GemAiSingle"
 import GemDetailPage from "@pages/App/GemDetail"
 import GemsPortal from "@pages/App/GemsPortal"
 import { PresalePortal } from "@pages/App/PresalePortal"
+import BookmarksPage from "@pages/BookMark"
 import { HomePage, DefaultPage, NotFoundPage } from "@pages/index"
 import EditAccount from "@pages/ProfilePage"
+import SubscriptionPage from "@pages/SubscriptionPage"
 import { PDFViewer } from "@react-pdf/renderer"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
@@ -157,6 +159,14 @@ function App() {
         {
           path: "/profile",
           element: <EditAccount />
+        },
+        {
+          path: "/profile/subscription",
+          element: <SubscriptionPage />
+        },
+        {
+          path: "/profile/bookmarks",
+          element: <BookmarksPage />
         },
         {
           path: "/default",
